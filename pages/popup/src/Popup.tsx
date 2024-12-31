@@ -1,79 +1,203 @@
 import '@src/Popup.css';
-import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
-import type { ComponentPropsWithoutRef } from 'react';
-
-const notificationOptions = {
-  type: 'basic',
-  iconUrl: chrome.runtime.getURL('icon-34.png'),
-  title: 'Injecting content script error',
-  message: 'You cannot inject script here!',
-} as const;
+import { useEffect, useState, useCallback } from 'react';
+import { Button, Icon, Alert, AlertTitle, AlertDescription } from '@extension/ui';
+import { withErrorBoundary, withSuspense } from '@extension/shared';
+import { captureStateStorage, captureTabStorage } from '@extension/storage';
 
 const Popup = () => {
-  const theme = useStorage(exampleThemeStorage);
-  const isLight = theme === 'light';
-  const logo = isLight ? 'popup/logo_vertical.svg' : 'popup/logo_vertical_dark.svg';
-  const goGithubSite = () =>
-    chrome.tabs.create({ url: 'https://briehq.com' });
+  const logo = 'popup/logo_vertical.svg';
 
-  const injectContentScript = async () => {
-    const [tab] = await chrome.tabs.query({ currentWindow: true, active: true });
-
-    if (tab.url!.startsWith('about:') || tab.url!.startsWith('chrome:')) {
-      chrome.notifications.create('inject-error', notificationOptions);
-    }
-
-    await chrome.scripting
-      .executeScript({
-        target: { tabId: tab.id! },
-        files: ['/content-runtime/index.iife.js'],
-      })
-      .catch(err => {
-        // Handling errors related to other paths
-        if (err.message.includes('Cannot access a chrome:// URL')) {
-          chrome.notifications.create('inject-error', notificationOptions);
-        }
-      });
-  };
+  const navigateTo = useCallback(url => {
+    chrome.tabs.create({ url });
+  }, []);
 
   return (
-    <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
-      <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
-        <button onClick={goGithubSite}>
-          <img src={chrome.runtime.getURL(logo)} className="App-logo" alt="logo" />
+    <div className="light relative bg-background p-4">
+      <header className="mb-4 flex items-center justify-between">
+        <button onClick={() => navigateTo('https://briehq.com')} className="flex items-center gap-x-2">
+          <img src={chrome.runtime.getURL(logo)} className="size-5" alt="Brie" />
+          <h1 className="text-xl font-semibold">brie</h1>
         </button>
-        <p>
-          Edit <code>pages/popup/src/Popup.tsx</code>
-        </p>
-        <button
-          className={
-            'font-bold mt-4 py-1 px-4 rounded shadow hover:scale-105 ' +
-            (isLight ? 'bg-blue-200 text-black' : 'bg-gray-700 text-white')
-          }
-          onClick={injectContentScript}>
-          Click to inject Content Script
-        </button>
-        <ToggleButton>Toggle theme</ToggleButton>
+        <div className="flex items-center">
+          {false && (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="hover:bg-slate-50 dark:hover:text-black"
+              onClick={() => navigateTo('https://app.briehq.com/settings?utm_source=extension')}>
+              <Icon name="GitHubLogoIcon" size={20} className="size-4" />
+            </Button>
+          )}
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="hover:bg-slate-50 dark:hover:text-black"
+            onClick={() => navigateTo('https://app.briehq.com/settings?utm_source=extension')}>
+            <Icon name="DiscordLogoIcon" size={20} className="size-4" />
+          </Button>
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="hover:bg-slate-50 dark:hover:text-black"
+            onClick={() => navigateTo('https://app.briehq.com?utm_source=extension')}>
+            <Icon name="House" size={20} className="size-4" strokeWidth={1.5} />
+          </Button>
+        </div>
       </header>
+
+      <CaptureScreenshotButton />
     </div>
   );
 };
 
-const ToggleButton = (props: ComponentPropsWithoutRef<'button'>) => {
-  const theme = useStorage(exampleThemeStorage);
-  return (
-    <button
-      className={
-        props.className +
-        ' ' +
-        'font-bold mt-4 py-1 px-4 rounded shadow hover:scale-105 ' +
-        (theme === 'light' ? 'bg-white text-black shadow-black' : 'bg-black text-white')
+const CaptureScreenshotButton = () => {
+  const [captureState, setCaptureState] = useState('idle');
+  const [activeTab, setActiveTab] = useState({ id: null, url: '' });
+  const [currentActiveTab, setCurrentActiveTab] = useState<number>();
+
+  const updateCaptureState = useCallback(async state => {
+    await captureStateStorage.setCaptureState(state);
+    console.log('set state: ', state);
+
+    setCaptureState(state);
+  }, []);
+
+  const updateActiveTab = useCallback(async tabId => {
+    await captureTabStorage.setCaptureTabId(tabId);
+    setActiveTab(prev => ({ ...prev, id: tabId }));
+  }, []);
+
+  useEffect(() => {
+    const initializeState = async () => {
+      const [state, tabId] = await Promise.all([
+        captureStateStorage.getCaptureState(),
+        captureTabStorage.getCaptureTabId(),
+      ]);
+
+      console.log('state, tabId', state, tabId);
+
+      setCaptureState(state);
+      setActiveTab(prev => ({ ...prev, id: tabId }));
+
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tabs[0]?.url) {
+        setActiveTab(prev => ({ ...prev, url: tabs[0].url }));
+        setCurrentActiveTab(tabs[0].id);
       }
-      onClick={exampleThemeStorage.toggle}>
-      {props.children}
-    </button>
+    };
+
+    const handleEscapeKey = async event => {
+      if (event.key === 'Escape' && captureState === 'capturing') {
+        await updateCaptureState('idle');
+        await updateActiveTab(null);
+        console.log('Capture mode exited.');
+      }
+    };
+
+    initializeState();
+    window.addEventListener('keydown', handleEscapeKey);
+
+    return () => window.removeEventListener('keydown', handleEscapeKey);
+  }, [captureState, updateCaptureState, updateActiveTab]);
+
+  const handleCaptureScreenshot = async () => {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (captureState === 'unsaved' && tabs[0]?.id) {
+      chrome.tabs.sendMessage(tabs[0].id, { action: 'CLOSE_MODAL' }, response => {
+        if (chrome.runtime.lastError) {
+          console.error('Error stopping unsaved:', chrome.runtime.lastError.message);
+        } else {
+          console.log('Unsaved closed:', response);
+        }
+      });
+    }
+
+    if (['capturing', 'unsaved'].includes(captureState)) {
+      console.log('state', captureState);
+
+      await updateCaptureState('idle');
+      await updateActiveTab(null);
+      return;
+    }
+
+    if (tabs[0]?.id) {
+      await updateCaptureState('capturing');
+      await updateActiveTab(tabs[0].id);
+
+      chrome.tabs.sendMessage(tabs[0].id, { action: 'START_SCREENSHOT' }, response => {
+        if (chrome.runtime.lastError) {
+          console.error('Error starting capture:', chrome.runtime.lastError.message);
+        } else {
+          console.log('Capture started:', response);
+        }
+      });
+    }
+
+    window.close();
+  };
+
+  const handleGoToActiveTab = async () => {
+    if (activeTab.id !== null) {
+      await chrome.tabs.update(activeTab.id, { active: true });
+      window.close();
+    }
+  };
+
+  const handleOnDiscard = async () => {
+    /**
+     * @todo
+     * if unsaved state,
+     * then display a alert with same two option, discard or save
+     */
+    await updateCaptureState('idle');
+    await updateActiveTab(null);
+  };
+
+  const isInternalPage = activeTab.url.startsWith('about:') || activeTab.url.startsWith('chrome:');
+
+  if (isInternalPage)
+    return (
+      <Alert>
+        <AlertDescription className="text-[12px]">Navigate to any website to start capturing bugs.</AlertDescription>
+      </Alert>
+    );
+
+  if (captureState === 'unsaved' && currentActiveTab !== activeTab.id)
+    return (
+      <>
+        <Alert>
+          <AlertTitle className="text-[14px]">Save or discard your changes</AlertTitle>
+          <AlertDescription className="text-[12px]">
+            It seems like you have an unsaved draft open in another tab.
+          </AlertDescription>
+        </Alert>
+
+        <div className="mt-4 flex gap-x-2">
+          <Button variant="secondary" type="button" size="sm" className="w-full" onClick={handleOnDiscard}>
+            Discard
+          </Button>
+          <Button type="button" size="sm" className="w-full" onClick={handleGoToActiveTab}>
+            Go to active tab
+          </Button>
+        </div>
+      </>
+    );
+
+  return (
+    <Button type="button" size="lg" className="w-full" onClick={handleCaptureScreenshot}>
+      <Icon
+        name={['capturing', 'unsaved'].includes(captureState) ? 'X' : 'Camera'}
+        size={20}
+        className="mr-2"
+        strokeWidth={1.5}
+      />
+      <span>{['capturing', 'unsaved'].includes(captureState) ? 'Exit Capture Screenshot' : 'Capture Screenshot'}</span>
+    </Button>
   );
 };
 
-export default withErrorBoundary(withSuspense(Popup, <div> Loading ... </div>), <div> Error Occur </div>);
+export default withErrorBoundary(withSuspense(Popup, <div>Loading...</div>), <div>Error Occurred</div>);
