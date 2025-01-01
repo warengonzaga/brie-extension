@@ -104,16 +104,8 @@ const CaptureScreenshotButton = () => {
   }, [captureState, updateCaptureState, updateActiveTab]);
 
   const handleCaptureScreenshot = async () => {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-
-    if (captureState === 'unsaved' && tabs[0]?.id) {
-      chrome.tabs.sendMessage(tabs[0].id, { action: 'CLOSE_MODAL' }, response => {
-        if (chrome.runtime.lastError) {
-          console.error('Error stopping unsaved:', chrome.runtime.lastError.message);
-        } else {
-          console.log('Unsaved closed:', response);
-        }
-      });
+    if (captureState === 'unsaved' && activeTab?.id) {
+      handleOnDiscard(activeTab?.id);
     }
 
     if (['capturing', 'unsaved'].includes(captureState)) {
@@ -121,8 +113,11 @@ const CaptureScreenshotButton = () => {
 
       await updateCaptureState('idle');
       await updateActiveTab(null);
+
       return;
     }
+
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 
     if (tabs[0]?.id) {
       await updateCaptureState('capturing');
@@ -141,13 +136,13 @@ const CaptureScreenshotButton = () => {
   };
 
   const handleGoToActiveTab = async () => {
-    if (activeTab.id !== null) {
+    if (activeTab.id) {
       await chrome.tabs.update(activeTab.id, { active: true });
       window.close();
     }
   };
 
-  const handleOnDiscard = async () => {
+  const handleOnDiscard = async (activeTabId: number) => {
     /**
      * @todo
      * if unsaved state,
@@ -155,6 +150,14 @@ const CaptureScreenshotButton = () => {
      */
     await updateCaptureState('idle');
     await updateActiveTab(null);
+
+    chrome.tabs.sendMessage(activeTabId, { action: 'CLOSE_MODAL' }, response => {
+      if (chrome.runtime.lastError) {
+        console.error('Error stopping unsaved:', chrome.runtime.lastError.message);
+      } else {
+        console.log('Unsaved closed:', response);
+      }
+    });
   };
 
   const isInternalPage = activeTab.url.startsWith('about:') || activeTab.url.startsWith('chrome:');
@@ -177,7 +180,12 @@ const CaptureScreenshotButton = () => {
         </Alert>
 
         <div className="mt-4 flex gap-x-2">
-          <Button variant="secondary" type="button" size="sm" className="w-full" onClick={handleOnDiscard}>
+          <Button
+            variant="secondary"
+            type="button"
+            size="sm"
+            className="w-full"
+            onClick={() => activeTab?.id && handleOnDiscard(activeTab.id)}>
             Discard
           </Button>
           <Button type="button" size="sm" className="w-full" onClick={handleGoToActiveTab}>

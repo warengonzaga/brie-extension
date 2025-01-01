@@ -48,13 +48,13 @@ const manifest = withSidePanel({
   },
   action: {
     default_popup: 'popup/index.html',
-    default_icon: 'icon-34.png',
+    default_icon: 'brie-logo.png',
   },
   chrome_url_overrides: {
     newtab: 'new-tab/index.html',
   },
   icons: {
-    128: 'icon-128.png',
+    128: 'brie-logo.png',
   },
   content_scripts: [
     {
