@@ -24,41 +24,26 @@ import {
 } from '@extension/ui';
 import { annotationsRedoStorage, annotationsStorage, captureStateStorage } from '@extension/storage';
 import AnnotationContainer from './components/annotation/annotation-container';
-
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js',
-  },
-  {
-    value: 'remix',
-    label: 'Remix',
-  },
-  {
-    value: 'astro',
-    label: 'Astro',
-  },
-];
+import { useViewportSize } from './hooks';
 
 export default function App() {
   const { toast } = useToast();
+  const { width } = useViewportSize();
   const [screenshots, setScreenshots] = useState<{ name: string; image: string }[]>();
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
+
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [showRightSection, setShowRightSection] = useState(true);
+
+  const handleToggleMaximize = () => setIsMaximized(!isMaximized);
+
+  const handleToggleRightSection = () => setShowRightSection(!showRightSection);
 
   useEffect(() => {
     console.log('content ui loaded');
 
     const handleDisplayModal = async event => {
       console.log('DISPLAY_MODAL Listener', event.detail);
+      console.log('event.detail.screenshots', event.detail.screenshots);
 
       setScreenshots(event.detail.screenshots); // Extract data from the event
       await captureStateStorage.setCaptureState('unsaved');
@@ -104,115 +89,110 @@ export default function App() {
       <div className="light relative">
         <main className="flex-1 md:container md:max-w-screen-xl">
           <div className="flex items-center justify-between gap-2 rounded bg-white">
-            <DialogCopy onClose={handleOnClose}>
-              <div className="flex h-full">
+            <DialogCopy
+              isMaximized={isMaximized}
+              onClose={handleOnClose}
+              actions={
+                <>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    onClick={handleToggleMaximize}
+                    type="button"
+                    className="size-6">
+                    {isMaximized ? (
+                      <Icon name="Minimize2Icon" className="size-3" strokeWidth="1.5" />
+                    ) : (
+                      <Icon name="Maximize2Icon" className="size-3" strokeWidth="1.5" />
+                    )}
+                  </Button>
+
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    onClick={handleToggleRightSection}
+                    type="button"
+                    className="size-6">
+                    {showRightSection ? (
+                      <Icon name="PanelRightCloseIcon" className="size-3.5" strokeWidth="1.5" />
+                    ) : (
+                      <Icon name="PanelLeftCloseIcon" className="size-3.5" strokeWidth="1.5" />
+                    )}
+                  </Button>
+                </>
+              }>
+              <div className="flex h-full flex-col md:flex-row">
                 {/* Left Column */}
-                <div className="flex w-[70%] flex-col justify-center bg-gray-50 px-4 pb-4 pt-5 sm:p-6">
+
+                <div
+                  className={`flex ${
+                    showRightSection ? 'sm:w-[70%]' : 'w-full'
+                  } mt-10 flex-col justify-center bg-gray-50 px-4 pb-4 pt-5 sm:mt-0 sm:p-6`}>
                   {/* Content Section */}
 
                   <AnnotationContainer attachments={screenshots} />
 
                   {/* Footer Section */}
                   <div className="mt-4 flex justify-center">
-                    <p className="text-xs text-gray-400 max-w-lg text-center select-none">
+                    <p className="max-w-lg select-none text-center text-xs text-gray-400">
                       Brie also includes a fullscreen screenshot, along with browser and OS details, network requests,
                       and console logs to assist developers in debugging effectively.
                     </p>
                   </div>
                 </div>
 
-                {/* Right Column */}
-                <div className="flex w-[30%] flex-col justify-between px-4 pb-4 pt-5 sm:p-6">
-                  {/* Dropdown and Comment */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-x-4">
-                      <h3 className="text-sm font-regular text-gray-600 whitespace-nowrap">Create a</h3>
-                      {/* <select disabled className="mt-1 w-full rounded-lg border p-2">
-                        <option>Link you can share</option>
-                      </select> */}
+                {showRightSection && (
+                  <div className="flex flex-col justify-between px-4 pb-4 pt-5 sm:w-[30%] sm:p-6">
+                    {/* Dropdown and Comment */}
+                    <div className="space-y-4 sm:mt-8">
+                      <Textarea placeholder="Add a description" rows={width < 500 ? 3 : 10} className="w-full" />
 
-                      <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="w-full justify-between text-gray-600">
-                            {value
-                              ? frameworks.find(framework => framework.value === value)?.label
-                              : 'Link you can share'}
-                            <Icon name="ChevronsUpDown" className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search integration..." />
-                            <CommandList>
-                              <CommandEmpty>No integration found.</CommandEmpty>
-                              <CommandGroup>
-                                {frameworks.map(framework => (
-                                  <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
-                                    onSelect={currentValue => {
-                                      setValue(currentValue === value ? '' : currentValue);
-                                      setOpen(false);
-                                    }}>
-                                    <Icon
-                                      name="Check"
-                                      className={cn(
-                                        'mr-2 h-4 w-4',
-                                        value === framework.value ? 'opacity-100' : 'opacity-0',
-                                      )}
-                                    />
-                                    {framework.label}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <small className="select-none text-xs text-gray-400">
+                        This is the issue&apos;s description. Please provide detailed information.
+                      </small>
                     </div>
 
-                    <Textarea placeholder="Add a description" rows={10} />
-                  </div>
+                    {/* Action Buttons */}
+                    <div className="text-center">
+                      <div className="mt-6 flex items-center justify-between gap-x-2">
+                        <div className="flex gap-x-2">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button type="button" size="icon" variant="secondary" onClick={() => {}}>
+                                <Icon name="Paperclip" className="size-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="start" sideOffset={14}>
+                              Attach file
+                            </TooltipContent>
+                          </Tooltip>
 
-                  {/* Action Buttons */}
-                  <div className="mt-6 flex items-center justify-between">
-                    <div className="flex gap-x-2">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button type="button" size="icon" variant="secondary" onClick={() => {}}>
-                            <Icon name="Paperclip" className="size-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" align="start" sideOffset={14}>
-                          Attach file
-                        </TooltipContent>
-                      </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button type="button" size="icon" variant="secondary" onClick={() => {}}>
+                                <Icon name="Folder" className="size-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="start" sideOffset={14}>
+                              Add to folder
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
 
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button type="button" size="icon" variant="secondary" onClick={() => {}}>
-                            <Icon name="Folder" className="size-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" align="start" sideOffset={14}>
-                          Add to folder
-                        </TooltipContent>
-                      </Tooltip>
+                        <Button
+                          className="w-full"
+                          onClick={() => {
+                            toast({ variant: 'destructive', description: 'this ois an toast example' });
+                          }}>
+                          Create
+                        </Button>
+                      </div>
+                      <small className="select-none text-center text-xs text-gray-400">
+                        This will create a link you can share.
+                      </small>
                     </div>
-
-                    <Button
-                      className="w-[200px]"
-                      onClick={() => {
-                        toast({ variant: 'destructive', description: 'this ois an toast example' });
-                      }}>
-                      Create issue
-                    </Button>
                   </div>
-                </div>
+                )}
               </div>
             </DialogCopy>
           </div>

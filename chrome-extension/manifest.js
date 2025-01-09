@@ -5,6 +5,11 @@ const packageJson = JSON.parse(fs.readFileSync('../package.json', 'utf8'));
 
 const isFirefox = process.env.__FIREFOX__ === 'true';
 
+const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature } = {
+  activateNewTabFeature: false,
+  activateDevToolsFeature: false,
+  activateSidePanelFeature: false,
+};
 /**
  * If you want to disable the sidePanel, you can delete withSidePanel function and remove the sidePanel HoC on the manifest declaration.
  *
@@ -17,12 +22,17 @@ function withSidePanel(manifest) {
   if (isFirefox) {
     return manifest;
   }
-  return deepmerge(manifest, {
-    side_panel: {
-      default_path: 'side-panel/index.html',
-    },
-    permissions: ['sidePanel'],
-  });
+  return deepmerge(
+    manifest,
+    ...(activateSidePanelFeature
+      ? {
+          side_panel: {
+            default_path: 'side-panel/index.html',
+          },
+          permissions: ['sidePanel'],
+        }
+      : {}),
+  );
 }
 
 /**
@@ -40,7 +50,7 @@ const manifest = withSidePanel({
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
-  permissions: ['storage', 'scripting', 'tabs', 'notifications'],
+  permissions: ['webRequest', 'storage', 'scripting', 'tabs', 'notifications'],
   options_page: 'options/index.html',
   background: {
     service_worker: 'background.iife.js',
@@ -50,16 +60,21 @@ const manifest = withSidePanel({
     default_popup: 'popup/index.html',
     default_icon: 'brie-logo.png',
   },
-  chrome_url_overrides: {
-    newtab: 'new-tab/index.html',
-  },
+  ...(activateNewTabFeature
+    ? {
+        chrome_url_overrides: {
+          newtab: 'new-tab/index.html',
+        },
+      }
+    : {}),
   icons: {
     128: 'brie-logo.png',
   },
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      js: ['content/index.iife.js'],
+      js: ['content/index.iife.js', 'content/extend.iife.js'],
+      run_at: 'document_start',
     },
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
@@ -70,10 +85,10 @@ const manifest = withSidePanel({
       css: ['content.css'], // public folder
     },
   ],
-  devtools_page: 'devtools/index.html',
+  ...(activateDevToolsFeature ? { devtools_page: 'devtools/index.html' } : {}),
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.css', '*.svg', 'icon-128.png', 'icon-34.png'],
+      resources: ['*.js', '*.css', '*.svg', 'icon-128.png', 'icon-34.png', 'content/extend.iife.js'],
       matches: ['*://*/*'],
     },
   ],

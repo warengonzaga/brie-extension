@@ -12,7 +12,7 @@ const Popup = () => {
   }, []);
 
   return (
-    <div className="light relative bg-background p-4">
+    <div className="light relative bg-background px-5 pb-7 pt-4">
       <header className="mb-4 flex items-center justify-between">
         <button onClick={() => navigateTo('https://briehq.com')} className="flex items-center gap-x-2">
           <img src={chrome.runtime.getURL(logo)} className="size-5" alt="Brie" />
@@ -164,7 +164,7 @@ const CaptureScreenshotButton = () => {
 
   if (isInternalPage)
     return (
-      <Alert>
+      <Alert className="text-center">
         <AlertDescription className="text-[12px]">Navigate to any website to start capturing bugs.</AlertDescription>
       </Alert>
     );
@@ -172,7 +172,7 @@ const CaptureScreenshotButton = () => {
   if (captureState === 'unsaved' && currentActiveTab !== activeTab.id)
     return (
       <>
-        <Alert>
+        <Alert className="text-center">
           <AlertTitle className="text-[14px]">Save or discard your changes</AlertTitle>
           <AlertDescription className="text-[12px]">
             It seems like you have an unsaved draft open in another tab.

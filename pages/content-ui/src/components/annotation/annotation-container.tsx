@@ -511,6 +511,8 @@ const AnnotationContainer = ({ attachments }: { attachments: { name: string; ima
      * window.
      */
     window.addEventListener('resize', () => {
+      console.log('is resizing event fired');
+
       handleResize({
         canvas: fabricRef.current,
       });
@@ -767,10 +769,10 @@ const AnnotationContainer = ({ attachments }: { attachments: { name: string; ima
           <Button
             type="button"
             size="icon"
-            className="hover:bg-slate-200 h-7 w-7"
+            className="size-7 hover:bg-slate-200"
             variant="secondary"
             onClick={handleOnRemove}>
-            <Icon name="TrashIcon" className="h-4 w-4" />
+            <Icon name="TrashIcon" className="size-4" />
           </Button>
         </div>
       )}
