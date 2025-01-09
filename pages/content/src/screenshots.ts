@@ -2,7 +2,7 @@ import html2canvas from 'html2canvas';
 
 let startX: number, startY: number;
 let isSelecting = false;
-let cancelled = false;
+// let cancelled = false;
 let selectionBox: HTMLDivElement;
 let overlay: HTMLDivElement;
 let dimensionLabel: HTMLDivElement;
@@ -34,7 +34,7 @@ const cropSelectedArea = (
   croppedCanvas.width = width * scaleFactor; // Scale the width for higher resolution
   croppedCanvas.height = height * scaleFactor; // Scale the height for higher resolution
 
-  const ctx = croppedCanvas.getContext('2d');
+  const ctx = croppedCanvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) {
     throw new Error('Failed to get 2D context for cropped canvas.');
   }
@@ -155,9 +155,12 @@ const hideLoadingMessage = () => {
 // Clean up all temporary elements
 const cleanup = () => {
   isSelecting = false;
+
+  console.log('cleen up', { isSelecting });
+
   //   startX = 0;
   //   startY = 0;
-  cancelled = true;
+  //   cancelled = true;
 
   overlay?.remove();
   selectionBox?.remove();
@@ -168,7 +171,7 @@ const cleanup = () => {
   document.body.style.overflow = '';
   document.removeEventListener('keydown', onKeyDown);
   document.removeEventListener('mousemove', updateSelectionBox);
-  document.removeEventListener('mouseup', onMouseUp);
+  //   document.removeEventListener('mouseup', onMouseUp);
   document.removeEventListener('touchmove', updateSelectionBox);
   document.removeEventListener('touchend', onTouchEnd);
 };
@@ -243,10 +246,8 @@ const onMouseDown = (e: MouseEvent | TouchEvent) => {
 
 // Handle keydown events for ESC press
 const onKeyDown = (e: KeyboardEvent) => {
-  console.log('e.key', e.key);
-
   if (e.key === 'Escape') {
-    cancelled = true; // Mark as cancelled when ESC is pressed
+    // cancelled = true; // Mark as cancelled when ESC is pressed
     cleanup(); // Cleanup on ESC
 
     // Notify Background on ESC
@@ -266,7 +267,7 @@ const onTouchStart = (e: TouchEvent) => {
 
 // Finish the selection and capture the screenshot
 const onMouseUp = async (e: MouseEvent | TouchEvent) => {
-  if (cancelled) return;
+  if (!isSelecting) return;
 
   isSelecting = false;
 
@@ -291,7 +292,7 @@ const onMouseMove = (e: MouseEvent) => {
 
 // Finish the selection for touch and capture the screenshot
 const onTouchEnd = async (e: TouchEvent) => {
-  if (cancelled) return;
+  if (!isSelecting) return;
 
   isSelecting = false;
 
@@ -347,7 +348,10 @@ const captureScreenshots = async (x: number, y: number, width: number, height: n
 
     // Capture full screenshot
     const fullCanvas = await html2canvas(document.body, {
-      useCORS: true,
+      useCORS: true, // Ensures external resources don't block rendering
+      allowTaint: true, // Skips cross-origin restrictions
+      logging: false, // Disables debug logs
+      removeContainer: true, // Removes temporary DOM elements
       scale: scaleFactor, // Increase the scale factor for higher resolution
       scrollX: window.scrollX,
       scrollY: window.scrollY,
@@ -366,9 +370,6 @@ const captureScreenshots = async (x: number, y: number, width: number, height: n
       },
     });
 
-    // Clean the full screenshot canvas to remove the "In process" label
-    // cleanCanvas(fullCanvas, loadingMessage);
-
     // Crop the selected area
     const croppedCanvas = cropSelectedArea(fullCanvas, x, y, width, height, scaleFactor);
 
@@ -376,11 +377,16 @@ const captureScreenshots = async (x: number, y: number, width: number, height: n
     addBoundaryBox(fullCanvas, x, y, width, height);
 
     // Convert canvases to images
-    const fullScreenshotImage = fullCanvas.toDataURL('image/png', 1.0);
-    const croppedScreenshotImage =
+    let fullScreenshotImage = fullCanvas.toDataURL('image/png', 1.0);
+    let croppedScreenshotImage =
       croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1.0) : null;
 
     saveAndNotify({ cropped: croppedScreenshotImage, full: fullScreenshotImage });
+
+    fullScreenshotImage = null;
+    croppedScreenshotImage = null;
+    croppedCanvas?.remove();
+    fullCanvas?.remove();
   } catch (error) {
     console.error('Error during screenshot capture:', error);
   }

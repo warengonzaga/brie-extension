@@ -139,6 +139,16 @@ export default function App() {
                       and console logs to assist developers in debugging effectively.
                     </p>
                   </div>
+
+                  {!showRightSection && (
+                    <Button
+                      className="relative mt-2 w-full sm:absolute sm:bottom-6 sm:right-4 sm:mt-0 sm:w-[104px]"
+                      onClick={() => {
+                        toast({ variant: 'destructive', description: 'this ois an toast example' });
+                      }}>
+                      Create
+                    </Button>
+                  )}
                 </div>
 
                 {showRightSection && (
