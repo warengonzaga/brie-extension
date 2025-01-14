@@ -2,14 +2,13 @@ import fs from 'node:fs';
 import deepmerge from 'deepmerge';
 
 const packageJson = JSON.parse(fs.readFileSync('../package.json', 'utf8'));
-
 const isFirefox = process.env.__FIREFOX__ === 'true';
-
 const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature } = {
   activateNewTabFeature: false,
   activateDevToolsFeature: false,
   activateSidePanelFeature: false,
 };
+
 /**
  * If you want to disable the sidePanel, you can delete withSidePanel function and remove the sidePanel HoC on the manifest declaration.
  *
@@ -17,23 +16,24 @@ const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature
  * const manifest = { // remove `withSidePanel()`
  * ```
  */
-function withSidePanel(manifest) {
+const withSidePanel = manifest => {
   // Firefox does not support sidePanel
   if (isFirefox) {
     return manifest;
   }
+
   return deepmerge(
     manifest,
-    ...(activateSidePanelFeature
+    activateSidePanelFeature
       ? {
           side_panel: {
             default_path: 'side-panel/index.html',
           },
           permissions: ['sidePanel'],
         }
-      : {}),
+      : {},
   );
-}
+};
 
 /**
  * After changing, please reload the extension at `chrome://extensions`
@@ -50,7 +50,7 @@ const manifest = withSidePanel({
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
-  permissions: ['webRequest', 'storage', 'scripting', 'tabs', 'notifications'],
+  permissions: ['webRequest', 'storage', 'scripting', 'tabs', 'notifications', 'activeTab'], //, 'webRequestBlocking'
   options_page: 'options/index.html',
   background: {
     service_worker: 'background.iife.js',
@@ -73,7 +73,7 @@ const manifest = withSidePanel({
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      js: ['content/index.iife.js', 'content/extend.iife.js'],
+      js: ['content/index.iife.js'],
       run_at: 'document_start',
     },
     {
