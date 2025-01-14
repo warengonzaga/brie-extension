@@ -1,7 +1,8 @@
 import { fabric } from 'fabric';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CustomFabricObject, ElementDirection, ImageUpload, ModifyShape } from '@src/models';
+import type { CustomFabricObject, ElementDirection, ModifyShape } from '@src/models';
+import { ImageUpload } from '@src/models';
 
 export const createRectangle = (pointer: PointerEvent) => {
   const rect = new fabric.Rect({
@@ -169,7 +170,6 @@ export const createSuggestingBox = ({ boxLeft, boxWidth, boxTop, boxHeight, clas
     padding: 10,
     shapeType: 'suggestion',
     objectId: uuidv4(),
-    selectable: true,
   } as any);
 };
 

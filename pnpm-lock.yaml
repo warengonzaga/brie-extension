@@ -114,6 +114,9 @@ importers:
       '@extension/storage':
         specifier: workspace:*
         version: link:../packages/storage
+      uuid:
+        specifier: ^11.0.3
+        version: 11.0.3
       webextension-polyfill:
         specifier: ^0.12.0
         version: 0.12.0
@@ -133,6 +136,9 @@ importers:
       '@laynezh/vite-plugin-lib-assets':
         specifier: ^0.5.23
         version: 0.5.24(vite@5.4.9(@types/node@22.7.4)(sass@1.79.4)(terser@5.34.1))
+      '@types/webextension-polyfill':
+        specifier: ^0.12.1
+        version: 0.12.1
       '@types/ws':
         specifier: ^8.5.13
         version: 8.5.13
@@ -1913,6 +1919,9 @@ packages:
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
+
+  '@types/webextension-polyfill@0.12.1':
+    resolution: {integrity: sha512-xPTFWwQ8BxPevPF2IKsf4hpZNss4LxaOLZXypQH4E63BDLmcwX/RMGdI4tB4VO4Nb6xDBH3F/p4gz4wvof1o9w==}
 
   '@types/which@2.0.2':
     resolution: {integrity: sha512-113D3mDkZDjo+EeUEHCFy0qniNc1ZpecGiAU7WSo7YDoSzolZIQKpYFHrPpjkB2nuyahcKfrmLXeQlh7gqJYdw==}
@@ -6552,6 +6561,8 @@ snapshots:
   '@types/sinonjs__fake-timers@8.1.5': {}
 
   '@types/stack-utils@2.0.3': {}
+
+  '@types/webextension-polyfill@0.12.1': {}
 
   '@types/which@2.0.2': {}
 

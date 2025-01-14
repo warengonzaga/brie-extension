@@ -12,7 +12,7 @@ const Popup = () => {
   }, []);
 
   return (
-    <div className="light relative bg-background px-5 pb-7 pt-4">
+    <div className="light bg-background relative px-5 pb-7 pt-4">
       <header className="mb-4 flex items-center justify-between">
         <button onClick={() => navigateTo('https://briehq.com')} className="flex items-center gap-x-2">
           <img src={chrome.runtime.getURL(logo)} className="size-5" alt="Brie" />
@@ -60,8 +60,6 @@ const CaptureScreenshotButton = () => {
 
   const updateCaptureState = useCallback(async state => {
     await captureStateStorage.setCaptureState(state);
-    console.log('set state: ', state);
-
     setCaptureState(state);
   }, []);
 
@@ -77,14 +75,14 @@ const CaptureScreenshotButton = () => {
         captureTabStorage.getCaptureTabId(),
       ]);
 
-      console.log('state, tabId', state, tabId);
-
       setCaptureState(state);
       setActiveTab(prev => ({ ...prev, id: tabId }));
 
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+
       if (tabs[0]?.url) {
         setActiveTab(prev => ({ ...prev, url: tabs[0].url }));
+
         setCurrentActiveTab(tabs[0].id);
       }
     };
@@ -93,7 +91,6 @@ const CaptureScreenshotButton = () => {
       if (event.key === 'Escape' && captureState === 'capturing') {
         await updateCaptureState('idle');
         await updateActiveTab(null);
-        console.log('Capture mode exited.');
       }
     };
 
@@ -109,7 +106,13 @@ const CaptureScreenshotButton = () => {
     }
 
     if (['capturing', 'unsaved'].includes(captureState)) {
-      console.log('state', captureState);
+      chrome.tabs.sendMessage(activeTab?.id, { action: 'EXIT_CAPTURE' }, response => {
+        if (chrome.runtime.lastError) {
+          console.error('Error stopping unsaved:', chrome.runtime.lastError.message);
+        } else {
+          console.log('Unsaved closed:', response);
+        }
+      });
 
       await updateCaptureState('idle');
       await updateActiveTab(null);
@@ -196,15 +199,25 @@ const CaptureScreenshotButton = () => {
     );
 
   return (
-    <Button type="button" size="lg" className="w-full" onClick={handleCaptureScreenshot}>
-      <Icon
-        name={['capturing', 'unsaved'].includes(captureState) ? 'X' : 'Camera'}
-        size={20}
-        className="mr-2"
-        strokeWidth={1.5}
-      />
-      <span>{['capturing', 'unsaved'].includes(captureState) ? 'Exit Capture Screenshot' : 'Capture Screenshot'}</span>
-    </Button>
+    <>
+      <Button type="button" size="lg" className="w-full" onClick={handleCaptureScreenshot}>
+        <Icon
+          name={['capturing', 'unsaved'].includes(captureState) ? 'X' : 'Camera'}
+          size={20}
+          className="mr-2"
+          strokeWidth={1.5}
+        />
+        <span>
+          {['capturing', 'unsaved'].includes(captureState) ? 'Exit Capture Screenshot' : 'Capture Screenshot'}
+        </span>
+      </Button>
+
+      {activeTab.id !== currentActiveTab && ['capturing', 'unsaved'].includes(captureState) && (
+        <Button type="button" variant="link" size="sm" className="w-full" onClick={handleGoToActiveTab}>
+          Go to active tab
+        </Button>
+      )}
+    </>
   );
 };
 

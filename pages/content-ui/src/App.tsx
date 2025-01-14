@@ -2,18 +2,8 @@ import { useEffect, useState } from 'react';
 
 import {
   Button,
-  cn,
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
   DialogCopy,
   Icon,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Textarea,
   Toaster,
   Tooltip,
@@ -25,6 +15,7 @@ import {
 import { annotationsRedoStorage, annotationsStorage, captureStateStorage } from '@extension/storage';
 import AnnotationContainer from './components/annotation/annotation-container';
 import { useViewportSize } from './hooks';
+import { createJsonFile } from './utils';
 
 export default function App() {
   const { toast } = useToast();
@@ -70,7 +61,25 @@ export default function App() {
 
   const handleOnCreate = async () => {
     // if success revert to idle state
-    await captureStateStorage.setCaptureState('idle');
+    // await captureStateStorage.setCaptureState('idle');
+
+    chrome.runtime.sendMessage({ type: 'GET_REQUESTS' }, response => {
+      console.log('Received requests:', response?.requests);
+      if (response?.requests?.length) {
+        const jsonFile = createJsonFile(response.requests.flat(), 'requests.json');
+
+        const formData = new FormData();
+        formData.append('requests', jsonFile);
+
+        if (screenshots) {
+          formData.append('screenshots', screenshots);
+        }
+
+        // Further processing...
+      } else {
+        console.error('No requests received or requests are not an array');
+      }
+    });
   };
 
   const handleOnClose = async () => {
@@ -145,6 +154,8 @@ export default function App() {
                       className="relative mt-2 w-full sm:absolute sm:bottom-6 sm:right-4 sm:mt-0 sm:w-[104px]"
                       onClick={() => {
                         toast({ variant: 'destructive', description: 'this ois an toast example' });
+
+                        handleOnCreate();
                       }}>
                       Create
                     </Button>
@@ -193,6 +204,7 @@ export default function App() {
                           className="w-full"
                           onClick={() => {
                             toast({ variant: 'destructive', description: 'this ois an toast example' });
+                            handleOnCreate();
                           }}>
                           Create
                         </Button>
