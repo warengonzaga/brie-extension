@@ -1,12 +1,12 @@
-import { parseHeaders } from './fetch-interceptor';
+import { parseHeaders } from '@src/utils';
 
 // XMLHttpRequest Interceptor
-export const interceptXHR = capturedRequests => {
+export const interceptXHR = () => {
   const originalOpen = XMLHttpRequest.prototype.open;
   const originalSend = XMLHttpRequest.prototype.send;
 
   XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-    this._requestDetails = { method, url, startTime: new Date().toISOString() };
+    this._requestDetails = { method, url, requestStart: new Date().toISOString() };
     return originalOpen.apply(this, [method, url, ...rest]);
   };
 
@@ -24,16 +24,26 @@ export const interceptXHR = capturedRequests => {
             .filter(line => line.includes(':'))
             .map(line => line.split(':').map(str => str.trim())),
         );
-        const req = {
-          ...this._requestDetails,
-          requestEnd: endTime,
-          status: this.status,
-          responseHeaders,
-          responseBody: this.responseText,
-        };
 
-        console.log(`[XHR] Intercepted request:`, req);
-        capturedRequests.push(req);
+        try {
+          window.postMessage(
+            {
+              type: 'ADD_RECORD',
+              payload: {
+                recordType: 'network',
+                source: 'client',
+                ...this._requestDetails,
+                requestEnd: endTime,
+                status: this.status,
+                responseHeaders,
+                responseBody: this.responseText,
+              },
+            },
+            '*',
+          );
+        } catch (error) {
+          console.log('[XHR] ', error);
+        }
       }
 
       if (originalOnReadyStateChange) {

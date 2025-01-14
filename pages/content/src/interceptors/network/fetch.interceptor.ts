@@ -1,36 +1,10 @@
-// Utility to extract query parameters
-export const extractQueryParams = url => {
-  try {
-    const params = new URL(url, window.location.origin).searchParams;
-    return Object.fromEntries(params.entries());
-  } catch (error) {
-    console.error('Error extracting query parameters:', error);
-    return {};
-  }
-};
-
-// Utility to parse headers
-export const parseHeaders = headers => {
-  const parsedHeaders = {};
-  headers.forEach((value, key) => {
-    parsedHeaders[key] = value;
-  });
-  return parsedHeaders;
-};
-
-// Utility to truncate large responses
-export const truncateResponse = responseBody => {
-  return typeof responseBody === 'string' && responseBody.length > 1000
-    ? responseBody.slice(0, 1000) + '... (truncated)'
-    : responseBody;
-};
+import { extractQueryParams, parseHeaders } from '@src/utils';
 
 // Fetch Interceptor
-export const interceptFetch = capturedRequests => {
+export const interceptFetch = () => {
   const originalFetch = window.fetch;
 
   window.fetch = async function (...args) {
-    console.log(`[Fetch] Intercepted args:`, args);
     const [url, options] = args;
     const startTime = new Date().toISOString();
 
@@ -61,21 +35,30 @@ export const interceptFetch = capturedRequests => {
         responseBody = 'Error parsing response body';
       }
 
-      const req = {
-        method,
-        url,
-        queryParams,
-        requestHeaders,
-        requestBody,
-        responseHeaders,
-        responseBody,
-        requestStart: startTime,
-        requestEnd: endTime,
-        status: response.status,
-      };
-
-      console.log(`[Fetch] Intercepted request:`, req);
-      capturedRequests.push(req);
+      try {
+        window.postMessage(
+          {
+            type: 'ADD_RECORD',
+            payload: {
+              recordType: 'network',
+              source: 'client',
+              method,
+              url,
+              queryParams,
+              requestHeaders,
+              requestBody,
+              responseHeaders,
+              responseBody,
+              requestStart: startTime,
+              requestEnd: endTime,
+              status: response.status,
+            },
+          },
+          '*',
+        );
+      } catch (error) {
+        console.log('[Fetch] ', error);
+      }
 
       return response;
     } catch (error) {

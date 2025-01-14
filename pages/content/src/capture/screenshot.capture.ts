@@ -11,14 +11,26 @@ let loadingMessage: HTMLDivElement | null = null;
 
 // --- Helper Functions ---
 
-// Function to draw the red boundary box on the full screenshot
-const addBoundaryBox = (canvas: HTMLCanvasElement, x: number, y: number, width: number, height: number) => {
+const addBoundaryBox = (
+  canvas: HTMLCanvasElement,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  scaleFactor: number,
+) => {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
+  // Adjust coordinates and dimensions by the scale factors
+  const scaledX = x * scaleFactor;
+  const scaledY = y * scaleFactor;
+  const scaledWidth = width * scaleFactor;
+  const scaledHeight = height * scaleFactor;
+
   ctx.strokeStyle = 'red';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(x, y, width, height);
+  ctx.lineWidth = 4;
+  ctx.strokeRect(scaledX, scaledY, scaledWidth, scaledHeight);
 };
 
 // Function to crop the selected area
@@ -153,10 +165,8 @@ const hideLoadingMessage = () => {
 };
 
 // Clean up all temporary elements
-const cleanup = () => {
+export const cleanup = () => {
   isSelecting = false;
-
-  console.log('cleen up', { isSelecting });
 
   //   startX = 0;
   //   startY = 0;
@@ -310,8 +320,6 @@ const onTouchEnd = async (e: TouchEvent) => {
 };
 
 const onTouchMove = (e: TouchEvent) => {
-  console.log('on tocuche move', e);
-
   const { clientX, clientY } = e.touches[0];
   positionInstructionsMessage(clientX, clientY);
 };
@@ -342,54 +350,116 @@ const showInstructions = () => {
 
 // --- Screenshot Capturing ---
 
-const captureScreenshots = async (x: number, y: number, width: number, height: number) => {
+const captureScreenshots = async (x, y, width, height) => {
   try {
     const scaleFactor = window.devicePixelRatio || 2;
 
-    // Capture full screenshot
-    const fullCanvas = await html2canvas(document.body, {
-      useCORS: true, // Ensures external resources don't block rendering
-      allowTaint: true, // Skips cross-origin restrictions
-      logging: false, // Disables debug logs
-      removeContainer: true, // Removes temporary DOM elements
-      scale: scaleFactor, // Increase the scale factor for higher resolution
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
-      x: window.scrollX,
-      y: window.scrollY,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      ignoreElements: element => {
-        // Exclude hidden elements or those with specific attributes
-        return (
-          element.hasAttribute('aria-hidden') || // Accessibility-related hidden elements
-          element.style.display === 'none' || // Elements explicitly hidden
-          element.style.visibility === 'hidden' || // Invisible elements
-          element.style.opacity === '0' // Fully transparent elements
-        );
-      },
+    // Check if Native Capture API is available
+    const isNativeCaptureAvailable = await new Promise(resolve => {
+      chrome.runtime.sendMessage({ action: 'checkNativeCapture' }, response => {
+        console.log('response', response);
+
+        resolve(response?.isAvailable || false);
+      });
     });
 
-    // Crop the selected area
-    const croppedCanvas = cropSelectedArea(fullCanvas, x, y, width, height, scaleFactor);
+    console.log('isNativeCaptureAvailable', isNativeCaptureAvailable);
 
-    // Add a red boundary box on the full screenshot
-    addBoundaryBox(fullCanvas, x, y, width, height);
+    if (isNativeCaptureAvailable) {
+      // Use Native Capture API through the background script
+      if (loadingMessage) loadingMessage.hidden = true;
 
-    // Convert canvases to images
-    let fullScreenshotImage = fullCanvas.toDataURL('image/png', 1.0);
-    let croppedScreenshotImage =
-      croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1.0) : null;
+      const dataUrl = await new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
+          console.log('Response from background script:', response);
 
-    saveAndNotify({ cropped: croppedScreenshotImage, full: fullScreenshotImage });
+          if (chrome.runtime.lastError) {
+            // Error from Chrome's runtime
+            console.log('chrome.runtime.lastError.message', chrome.runtime.lastError.message);
 
-    fullScreenshotImage = null;
-    croppedScreenshotImage = null;
-    croppedCanvas?.remove();
-    fullCanvas?.remove();
+            reject(new Error(chrome.runtime.lastError.message));
+          } else if (!response || !response.success) {
+            console.log('response?.message', response?.message);
+            // Error from the response itself
+            reject(new Error(response?.message || 'Failed to capture screenshot.'));
+          } else {
+            // Successfully received data URL
+            resolve(response.dataUrl);
+          }
+        });
+      });
+
+      console.log('Captured screenshot data URL:', dataUrl);
+
+      if (loadingMessage) loadingMessage.hidden = false;
+
+      // Process the screenshot from the Native Capture API
+      return processScreenshot(dataUrl, x, y, width, height, scaleFactor);
+    } else {
+      // Fallback to html2canvas logic
+      const fullCanvas = await html2canvas(document.body, {
+        useCORS: true, // Ensures external resources don't block rendering
+        allowTaint: true, // Skips cross-origin restrictions
+        logging: false, // Disables debug logs
+        removeContainer: true, // Removes temporary DOM elements
+        scale: scaleFactor, // Increase the scale factor for higher resolution
+        scrollX: window.scrollX,
+        scrollY: window.scrollY,
+        x: window.scrollX,
+        y: window.scrollY,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        // ignoreElements: element => {
+        //   // Exclude hidden elements or those with specific attributes
+
+        //   return (
+        //     // element.tagName === 'IFRAME' || // Ignore iframes
+        //     element.hasAttribute('aria-hidden') || // Accessibility-related hidden elements
+        //     element.style.display === 'none' || // Elements explicitly hidden
+        //     element.style.visibility === 'hidden' || // Invisible elements
+        //     element.style.opacity === '0' // Fully transparent elements
+        //   );
+        // },
+      });
+
+      return processScreenshot(fullCanvas.toDataURL('image/png', 1.0), x, y, width, height, scaleFactor);
+    }
   } catch (error) {
     console.error('Error during screenshot capture:', error);
   }
+};
+
+// Helper: Process the screenshot
+const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
+  const img = new Image();
+  img.src = dataUrl;
+  await new Promise(resolve => (img.onload = resolve));
+
+  const fullCanvas = document.createElement('canvas');
+  fullCanvas.width = img.width;
+  fullCanvas.height = img.height;
+
+  const ctx = fullCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  // Crop the selected area
+  const croppedCanvas = cropSelectedArea(fullCanvas, x, y, width, height, scaleFactor);
+
+  // Add a red boundary box on the full screenshot
+  addBoundaryBox(fullCanvas, x, y, width, height, scaleFactor);
+
+  // Convert canvases to images
+  let fullScreenshotImage: string | null = fullCanvas.toDataURL('image/png', 1.0);
+  let croppedScreenshotImage =
+    croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1.0) : null;
+
+  saveAndNotify({ cropped: croppedScreenshotImage, full: fullScreenshotImage });
+
+  // Cleanup
+  fullScreenshotImage = null;
+  croppedScreenshotImage = null;
+  croppedCanvas?.remove();
+  fullCanvas?.remove();
 };
 
 // Save and notify with screenshots
