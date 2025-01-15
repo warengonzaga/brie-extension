@@ -1,4 +1,4 @@
-export * from './dialog-copy';
+export * from './dialog-legacy';
 
 export * from './button';
 export * from './skeleton';

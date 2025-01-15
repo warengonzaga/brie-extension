@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Button } from './button';
 import { Icon } from './icon';
 
-export const DialogCopy = ({
+export const DialogLegacy = ({
   isMaximized,
   onClose,
   children,

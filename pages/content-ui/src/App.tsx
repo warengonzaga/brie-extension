@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import {
   Button,
-  DialogCopy,
+  DialogLegacy,
   Icon,
   Textarea,
   Toaster,
@@ -98,7 +98,7 @@ export default function App() {
       <div className="light relative">
         <main className="flex-1 md:container md:max-w-screen-xl">
           <div className="flex items-center justify-between gap-2 rounded bg-white">
-            <DialogCopy
+            <DialogLegacy
               isMaximized={isMaximized}
               onClose={handleOnClose}
               actions={
@@ -144,7 +144,7 @@ export default function App() {
                   {/* Footer Section */}
                   <div className="mt-4 flex justify-center">
                     <p className="max-w-lg select-none text-center text-xs text-gray-400">
-                      Brie also includes a fullscreen screenshot, along with browser and OS details, network requests,
+                      Brie will include a fullscreen screenshot, along with browser and OS details, network requests,
                       and console logs to assist developers in debugging effectively.
                     </p>
                   </div>
@@ -216,7 +216,7 @@ export default function App() {
                   </div>
                 )}
               </div>
-            </DialogCopy>
+            </DialogLegacy>
           </div>
         </main>
 

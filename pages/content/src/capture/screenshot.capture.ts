@@ -286,10 +286,16 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
   const height = Math.abs(clientY - startY);
 
   cleanup();
-  showLoadingMessage();
+
+  /**
+   * @todo
+   * Improve show loading message logic.
+   * Note: The message should not be visible on screenshots. Only for user.
+   */
+  // showLoadingMessage();
 
   await captureScreenshots(startX, startY, width, height);
-  hideLoadingMessage();
+  // hideLoadingMessage();
 };
 
 // Move the instructions message with the cursor
@@ -360,7 +366,7 @@ const captureScreenshots = async (x, y, width, height) => {
 
     if (isNativeCaptureAvailable) {
       // Use Native Capture API through the background script
-      if (loadingMessage) loadingMessage.hidden = true;
+      // if (loadingMessage) loadingMessage.hidden = true;
 
       const dataUrl = await new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
@@ -380,7 +386,7 @@ const captureScreenshots = async (x, y, width, height) => {
         });
       });
 
-      if (loadingMessage) loadingMessage.hidden = false;
+      // if (loadingMessage) loadingMessage.hidden = false;
 
       // Process the screenshot from the Native Capture API
       return processScreenshot(dataUrl, x, y, width, height, scaleFactor);

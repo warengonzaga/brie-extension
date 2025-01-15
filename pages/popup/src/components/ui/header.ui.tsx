@@ -2,12 +2,12 @@ import { Button, Icon } from '@extension/ui';
 import { navigateTo } from '@src/utils';
 
 export const Header = () => {
-  const logo = 'popup/logo_vertical.svg';
+  const logo = chrome.runtime.getURL('popup/logo_vertical.svg');
 
   return (
     <header className="mb-4 flex items-center justify-between">
       <button onClick={() => navigateTo('https://briehq.com')} className="flex items-center gap-x-2">
-        <img src={chrome.runtime.getURL(logo)} className="size-5" alt="Brie" />
+        <img src={logo} className="size-5" alt="Brie" />
         <h1 className="text-xl font-semibold">brie</h1>
       </button>
       <div className="flex items-center">
