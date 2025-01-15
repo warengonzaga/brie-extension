@@ -9,8 +9,7 @@ let dimensionLabel: HTMLDivElement;
 let message: HTMLDivElement | null = null;
 let loadingMessage: HTMLDivElement | null = null;
 
-// --- Helper Functions ---
-
+// Helper Functions
 const addBoundaryBox = (
   canvas: HTMLCanvasElement,
   x: number,
@@ -202,8 +201,7 @@ const positionInstructionsMessage = (clientX: number, clientY: number) => {
   message.style.top = `${clientY + offset}px`;
 };
 
-// --- Event Handlers ---
-
+// Event Handlers
 // Update the selection box dimensions
 const updateSelectionBox = (e: MouseEvent | TouchEvent) => {
   if (!isSelecting) return;
@@ -348,8 +346,7 @@ const showInstructions = () => {
   document.addEventListener('touchmove', onTouchMove);
 };
 
-// --- Screenshot Capturing ---
-
+// Screenshot Capturing
 const captureScreenshots = async (x, y, width, height) => {
   try {
     const scaleFactor = window.devicePixelRatio || 2;
@@ -442,17 +439,9 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
   addBoundaryBox(fullCanvas, x, y, width, height, scaleFactor);
 
   // Convert canvases to images
-  let fullScreenshotImage: string | null = fullCanvas.toDataURL('image/png', 1);
+  let fullScreenshotImage: string | null = fullCanvas.toDataURL('image/jpeg', 1);
   let croppedScreenshotImage =
-    croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1) : null;
-
-  // let croppedScreenshotImage = null;
-  // try {
-  //   croppedScreenshotImage =
-  //     croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1) : null;
-  // } catch (e) {
-  //   console.error('Failed to generate data URL:', e?.message);
-  // }
+    croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/jpeg', 1) : null;
 
   saveAndNotify({ cropped: croppedScreenshotImage, full: fullScreenshotImage });
 

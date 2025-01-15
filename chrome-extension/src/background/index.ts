@@ -1,72 +1,7 @@
 import 'webextension-polyfill';
-import { v4 as uuidv4 } from 'uuid';
 
 import { annotationsRedoStorage, annotationsStorage, captureStateStorage, captureTabStorage } from '@extension/storage';
-
-// Global map to store requests by requestId
-const recordsMap = new Map();
-
-// Add or merge requests
-const addOrMergeRecords = (record: any) => {
-  const uuid = uuidv4();
-
-  if (record.recordType === 'events') {
-    recordsMap.set(uuid, record);
-
-    return;
-  }
-
-  if (record.recordType !== 'network') {
-    recordsMap.set(uuid, { uuid, ...record });
-
-    return;
-  }
-
-  const { url, ...others } = record;
-
-  // IMPROVE: other events doesnot have an unique url, such cookies etc
-
-  // Ensure there's an existing entry for this requestId
-  if (!recordsMap.has(url)) {
-    recordsMap.set(url, { url, uuid, ...others });
-  }
-
-  // Add the requestBody data to the request
-  const recordData = recordsMap.get(url);
-
-  for (const [key, value] of Object.entries(others)) {
-    if (!recordData[key]) {
-      recordData[key] = value;
-    }
-
-    if (key === 'requestBody' && recordData[key] && recordData[key].raw) {
-      const rowRequestBody = recordData[key].raw;
-
-      if (!rowRequestBody.length) {
-        recordData[key]['parsed'] = null;
-        continue;
-      }
-
-      // Convert raw byte array to a string
-      const rawBytes = rowRequestBody[0].bytes;
-      const byteArray = new Uint8Array(rawBytes);
-
-      // Convert the byte array to a string (assuming UTF-8 encoding)
-      const decoder = new TextDecoder('utf-8');
-      const decodedBody = decoder.decode(byteArray);
-
-      // Now you can parse the body if it's JSON or handle it otherwise
-      try {
-        recordData[key]['parsed'] = JSON.parse(decodedBody);
-      } catch (e) {
-        console.log('[addOrMergeRecord] Error: ', e);
-
-        // If it's not JSON, just store the raw decoded string
-        // requestData[key].row = decodedBody;
-      }
-    }
-  }
-};
+import { addOrMergeRecords, getRecords } from '@src/utils';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
   const captureTabId = await captureTabStorage.getCaptureTabId();
@@ -101,7 +36,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
 });
 
 /**
- * do not use async/await for onMessage listeners
+ * NOTE: Do Not Use async/await in onMessage listeners
  */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'EXIT_CAPTURE') {
@@ -120,7 +55,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === 'GET_REQUESTS') {
-    sendResponse({ requests: Array.from(recordsMap.values()) });
+    sendResponse({ requests: getRecords() });
   }
 
   if (message.action === 'checkNativeCapture') {
@@ -131,7 +66,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Handle the async operation
     chrome.tabs.captureVisibleTab(
       null, // Current window
-      { format: 'png', quality: 80 },
+      { format: 'jpeg', quality: 100 },
       dataUrl => {
         if (chrome.runtime.lastError) {
           console.error('Error capturing screenshot:', chrome.runtime.lastError);

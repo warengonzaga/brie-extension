@@ -12,7 +12,7 @@ const Popup = () => {
   }, []);
 
   return (
-    <div className="light bg-background relative px-5 pb-7 pt-4">
+    <div className="light relative bg-background px-5 pb-5 pt-4">
       <header className="mb-4 flex items-center justify-between">
         <button onClick={() => navigateTo('https://briehq.com')} className="flex items-center gap-x-2">
           <img src={chrome.runtime.getURL(logo)} className="size-5" alt="Brie" />
@@ -34,7 +34,7 @@ const Popup = () => {
             size="icon"
             variant="ghost"
             className="hover:bg-slate-50 dark:hover:text-black"
-            onClick={() => navigateTo('https://app.briehq.com/settings?utm_source=extension')}>
+            onClick={() => navigateTo('https://app.discord.com/settings?utm_source=extension')}>
             <Icon name="DiscordLogoIcon" size={20} className="size-4" />
           </Button>
           <Button
@@ -49,6 +49,17 @@ const Popup = () => {
       </header>
 
       <CaptureScreenshotButton />
+
+      <div className="mt-4 text-center text-[10px] font-normal text-slate-600">
+        In beta.{' '}
+        <a
+          href="https://app.discord.com/settings?utm_source=extension"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-slate-900">
+          Report bugs or request features.
+        </a>
+      </div>
     </div>
   );
 };
