@@ -49,14 +49,6 @@ export const interceptConsole = () => {
       };
     }
 
-    // console.log('console logs events');
-
-    // Send the captured log to the background script or store it
-    // chrome.runtime.sendMessage({
-    //   type: 'ADD_RECORD',
-    //   data: logData, // In this case eventQueue is an array, use flat() on parse
-    // });
-
     window.postMessage(
       {
         type: 'ADD_RECORD',

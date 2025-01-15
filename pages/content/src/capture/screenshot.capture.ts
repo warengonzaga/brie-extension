@@ -357,13 +357,9 @@ const captureScreenshots = async (x, y, width, height) => {
     // Check if Native Capture API is available
     const isNativeCaptureAvailable = await new Promise(resolve => {
       chrome.runtime.sendMessage({ action: 'checkNativeCapture' }, response => {
-        console.log('response', response);
-
         resolve(response?.isAvailable || false);
       });
     });
-
-    console.log('isNativeCaptureAvailable', isNativeCaptureAvailable);
 
     if (isNativeCaptureAvailable) {
       // Use Native Capture API through the background script
@@ -371,8 +367,6 @@ const captureScreenshots = async (x, y, width, height) => {
 
       const dataUrl = await new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
-          console.log('Response from background script:', response);
-
           if (chrome.runtime.lastError) {
             // Error from Chrome's runtime
             console.log('chrome.runtime.lastError.message', chrome.runtime.lastError.message);
@@ -388,8 +382,6 @@ const captureScreenshots = async (x, y, width, height) => {
           }
         });
       });
-
-      console.log('Captured screenshot data URL:', dataUrl);
 
       if (loadingMessage) loadingMessage.hidden = false;
 
@@ -432,6 +424,7 @@ const captureScreenshots = async (x, y, width, height) => {
 // Helper: Process the screenshot
 const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
   const img = new Image();
+  img.crossOrigin = 'anonymous';
   img.src = dataUrl;
   await new Promise(resolve => (img.onload = resolve));
 
@@ -449,9 +442,17 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
   addBoundaryBox(fullCanvas, x, y, width, height, scaleFactor);
 
   // Convert canvases to images
-  let fullScreenshotImage: string | null = fullCanvas.toDataURL('image/png', 1.0);
+  let fullScreenshotImage: string | null = fullCanvas.toDataURL('image/png', 1);
   let croppedScreenshotImage =
-    croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1.0) : null;
+    croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1) : null;
+
+  // let croppedScreenshotImage = null;
+  // try {
+  //   croppedScreenshotImage =
+  //     croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/png', 1) : null;
+  // } catch (e) {
+  //   console.error('Failed to generate data URL:', e?.message);
+  // }
 
   saveAndNotify({ cropped: croppedScreenshotImage, full: fullScreenshotImage });
 

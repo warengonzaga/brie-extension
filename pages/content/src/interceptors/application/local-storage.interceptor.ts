@@ -12,11 +12,6 @@ export const interceptLocalStorage = () => {
       value: isNonProduction() ? value : redactSensitiveInfo(key, value),
     });
   }
-  console.log('localStorageData', localStorageData);
-  // chrome.runtime.sendMessage({
-  //   type: 'ADD_RECORD',
-  //   data: localStorageData, // In this case is an array, use flat() on parse
-  // });
 
   window.postMessage(
     {

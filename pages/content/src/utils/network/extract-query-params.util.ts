@@ -1,5 +1,5 @@
 // Utility to extract query parameters
-export const extractQueryParams = url => {
+export const extractQueryParams = (url: string): Record<string, string> => {
   try {
     const params = new URL(url, window.location.origin).searchParams;
     return Object.fromEntries(params.entries());
