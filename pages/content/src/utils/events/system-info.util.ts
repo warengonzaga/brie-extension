@@ -22,6 +22,13 @@ const getBatteryInfo = async (): Promise<{ charging: boolean; level: number }> =
   return { charging: false, level: 1 }; // Fallback if battery API is unavailable
 };
 
+const getBrowserZoomLevel = () => {
+  const pixelRatio = window.devicePixelRatio;
+  const zoomLevel = Math.round(devicePixelRatio * 100);
+
+  return { pixelRatio, zoomLevel };
+};
+
 const parseUserAgent = () => {
   const uaData = navigator.userAgentData || {};
   const userAgent = navigator.userAgent;
@@ -68,7 +75,7 @@ const parseUserAgent = () => {
   }
 
   return {
-    browser: { name: browserName, version: browserVersion },
+    browser: { name: browserName, version: browserVersion, ...getBrowserZoomLevel() },
     os: { name: osName, version: osVersion },
   };
 };

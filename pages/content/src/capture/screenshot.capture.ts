@@ -164,25 +164,31 @@ const hideLoadingMessage = () => {
 };
 
 // Clean up all temporary elements
-export const cleanup = () => {
-  isSelecting = false;
+export const cleanup = (): Promise<void> => {
+  return new Promise(resolve => {
+    isSelecting = false;
 
-  //   startX = 0;
-  //   startY = 0;
-  //   cancelled = true;
+    // Reset any necessary state
+    // startX = 0;
+    // startY = 0;
+    // cancelled = true;
 
-  overlay?.remove();
-  selectionBox?.remove();
-  dimensionLabel?.remove();
-  message?.remove();
-  loadingMessage?.remove();
+    overlay?.remove();
+    selectionBox?.remove();
+    dimensionLabel?.remove();
+    message?.remove();
+    loadingMessage?.remove();
 
-  document.body.style.overflow = '';
-  document.removeEventListener('keydown', onKeyDown);
-  document.removeEventListener('mousemove', updateSelectionBox);
-  //   document.removeEventListener('mouseup', onMouseUp);
-  document.removeEventListener('touchmove', updateSelectionBox);
-  document.removeEventListener('touchend', onTouchEnd);
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKeyDown);
+    document.removeEventListener('mousemove', updateSelectionBox);
+    // document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('touchmove', updateSelectionBox);
+    document.removeEventListener('touchend', onTouchEnd);
+
+    // Resolve the promise to signal that cleanup is complete
+    resolve();
+  });
 };
 
 // Position the instructions message dynamically
@@ -285,7 +291,7 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
   const width = Math.abs(clientX - startX);
   const height = Math.abs(clientY - startY);
 
-  cleanup();
+  await cleanup();
 
   /**
    * @todo

@@ -20,28 +20,22 @@ import { createJsonFile } from './utils';
 export default function App() {
   const { toast } = useToast();
   const { width } = useViewportSize();
-  const [screenshots, setScreenshots] = useState<{ name: string; image: string }[]>();
 
+  const [screenshots, setScreenshots] = useState<{ name: string; image: string }[]>();
   const [isMaximized, setIsMaximized] = useState(false);
   const [showRightSection, setShowRightSection] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleToggleMaximize = () => setIsMaximized(!isMaximized);
-
   const handleToggleRightSection = () => setShowRightSection(!showRightSection);
 
   useEffect(() => {
-    console.log('content ui loaded');
-
     const handleDisplayModal = async event => {
-      console.log('DISPLAY_MODAL Listener', event.detail);
-      console.log('event.detail.screenshots', event.detail.screenshots);
-
       setScreenshots(event.detail.screenshots); // Extract data from the event
       await captureStateStorage.setCaptureState('unsaved');
     };
 
     const handleOnCloseModal = () => {
-      console.log('CLOSE_MODAL Listener');
       setScreenshots(null);
 
       annotationsStorage.setAnnotations([]);
@@ -60,33 +54,58 @@ export default function App() {
   }, []);
 
   const handleOnCreate = async () => {
+    setIsLoading(true);
     // if success revert to idle state
     // await captureStateStorage.setCaptureState('idle');
 
-    chrome.runtime.sendMessage({ type: 'GET_REQUESTS' }, response => {
-      console.log('Received requests:', response?.requests);
-      if (response?.requests?.length) {
-        const jsonFile = createJsonFile(response.requests.flat(), 'requests.json');
+    /**
+     * @todo
+     * 1. Request 1: create multi form object which contains:
+     *  - screenshots: full and cropped
+     *  - create records.json file
+     *  - send request to BE
+     * Return: slice id
+     *
+     * 2. Request 2: Use slice id to update, which is multi as well,
+     *  - send comment
+     *  - attachments
+     *  - folder details
+     *
+     */
 
-        const formData = new FormData();
-        formData.append('requests', jsonFile);
+    try {
+      chrome.runtime.sendMessage({ type: 'GET_REQUESTS' }, response => {
+        console.log('Received requests:', response?.requests);
+        if (response?.requests?.length) {
+          const jsonFile = createJsonFile(response.requests.flat(), 'requests.json');
 
-        if (screenshots) {
-          formData.append('screenshots', screenshots);
+          const formData = new FormData();
+          formData.append('requests', jsonFile);
+
+          if (screenshots) {
+            formData.append('screenshots', screenshots);
+          }
+
+          toast({ description: 'The bug report has been created and opened in a new tab.' });
+
+          // Further processing...
+        } else {
+          toast({ variant: 'destructive', description: 'Apologies, no data was captured. Please try again later.' });
+
+          console.error('[OnCreate] No requests received or requests are not an array');
         }
-
-        // Further processing...
-      } else {
-        console.error('No requests received or requests are not an array');
-      }
-    });
+      });
+    } catch (e) {
+      console.error('[OnCreate] ', e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleOnClose = async () => {
+  const handleOnClose = () => {
     setScreenshots(null);
 
-    await captureStateStorage.setCaptureState('idle');
-
+    captureStateStorage.setCaptureState('idle');
     annotationsStorage.setAnnotations([]);
     annotationsRedoStorage.setAnnotations([]);
   };
@@ -152,11 +171,9 @@ export default function App() {
                   {!showRightSection && (
                     <Button
                       className="relative mt-2 w-full sm:absolute sm:bottom-6 sm:right-4 sm:mt-0 sm:w-[104px]"
-                      onClick={() => {
-                        toast({ variant: 'destructive', description: 'this ois an toast example' });
-
-                        handleOnCreate();
-                      }}>
+                      onClick={handleOnCreate}
+                      loading={isLoading}
+                      disabled={isLoading}>
                       Create
                     </Button>
                   )}
@@ -200,12 +217,7 @@ export default function App() {
                           </Tooltip>
                         </div>
 
-                        <Button
-                          className="w-full"
-                          onClick={() => {
-                            toast({ variant: 'destructive', description: 'this ois an toast example' });
-                            handleOnCreate();
-                          }}>
+                        <Button className="w-full" onClick={handleOnCreate} loading={isLoading} disabled={isLoading}>
                           Create
                         </Button>
                       </div>

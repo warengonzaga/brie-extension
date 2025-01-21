@@ -1,6 +1,13 @@
 import 'webextension-polyfill';
+import { v4 as uuidv4 } from 'uuid';
 
-import { annotationsRedoStorage, annotationsStorage, captureStateStorage, captureTabStorage } from '@extension/storage';
+import {
+  annotationsRedoStorage,
+  annotationsStorage,
+  captureStateStorage,
+  captureTabStorage,
+  userUUIDStorage,
+} from '@extension/storage';
 import { addOrMergeRecords, getRecords } from '@src/utils';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
@@ -79,6 +86,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   return true; // Keep the connection open for async handling
+});
+
+chrome.runtime.onInstalled.addListener(async details => {
+  if (details.reason === 'install') {
+    /**
+     * Set unique identifier for the user
+     * to store reported bugs when no account
+     */
+    const userUuid = await userUUIDStorage.get();
+    if (!userUuid) await userUUIDStorage.update(uuidv4());
+
+    // Open a welcome page
+    // await chrome.tabs.create({ url: 'welcome.html' });
+  }
 });
 
 // Listener for onCompleted

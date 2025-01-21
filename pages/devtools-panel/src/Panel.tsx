@@ -1,7 +1,8 @@
 import '@src/Panel.css';
+import type { ComponentPropsWithoutRef } from 'react';
+
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
 import { themeStorage } from '@extension/storage';
-import type { ComponentPropsWithoutRef } from 'react';
 
 const Panel = () => {
   const theme = useStorage(themeStorage);

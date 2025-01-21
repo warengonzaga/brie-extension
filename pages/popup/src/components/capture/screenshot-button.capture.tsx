@@ -1,21 +1,19 @@
-import { captureStateStorage, captureTabStorage } from '@extension/storage';
-import { Alert, AlertDescription, AlertTitle, Button, Icon } from '@extension/ui';
 import { useCallback, useEffect, useState } from 'react';
 
+import { useStorage } from '@extension/shared';
+import { captureStateStorage, captureTabStorage } from '@extension/storage';
+import { Alert, AlertDescription, AlertTitle, Button, Icon } from '@extension/ui';
+
 export const CaptureScreenshotButton = () => {
-  const [captureState, setCaptureState] = useState('idle');
+  const captureState = useStorage(captureStateStorage);
+  const captureTabId = useStorage(captureTabStorage);
+
   const [activeTab, setActiveTab] = useState({ id: null, url: '' });
   const [currentActiveTab, setCurrentActiveTab] = useState<number>();
 
   useEffect(() => {
     const initializeState = async () => {
-      const [state, tabId] = await Promise.all([
-        captureStateStorage.getCaptureState(),
-        captureTabStorage.getCaptureTabId(),
-      ]);
-
-      setCaptureState(state);
-      setActiveTab(prev => ({ ...prev, id: tabId }));
+      setActiveTab(prev => ({ ...prev, id: captureTabId }));
 
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -37,14 +35,13 @@ export const CaptureScreenshotButton = () => {
     window.addEventListener('keydown', handleEscapeKey);
 
     return () => window.removeEventListener('keydown', handleEscapeKey);
-  }, [captureState]);
+  }, [captureState, captureTabId]);
 
   const updateCaptureState = useCallback(async state => {
     await captureStateStorage.setCaptureState(state);
-    setCaptureState(state);
   }, []);
 
-  const updateActiveTab = useCallback(async tabId => {
+  const updateActiveTab = useCallback(async (tabId: number) => {
     await captureTabStorage.setCaptureTabId(tabId);
     setActiveTab(prev => ({ ...prev, id: tabId }));
   }, []);
