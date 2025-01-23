@@ -1,12 +1,13 @@
-import type { IssuePriority, IssueStatus, IssueType } from '../constants';
-import type { IProject } from './project.interface';
-import type { ISpace } from './space.interface';
-import type { IUser } from './user.interface';
+import type { SlicePriority, SliceStatus, SliceType } from '../constants';
+import type { Workspace } from './workspace.interface';
+import type { Space } from './space.interface';
+import type { User } from './user.interface';
+import type { Organization } from './organization.interface';
 
-export interface IIssue {
-  assignee: IUser | null;
+export interface Slice {
+  assignee: User | null;
   assigneeId: string | null;
-  reporter: IUser;
+  reporter: User;
   reporterId: string;
   id: string;
   externalId: string;
@@ -18,18 +19,18 @@ export interface IIssue {
   summary: string;
   description: string | null;
   slug: string | null;
-  customer: IUser;
-  customerId: string;
-  project: IProject;
-  projectId: string;
+  organization: Organization;
+  organizationId: string;
+  workspace: Workspace;
+  workspaceId: string;
   isFlagged: boolean;
   labels: any[];
   epicId: string | null;
-  type: IssueType;
-  status: IssueStatus;
-  priority: IssuePriority | null;
+  type: SliceType;
+  status: SliceStatus;
+  priority: SlicePriority | null;
   spaceId: string;
-  space: ISpace;
+  space: Space;
   notes?: string;
   attachments: {
     name: string;

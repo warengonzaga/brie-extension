@@ -1,4 +1,4 @@
-export enum IssuePriority {
+export enum SlicePriority {
   LOW = 'LOW',
   LOWEST = 'LOWEST',
   HIGH = 'HIGH',

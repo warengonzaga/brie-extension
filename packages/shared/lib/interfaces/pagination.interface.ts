@@ -1,6 +1,6 @@
 import type { OrderBy } from './query-filter.interface';
 
-export interface IPagination {
+export interface Pagination {
   limit: number;
   take: number;
   order?: OrderBy;
@@ -10,7 +10,7 @@ export interface IPagination {
   start?: string;
   end?: string;
   favorite?: boolean;
-  projectId?: string;
+  workspaceId?: string;
   spaceId?: string;
   status?: string;
   priority?: string;

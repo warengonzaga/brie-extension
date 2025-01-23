@@ -1,6 +1,6 @@
-import type { IIssue, IProject } from '.';
+import type { Slice, Workspace } from '.';
 
-export interface ISpace {
+export interface Space {
   id: string;
   externalId: string | null;
   internalId: number | null;
@@ -10,7 +10,7 @@ export interface ISpace {
   name: string;
   metadata: string | null;
   description: string | null;
-  projectId: string;
-  project: IProject;
-  issues: IIssue;
+  workspaceId: string;
+  workspace: Workspace;
+  slices: Slice[];
 }

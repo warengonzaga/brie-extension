@@ -1,21 +1,21 @@
 import type { AuthMethod } from '../constants';
 
-export interface IAuthState {
-  user: IUser;
-  tokens: ITokens;
+export interface AuthState {
+  user: User;
+  tokens: Tokens;
 }
 
-export interface ITokens {
+export interface Tokens {
   accessToken: string;
   refreshToken: string;
 }
 
-export interface IUserAndTokensResponse {
-  user: IUser;
-  tokens: ITokens;
+export interface UserAndTokensResponse {
+  user: User;
+  tokens: Tokens;
 }
 
-export interface IUser {
+export interface User {
   id: string;
   createdAt: Date;
   updatedAt: Date;

@@ -1,4 +1,4 @@
-export * from './issues';
+export * from './slices';
 
 export * from './auth-method.enum';
 export * from './plan.enum';

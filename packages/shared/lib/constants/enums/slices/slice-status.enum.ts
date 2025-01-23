@@ -1,4 +1,4 @@
-export enum IssueStatus {
+export enum SliceStatus {
   CREATED = 'CREATED',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',

@@ -1,7 +1,7 @@
 import type { Plan } from '../constants';
-import type { ISubscription } from './subscription.interface';
+import type { Subscription } from './subscription.interface';
 
-export interface ICustomer {
+export interface Organization {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -11,7 +11,7 @@ export interface ICustomer {
   addresses: any[];
   logo?: string;
   subscriptionId: string;
-  subscription: ISubscription;
+  subscription: Subscription;
   defaultPaymentMethodId?: string;
   ownerId: string;
   plan: Plan;

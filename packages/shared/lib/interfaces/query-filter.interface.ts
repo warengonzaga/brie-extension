@@ -1,4 +1,4 @@
-export interface IQueryFilter {
+export interface QueryFilter {
   limit: number;
   take: number;
   order: OrderBy;

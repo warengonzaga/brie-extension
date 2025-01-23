@@ -1,4 +1,4 @@
-export enum IssueType {
+export enum SliceType {
   TASK = 'TASK',
   ISSUE = 'ISSUE',
 }

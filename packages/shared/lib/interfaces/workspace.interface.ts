@@ -1,7 +1,7 @@
-import type { ISpace } from './space.interface';
-import type { IIssue } from './issue.interface';
+import type { Space } from './space.interface';
+import type { Slice } from './slice.interface';
 
-export interface IProject {
+export interface Workspace {
   externalId: string;
   id: string;
   key: string | null;
@@ -13,8 +13,8 @@ export interface IProject {
   avatarId: string | null;
   description: string | null;
   metadata: string | null;
-  customerId: string;
-  issues: IIssue[];
+  organizationId: string;
+  slices: Slice[];
   isFavorite: boolean;
-  spaces: ISpace[];
+  spaces: Space[];
 }
