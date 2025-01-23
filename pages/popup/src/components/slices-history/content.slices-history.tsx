@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 
 import { Button, Icon, Separator } from '@extension/ui';
 import { navigateTo } from '@src/utils';
+import { useAppSelector } from '@extension/store';
 
 export const SlicesHistoryContent = ({
   onBack,
@@ -12,6 +13,8 @@ export const SlicesHistoryContent = ({
   onDelete: (id: string) => void;
   onDeleteAll: () => void;
 }) => {
+  const filters = useAppSelector(state => state.issuesReducer.filters);
+
   return (
     <div>
       {/* Top Bar */}
@@ -38,6 +41,8 @@ export const SlicesHistoryContent = ({
       </p>
 
       <Separator className="inset-x-0 h-px bg-gray-900/5 dark:bg-gray-800" />
+
+      {JSON.stringify(filters, null, 2)}
 
       {/* Cards */}
       <div className="mt-2 space-y-2">

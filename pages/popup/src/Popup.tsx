@@ -2,6 +2,7 @@ import '@src/Popup.css';
 import { useState } from 'react';
 
 import { withErrorBoundary, withSuspense } from '@extension/shared';
+import { store, ReduxProvider } from '@extension/store';
 
 import { SlicesHistoryButton, SlicesHistoryContent } from './components/slices-history';
 import { CaptureScreenshotButton } from './components/capture';
@@ -21,18 +22,20 @@ const Popup = () => {
   };
 
   return (
-    <div className="light relative bg-background px-5 pb-5 pt-4">
-      {showSlicesHistory ? (
-        <SlicesHistoryContent onBack={handleOnBack} onDelete={handleOnDelete} onDeleteAll={handleOnDeleteAll} />
-      ) : (
-        <>
-          <Header />
-          <CaptureScreenshotButton />
-          <SlicesHistoryButton onClick={() => setShowSlicesHistory(true)} />
-          <BetaNotifier />
-        </>
-      )}
-    </div>
+    <ReduxProvider store={store}>
+      <div className="light bg-background relative px-5 pb-5 pt-4">
+        {showSlicesHistory ? (
+          <SlicesHistoryContent onBack={handleOnBack} onDelete={handleOnDelete} onDeleteAll={handleOnDeleteAll} />
+        ) : (
+          <>
+            <Header />
+            <CaptureScreenshotButton />
+            <SlicesHistoryButton onClick={() => setShowSlicesHistory(true)} />
+            <BetaNotifier />
+          </>
+        )}
+      </div>
+    </ReduxProvider>
   );
 };
 
