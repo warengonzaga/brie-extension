@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import type { ISubscription } from '@extension/shared';
+import type { Subscription } from '@extension/shared';
 
 import { baseQueryWithReauth } from '../../services';
 
@@ -9,7 +9,7 @@ export const subscriptionsAPI = createApi({
   tagTypes: ['SUBSCRIPTIONS'],
   baseQuery: baseQueryWithReauth,
   endpoints: build => ({
-    getSubscriptionById: build.query<ISubscription, { id: string }>({
+    getSubscriptionById: build.query<Subscription, { id: string }>({
       providesTags: ['SUBSCRIPTIONS'],
       query: ({ id }) => ({
         url: `/subscriptions/${id}`,

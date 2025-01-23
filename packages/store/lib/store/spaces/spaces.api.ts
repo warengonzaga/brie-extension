@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import type { IPagination, ISpace } from '@extension/shared';
+import type { Pagination, Space } from '@extension/shared';
 
 import { baseQueryWithReauth } from '../../services';
 
@@ -9,7 +9,7 @@ export const spacesAPI = createApi({
   tagTypes: ['SPACES'],
   baseQuery: baseQueryWithReauth,
   endpoints: build => ({
-    createSpaces: build.mutation<ISpace[], Partial<any>>({
+    createSpaces: build.mutation<Space[], Partial<any>>({
       invalidatesTags: ['SPACES'],
       query: body => ({
         url: '/spaces',
@@ -18,7 +18,7 @@ export const spacesAPI = createApi({
       }),
     }),
 
-    getSpaces: build.query<{ items: ISpace[]; total: number }, IPagination>({
+    getSpaces: build.query<{ items: Space[]; total: number }, Pagination>({
       providesTags: ['SPACES'],
       query: params => ({
         url: '/spaces',

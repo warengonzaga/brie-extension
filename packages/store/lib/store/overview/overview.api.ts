@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import type { IPagination } from '@extension/shared';
+import type { Pagination } from '@extension/shared';
 
 import { baseQueryWithReauth } from '../../services';
 
@@ -9,7 +9,7 @@ export const overviewAPI = createApi({
   baseQuery: baseQueryWithReauth,
 
   endpoints: build => ({
-    getOverview: build.query<any, IPagination>({
+    getOverview: build.query<any, Pagination>({
       query: ({ limit, take, start, end }) => ({
         url: '/overview',
         params: { limit, take, start, end },

@@ -1,17 +1,17 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { IPagination } from '@extension/shared';
+import type { Pagination } from '@extension/shared';
 
-const initialState: { filters: Partial<IPagination> } = {
-  filters: {} as Partial<IPagination>,
+const initialState: { filters: Partial<Pagination> } = {
+  filters: {} as Partial<Pagination>,
 };
 
-export const issuesSlice = createSlice({
-  name: 'issues',
+export const workspacesSlice = createSlice({
+  name: 'workspaces',
   initialState,
   reducers: {
-    setFilters(state, action: PayloadAction<Partial<IPagination>>) {
+    setFilters(state, action: PayloadAction<Partial<Pagination>>) {
       state.filters = { ...state.filters, ...action.payload };
     },
     clearFilters(state, action: PayloadAction<string | undefined>) {
@@ -30,8 +30,8 @@ export const issuesSlice = createSlice({
         return;
       }
 
-      if (action.payload === 'projectId') {
-        delete state.filters.projectId;
+      if (action.payload === 'workspaceId') {
+        delete state.filters.workspaceId;
         return;
       }
 

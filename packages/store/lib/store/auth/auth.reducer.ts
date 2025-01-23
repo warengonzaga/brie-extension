@@ -1,12 +1,15 @@
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { IAuthState, ITokens, IUser } from '@extension/shared';
+import type { AuthState, Tokens, User, UserAndTokensResponse } from '@extension/shared';
+import { authTokensStorage } from '@extension/storage';
 
 import { userAPI } from '../user';
+import { authPublicAPI } from './auth-public.api';
 
-const initialState: IAuthState = {
-  user: {} as IUser,
-  tokens: {} as ITokens,
+const initialState: AuthState = {
+  user: {} as User,
+  tokens: {} as Tokens,
 };
 
 export const authSlice = createSlice({
@@ -14,7 +17,19 @@ export const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addMatcher(userAPI.endpoints.getUserDetails.matchFulfilled, (state, { payload }: any) => {
+    builder.addMatcher(
+      authPublicAPI.endpoints.loginGuest.matchFulfilled,
+      (state, { payload }: PayloadAction<UserAndTokensResponse>) => {
+        state.user = payload.user;
+        state.tokens = payload.tokens;
+
+        // const { organization } = payload.user;
+
+        authTokensStorage.setTokens(payload.tokens);
+      },
+    );
+
+    builder.addMatcher(userAPI.endpoints.getUserDetails.matchFulfilled, (state, { payload }: PayloadAction<User>) => {
       state.user = payload;
     });
   },

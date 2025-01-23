@@ -1,30 +1,31 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
-import { authReducer } from './auth';
-import { issuesPrivateAPI, issuesPublicAPI, issuesReducer } from './issues';
+import { authReducer, authPublicAPI } from './auth';
+import { slicesPrivateAPI, slicesPublicAPI, slicesReducer } from './slices';
 import { overviewAPI } from './overview';
-import { projectsPrivateAPI, projectsPublicAPI, projectsReducer } from './projects';
+import { workspacesPrivateAPI, workspacesPublicAPI, workspacesReducer } from './workspaces';
 import { spacesAPI } from './spaces';
 import { subscriptionsAPI } from './subscriptions';
 import { userAPI } from './user';
 
 const rootReducer = combineReducers({
+  [authPublicAPI.reducerPath]: authPublicAPI.reducer,
   authReducer,
 
   [userAPI.reducerPath]: userAPI.reducer,
 
   [overviewAPI.reducerPath]: overviewAPI.reducer,
 
-  [issuesPrivateAPI.reducerPath]: issuesPrivateAPI.reducer,
-  [issuesPublicAPI.reducerPath]: issuesPublicAPI.reducer,
-  issuesReducer,
+  [slicesPrivateAPI.reducerPath]: slicesPrivateAPI.reducer,
+  [slicesPublicAPI.reducerPath]: slicesPublicAPI.reducer,
+  slicesReducer,
 
   [spacesAPI.reducerPath]: spacesAPI.reducer,
 
-  [projectsPrivateAPI.reducerPath]: projectsPrivateAPI.reducer,
-  [projectsPublicAPI.reducerPath]: projectsPublicAPI.reducer,
-  projectsReducer,
+  [workspacesPrivateAPI.reducerPath]: workspacesPrivateAPI.reducer,
+  [workspacesPublicAPI.reducerPath]: workspacesPublicAPI.reducer,
+  workspacesReducer,
 
   [subscriptionsAPI.reducerPath]: subscriptionsAPI.reducer,
 });
@@ -36,10 +37,10 @@ const setupStore = () =>
       getDefaultMiddleware()
         .concat(userAPI.middleware)
         .concat(overviewAPI.middleware)
-        .concat(projectsPrivateAPI.middleware)
-        .concat(projectsPublicAPI.middleware)
-        .concat(issuesPrivateAPI.middleware)
-        .concat(issuesPublicAPI.middleware)
+        .concat(workspacesPrivateAPI.middleware)
+        .concat(workspacesPublicAPI.middleware)
+        .concat(slicesPrivateAPI.middleware)
+        .concat(slicesPublicAPI.middleware)
         .concat(spacesAPI.middleware)
         .concat(subscriptionsAPI.middleware),
   });
@@ -49,3 +50,17 @@ export const store = setupStore();
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof setupStore>;
 export type AppDispatch = AppStore['dispatch'];
+
+export const { useLazyGetUserDetailsQuery, useGetUserDetailsQuery } = userAPI;
+export const { useGetSubscriptionByIdQuery, useLazyGetSubscriptionByIdQuery } = subscriptionsAPI;
+export const { useCreateSpacesMutation, useGetSpacesQuery, useLazyGetSpacesQuery } = spacesAPI;
+export const { useGetWorkspacesQuery, useCreateWorkspaceMutation, useGetWorkspaceByIdQuery } = workspacesPrivateAPI;
+export const { useGetWorkspacePublicByIdQuery } = workspacesPublicAPI;
+export const { useGetSlicesQuery, useLazyGetSlicesQuery, useDeleteSliceByIdMutation, useCreateSliceMutation } =
+  slicesPrivateAPI;
+export const { useGetPublicSliceByIdQuery } = slicesPublicAPI;
+export const { useGetOverviewQuery, useLazyGetOverviewQuery } = overviewAPI;
+export const { useLoginGuestMutation } = authPublicAPI;
+
+// export const { setFilters, clearFilters } = slicesSlice.actions;
+// export const { setFilters, clearFilters } = workspacesSlice.actions;
