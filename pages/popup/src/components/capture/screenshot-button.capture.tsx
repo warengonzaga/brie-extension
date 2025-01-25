@@ -111,7 +111,7 @@ export const CaptureScreenshotButton = () => {
 
   const isInternalPage = activeTab.url.startsWith('about:') || activeTab.url.startsWith('chrome:');
 
-  if (isInternalPage) {
+  if (isInternalPage && captureState !== 'unsaved' && currentActiveTab !== activeTab.id) {
     return (
       <Alert className="text-center">
         <AlertDescription className="text-[12px]">Navigate to any website to start capturing bugs.</AlertDescription>
@@ -125,7 +125,7 @@ export const CaptureScreenshotButton = () => {
         <Alert className="text-center">
           <AlertTitle className="text-[14px]">Save or discard your changes</AlertTitle>
           <AlertDescription className="text-[12px]">
-            It seems like you have an unsaved draft open in another tab.
+            It seems like you have an unsaved draft open <br /> in another tab.
           </AlertDescription>
         </Alert>
 
