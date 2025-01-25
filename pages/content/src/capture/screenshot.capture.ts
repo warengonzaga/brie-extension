@@ -455,7 +455,7 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
   let croppedScreenshotImage =
     croppedCanvas.width && croppedCanvas.height ? croppedCanvas.toDataURL('image/jpeg', 1) : null;
 
-  saveAndNotify({ cropped: croppedScreenshotImage, full: fullScreenshotImage });
+  saveAndNotify({ primary: croppedScreenshotImage, secondary: fullScreenshotImage });
 
   // Cleanup
   fullScreenshotImage = null;
@@ -465,9 +465,11 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
 };
 
 // Save and notify with screenshots
-const saveAndNotify = ({ full, cropped }: { full: string; cropped: string | null }) => {
+const saveAndNotify = ({ secondary, primary }: { secondary: string; primary: string | null }) => {
   const event = new CustomEvent('DISPLAY_MODAL', {
-    detail: { screenshots: [...(cropped ? [{ name: 'cropped', image: cropped }] : []), { name: 'full', image: full }] },
+    detail: {
+      screenshots: [...(primary ? [{ name: 'primary', image: primary }] : []), { name: 'secondary', image: secondary }],
+    },
   });
   window.dispatchEvent(event);
 };

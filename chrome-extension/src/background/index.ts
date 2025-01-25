@@ -61,8 +61,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ status: 'success' });
   }
 
-  if (message.type === 'GET_REQUESTS') {
-    sendResponse({ requests: getRecords() });
+  if (message.type === 'GET_RECORDS') {
+    sendResponse({ records: getRecords() });
   }
 
   if (message.action === 'checkNativeCapture') {
