@@ -756,6 +756,11 @@ const AnnotationContainer = ({ attachments }: { attachments: { name: string; ima
 
   return (
     <div className="sm:px-4 lg:px-8">
+      {/* 
+        @todo: 
+         - add download image button w/ annotations
+         - add blur tool
+      */}
       <AnnotationSection canvasRef={canvasRef} undo={undo} redo={redo} />
 
       {actionMenuVisible && (

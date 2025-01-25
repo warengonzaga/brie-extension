@@ -1,111 +1,99 @@
-import { useEffect, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 
-import {
-  Button,
-  DialogLegacy,
-  Icon,
-  Textarea,
-  Toaster,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-  useToast,
-} from '@extension/ui';
-import { annotationsRedoStorage, annotationsStorage, captureStateStorage } from '@extension/storage';
+import { AuthMethod } from '@extension/shared';
+import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
+import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, useToast } from '@extension/ui';
+
 import AnnotationContainer from './components/annotation/annotation-container';
 import { useViewportSize } from './hooks';
-import { createJsonFile } from './utils';
+import { base64ToFile, createJsonFile } from './utils';
 
-export default function Content() {
+const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: { name: string; image: string }[] }) => {
   const { toast } = useToast();
   const { width } = useViewportSize();
-  const [screenshots, setScreenshots] = useState<{ name: string; image: string }[]>();
 
   const [isMaximized, setIsMaximized] = useState(false);
   const [showRightSection, setShowRightSection] = useState(true);
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
+
+  const { isLoading, isError, data: user } = useGetUserDetailsQuery();
+  const [createSlice] = useCreateSliceMutation();
+
+  const showRightSidebar = useMemo(() => {
+    if (user?.authMethod === AuthMethod.GUEST) return false;
+
+    return showRightSection;
+  }, [showRightSection, user?.authMethod]);
 
   const handleToggleMaximize = () => setIsMaximized(!isMaximized);
 
   const handleToggleRightSection = () => setShowRightSection(!showRightSection);
 
-  useEffect(() => {
-    const handleDisplayModal = async event => {
-      setScreenshots(event.detail.screenshots); // Extract data from the event
-      await captureStateStorage.setCaptureState('unsaved');
-    };
-
-    const handleOnCloseModal = () => {
-      setScreenshots(null);
-
-      annotationsStorage.setAnnotations([]);
-      annotationsRedoStorage.setAnnotations([]);
-    };
-
-    // Attach event listener
-    window.addEventListener('DISPLAY_MODAL', handleDisplayModal);
-    window.addEventListener('CLOSE_MODAL', handleOnCloseModal);
-
-    // Cleanup event listener on unmount
-    return () => {
-      window.removeEventListener('DISPLAY_MODAL', handleDisplayModal);
-      window.removeEventListener('CLOSE_MODAL', handleOnCloseModal);
-    };
-  }, []);
-
-  const handleOnCreate = async () => {
-    // if success revert to idle state
-    // await captureStateStorage.setCaptureState('idle');
-
-    /**
-     * @todo
-     * 1. Request 1: create multi form object which contains:
-     *  - screenshots: full and cropped
-     *  - create records.json file
-     *  - send request to BE
-     * Return: slice id
-     *
-     * 2. Request 2: Use slice id to update, which is multi as well,
-     *  - send comment
-     *  - attachments
-     *  - folder details
-     *
-     */
-
-    chrome.runtime.sendMessage({ type: 'GET_REQUESTS' }, response => {
-      console.log('Received requests:', response?.requests);
-      if (response?.requests?.length) {
-        const jsonFile = createJsonFile(response.requests.flat(), 'requests.json');
-
-        const formData = new FormData();
-        formData.append('requests', jsonFile);
-
-        if (screenshots) {
-          formData.append('screenshots', screenshots);
+  const getRecords = () => {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: 'GET_RECORDS' }, response => {
+        if (chrome.runtime.lastError) {
+          return reject(new Error(chrome.runtime.lastError.message));
         }
-
-        // Further processing...
-      } else {
-        console.error('No requests received or requests are not an array');
-      }
+        if (response?.records?.length) {
+          resolve(response.records);
+        } else {
+          reject(new Error('No records captured.'));
+        }
+      });
     });
   };
 
-  const handleOnClose = async () => {
-    setScreenshots(null);
+  const handleOnCreate = async () => {
+    setIsCreateLoading(true);
 
-    await captureStateStorage.setCaptureState('idle');
+    try {
+      const records: any = await getRecords();
 
-    annotationsStorage.setAnnotations([]);
-    annotationsRedoStorage.setAnnotations([]);
+      if (records?.length) {
+        const jsonFile = createJsonFile(records.flat(), 'records.json');
+
+        if (!jsonFile) {
+          toast({ variant: 'destructive', description: 'Failed to create records file. Please try again.' });
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('records', jsonFile);
+
+        const screenshotFiles = screenshots.map(({ name, image }) => base64ToFile(image, name));
+
+        screenshotFiles.forEach(file => {
+          formData.append(file.name, file);
+        });
+
+        const { data } = await createSlice(formData);
+        if (data?.id) {
+          toast({ description: 'The bug report has been created and opened in a new tab.' });
+
+          setTimeout(() => {
+            window?.open(`https://app.briehq.com/p/${data?.id}`, '_blank')?.focus();
+          }, 2000);
+
+          onClose();
+        } else {
+          toast({ variant: 'destructive', description: 'Failed to create slice. Please try again.' });
+        }
+      } else {
+        toast({ variant: 'destructive', description: 'No requests captured. Please try again later.' });
+      }
+    } catch (error) {
+      console.error('[OnCreate Error]:', error);
+      toast({ variant: 'destructive', description: 'An unexpected error occurred. Please try again.' });
+    } finally {
+      setIsCreateLoading(false);
+    }
   };
-
-  if (!screenshots?.length) return null;
 
   return (
     <DialogLegacy
       isMaximized={isMaximized}
-      onClose={handleOnClose}
+      onClose={onClose}
       actions={
         <>
           <Button size="icon" variant="secondary" onClick={handleToggleMaximize} type="button" className="size-6">
@@ -116,13 +104,15 @@ export default function Content() {
             )}
           </Button>
 
-          <Button size="icon" variant="secondary" onClick={handleToggleRightSection} type="button" className="size-6">
-            {showRightSection ? (
-              <Icon name="PanelRightCloseIcon" className="size-3.5" strokeWidth="1.5" />
-            ) : (
-              <Icon name="PanelLeftCloseIcon" className="size-3.5" strokeWidth="1.5" />
-            )}
-          </Button>
+          {user?.authMethod !== AuthMethod.GUEST && (
+            <Button size="icon" variant="secondary" onClick={handleToggleRightSection} type="button" className="size-6">
+              {showRightSidebar ? (
+                <Icon name="PanelRightCloseIcon" className="size-3.5" strokeWidth="1.5" />
+              ) : (
+                <Icon name="PanelLeftCloseIcon" className="size-3.5" strokeWidth="1.5" />
+              )}
+            </Button>
+          )}
         </>
       }>
       <div className="flex h-full flex-col md:flex-row">
@@ -130,7 +120,7 @@ export default function Content() {
 
         <div
           className={`flex ${
-            showRightSection ? 'sm:w-[70%]' : 'w-full'
+            showRightSidebar ? 'sm:w-[70%]' : 'w-full'
           } mt-10 flex-col justify-center bg-gray-50 px-4 pb-4 pt-5 sm:mt-0 sm:p-6`}>
           {/* Content Section */}
 
@@ -144,20 +134,18 @@ export default function Content() {
             </p>
           </div>
 
-          {!showRightSection && (
+          {!showRightSidebar && (
             <Button
               className="relative mt-2 w-full sm:absolute sm:bottom-6 sm:right-4 sm:mt-0 sm:w-[104px]"
-              onClick={() => {
-                toast({ variant: 'destructive', description: 'this ois an toast example' });
-
-                handleOnCreate();
-              }}>
+              onClick={handleOnCreate}
+              disabled={isCreateLoading}
+              loading={isCreateLoading}>
               Create
             </Button>
           )}
         </div>
 
-        {showRightSection && (
+        {showRightSidebar && (
           <div className="flex flex-col justify-between px-4 pb-4 pt-5 sm:w-[30%] sm:p-6">
             {/* Dropdown and Comment */}
             <div className="space-y-4 sm:mt-8">
@@ -197,10 +185,9 @@ export default function Content() {
 
                 <Button
                   className="w-full"
-                  onClick={() => {
-                    toast({ variant: 'destructive', description: 'this ois an toast example' });
-                    handleOnCreate();
-                  }}>
+                  onClick={handleOnCreate}
+                  disabled={isCreateLoading}
+                  loading={isCreateLoading}>
                   Create
                 </Button>
               </div>
@@ -213,4 +200,9 @@ export default function Content() {
       </div>
     </DialogLegacy>
   );
-}
+};
+
+const arePropsEqual = (prevProps, nextProps) =>
+  JSON.stringify(prevProps.screenshots[0].image) === JSON.stringify(nextProps.screenshots[0].image);
+
+export default memo(Content, arePropsEqual);
