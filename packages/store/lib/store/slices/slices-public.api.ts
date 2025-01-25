@@ -3,6 +3,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Slice } from '@extension/shared';
 import { BASE_URL } from '@extension/shared';
 
+import { attachmentUrlPath } from './slices-private.api';
+
 export const slicesPublicAPI = createApi({
   reducerPath: 'slices-public',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
@@ -16,7 +18,7 @@ export const slicesPublicAPI = createApi({
         labels: typeof slice.labels === 'string' ? JSON.parse(slice.labels) : slice.labels,
         attachments: slice.attachments.map(a => ({
           ...a,
-          preview: `${BASE_URL}/uploads/images/slices/${a.externalId}`,
+          preview: attachmentUrlPath(a),
         })),
       }),
     }),

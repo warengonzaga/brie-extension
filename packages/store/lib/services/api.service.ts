@@ -3,7 +3,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { Mutex } from 'async-mutex';
 import { toast } from 'react-hot-toast';
 
-import type { ITokens, IUserAndTokensResponse } from '@extension/shared';
+import type { Tokens, UserAndTokensResponse } from '@extension/shared';
 import { BASE_URL } from '@extension/shared';
 import { authTokensStorage } from '@extension/storage';
 
@@ -44,14 +44,14 @@ export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, Fetch
         const refreshResult = await refreshBaseQuery({ url: '/auth/refresh', method: 'POST' }, api, extraOptions);
 
         if (refreshResult?.data) {
-          await authTokensStorage.setTokens((refreshResult.data as IUserAndTokensResponse).tokens);
+          await authTokensStorage.setTokens((refreshResult.data as UserAndTokensResponse).tokens);
           // retry the initial query
           result = await accessBaseQuery(args, api, extraOptions);
         } else {
           toast.loading('Sorry, you will be logged off, because your login session has expired.');
 
           setTimeout(() => {
-            authTokensStorage.setTokens({} as ITokens);
+            authTokensStorage.setTokens({} as Tokens);
             // location.reload();
           }, 4000);
         }

@@ -5,6 +5,16 @@ import { BASE_URL } from '@extension/shared';
 
 import { baseQueryWithReauth } from '../../services';
 
+export const attachmentUrlPath = (a: Slice) => {
+  const uploadPaths = {
+    'image/jpeg': 'images/slices',
+    default: 'records',
+  };
+
+  const uploadPath = uploadPaths[a.type] || uploadPaths.default;
+  return `${BASE_URL}/uploads/${uploadPath}/${a.externalId}`;
+};
+
 export const slicesPrivateAPI = createApi({
   reducerPath: 'slices-private',
   baseQuery: baseQueryWithReauth,
@@ -24,13 +34,13 @@ export const slicesPrivateAPI = createApi({
           labels: typeof i.labels === 'string' ? JSON.parse(i.labels) : i.labels,
           attachments: i.attachments.map(a => ({
             ...a,
-            preview: `${BASE_URL}/uploads/images/slices/${a.externalId}`,
+            preview: attachmentUrlPath(a),
           })),
         })),
       }),
     }),
 
-    createSlice: build.mutation<Slice, Partial<Slice>>({
+    createSlice: build.mutation<Slice, Partial<{ primary: File; secondary: File; records: File }>>({
       invalidatesTags: ['SLICES'],
       query: body => ({
         url: '/slices',
