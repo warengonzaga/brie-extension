@@ -1,39 +1,36 @@
-import { Fragment, useMemo, useState } from 'react';
-import { format, isToday, parseISO } from 'date-fns';
+import { Fragment, useState } from 'react';
+import { format } from 'date-fns';
 
 import { Alert, AlertDescription, AlertTitle, Button, Icon, Separator } from '@extension/ui';
-import { useAppSelector, useGetSlicesQuery, useUser } from '@extension/store';
+import { useAppSelector, useDeleteSliceByIdMutation, useGetSlicesQuery, useUser } from '@extension/store';
 import type { Pagination } from '@extension/shared';
 import { AuthMethod, ITEMS_PER_PAGE } from '@extension/shared';
 
+import { useSlicesCreatedToday } from '@src/hooks';
 import { navigateTo } from '@src/utils';
 import { CardSkeleton } from './card-skeleton.slice-history';
 
-export const SlicesHistoryContent = ({
-  onBack,
-  onDelete,
-  onDeleteAll,
-}: {
-  onBack: () => void;
-  onDelete: (id: string) => void;
-  onDeleteAll: () => void;
-}) => {
+export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
   const user = useUser();
+  const totalSlicesCreatedToday = useSlicesCreatedToday();
   const filters = useAppSelector(state => state.slicesReducer.filters);
   const [pagination, setPagination] = useState<Pagination>({
     limit: 1,
     take: ITEMS_PER_PAGE,
   });
 
+  const [deleteSliceByExternalId, { isLoading: isDeleteSliceLoading }] = useDeleteSliceByIdMutation();
   const { isLoading, isError, data: slices } = useGetSlicesQuery({ ...pagination, ...filters });
 
-  const totalSlicesCreatedToday = useMemo(() => {
-    if (!slices?.items?.length) return 0;
-
-    return slices.items.filter(item => isToday(parseISO(item.createdAt))).length;
-  }, [slices?.items]);
-
   const previewScreenshotUrl = attachments => attachments.find(a => a?.name === 'primary')?.preview;
+
+  const onDeleteAll = () => {
+    // Handle delete all logic
+    console.log('All slices deleted');
+  };
+  const onDelete = async (externalId: string) => {
+    await deleteSliceByExternalId(externalId);
+  };
 
   return (
     <div>
@@ -57,7 +54,9 @@ export const SlicesHistoryContent = ({
         </h2>
 
         {user.fields?.authMethod === AuthMethod.GUEST && (
-          <p className="text-sm font-medium text-muted-foreground">{totalSlicesCreatedToday}/10 slices daily</p>
+          <p className="text-sm font-medium text-muted-foreground text-red-500">
+            {totalSlicesCreatedToday}/10 slices daily
+          </p>
         )}
       </div>
       <p className="mb-4 text-xs text-muted-foreground">
@@ -94,12 +93,17 @@ export const SlicesHistoryContent = ({
                 <div className="flex-1">
                   <button
                     className="max-w-[240px] truncate text-sm font-medium text-slate-700 hover:underline"
-                    onClick={() => navigateTo(`https://app.briehq.com/p/${item.id}`)}>
-                    {item.id}
+                    onClick={() => navigateTo(`https://app.briehq.com/s/${item.externalId}`)}>
+                    {item.externalId}
                   </button>
-                  <p className="text-xs text-muted-foreground">{format(item.createdAt, 'LLL dd, y HH:mm a')}</p>
+                  <p className="text-xs text-muted-foreground">{format(item.createdAt, 'LLL dd, y hh:mm a')}</p>
                 </div>
-                <Button variant="ghost" size="icon" className="text-red-500" onClick={() => onDelete('1')}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500"
+                  disabled={isDeleteSliceLoading}
+                  onClick={() => onDelete(item.externalId)}>
                   <Icon name="TrashIcon" className="size-3.5" />
                 </Button>
               </div>

@@ -1,15 +1,25 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { useSlicesCreatedToday } from '@src/hooks';
 
 import { useStorage } from '@extension/shared';
 import { captureStateStorage, captureTabStorage } from '@extension/storage';
 import { Alert, AlertDescription, AlertTitle, Button, Icon } from '@extension/ui';
+import { useUser } from '@extension/store';
 
 export const CaptureScreenshotButton = () => {
+  const totalSlicesCreatedToday = useSlicesCreatedToday();
+  const user = useUser();
   const captureState = useStorage(captureStateStorage);
   const captureTabId = useStorage(captureTabStorage);
 
   const [activeTab, setActiveTab] = useState({ id: null, url: '' });
   const [currentActiveTab, setCurrentActiveTab] = useState<number>();
+
+  const isCaptureScreenshotDisabled = useMemo(
+    () => totalSlicesCreatedToday > 10 && user?.fields?.authMethod === 'GUEST',
+    [totalSlicesCreatedToday, user?.fields?.authMethod],
+  );
 
   useEffect(() => {
     const initializeState = async () => {
@@ -148,7 +158,12 @@ export const CaptureScreenshotButton = () => {
 
   return (
     <>
-      <Button type="button" size="lg" className="w-full" onClick={handleCaptureScreenshot}>
+      <Button
+        type="button"
+        size="lg"
+        className="w-full disabled:cursor-not-allowed"
+        onClick={handleCaptureScreenshot}
+        disabled={isCaptureScreenshotDisabled}>
         <Icon
           name={['capturing', 'unsaved'].includes(captureState) ? 'X' : 'Camera'}
           size={20}
@@ -159,6 +174,12 @@ export const CaptureScreenshotButton = () => {
           {['capturing', 'unsaved'].includes(captureState) ? 'Exit Capture Screenshot' : 'Capture Screenshot'}
         </span>
       </Button>
+
+      {/* {isCaptureScreenshotDisabled && (
+        <p>
+          You’ve reached the issue limit for your plan. <a href="/pricing">Upgrade your plan</a> for unlimited issues.
+        </p>
+      )} */}
 
       {activeTab.id !== currentActiveTab && ['capturing', 'unsaved'].includes(captureState) && (
         <Button type="button" variant="link" size="sm" className="w-full" onClick={handleGoToActiveTab}>

@@ -71,23 +71,25 @@ export const interceptEvents = () => {
     trackEvent({ event: 'DOMContentLoaded', url: window.location.href });
   });
 
-  window.addEventListener('load', () => {
-    const systemInfo = getSystemInfo();
+  window.addEventListener('load', async () => {
+    const systemInfo = await getSystemInfo();
+
+    trackEvent({ event: 'PageLoaded' });
 
     trackEvent({
-      event: 'PageLoaded',
       ...systemInfo,
+      event: 'metadata',
       rowTimestamp: new Date().toISOString(),
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       url: document.location.href,
-      windowSize: { width: window.innerWidth, height: window.innerHeight },
-      screenSize: { width: window.screen.width, height: window.screen.height },
+      window: { width: window.innerWidth, height: window.innerHeight },
+      screen: { width: window.screen.width, height: window.screen.height },
     });
   });
 
-  window.addEventListener('beforeunload', () => {
-    trackEvent({ event: 'BeforeUnload', url: window.location.href });
-  });
+  // window.addEventListener('beforeunload', () => {
+  //   trackEvent({ event: 'BeforeUnload', url: window.location.href });
+  // });
 
   window.addEventListener('resize', () => {
     trackEvent({ event: 'Resize', size: { width: window.innerWidth, height: window.innerHeight } });

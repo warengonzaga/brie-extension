@@ -25,7 +25,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://app.discord.com/settings?utm_source=extension')}>
+          onClick={() => navigateTo('https://discord.gg/W9XZeWT8dM?utm_source=extension')}>
           <Icon name="DiscordLogoIcon" size={20} className="size-4" />
         </Button>
         <Button
@@ -33,7 +33,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://app.briehq.com?utm_source=extension')}>
+          onClick={() => navigateTo('https://briehq.com?utm_source=extension')}>
           <Icon name="House" size={20} className="size-4" strokeWidth={1.5} />
         </Button>
       </div>

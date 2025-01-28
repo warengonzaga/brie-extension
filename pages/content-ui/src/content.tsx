@@ -68,16 +68,17 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
         });
 
         const { data } = await createSlice(formData);
-        if (data?.id) {
+        if (data?.externalId) {
           toast({ description: 'The bug report has been created and opened in a new tab.' });
 
           setTimeout(() => {
-            window?.open(`https://app.briehq.com/p/${data?.id}`, '_blank')?.focus();
+            window?.open(`https://app.briehq.com/p/${data?.externalId}`, '_blank')?.focus();
           }, 2000);
 
           onClose();
         } else {
-          toast({ variant: 'destructive', description: 'Failed to create slice. Please try again.' });
+          // GUEST_DAILY_LIMIT and other errors
+          toast({ variant: 'destructive', description: data?.message || 'Failed to create slice. Please try again.' });
         }
       } else {
         toast({ variant: 'destructive', description: 'No requests captured. Please try again later.' });

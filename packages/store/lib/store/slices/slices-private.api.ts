@@ -51,8 +51,8 @@ export const slicesPrivateAPI = createApi({
 
     deleteSliceById: build.mutation<Slice, string>({
       invalidatesTags: ['SLICES'],
-      query: id => ({
-        url: `/slices/${id}`,
+      query: externalId => ({
+        url: `/slices/${externalId}`,
         method: 'DELETE',
       }),
     }),

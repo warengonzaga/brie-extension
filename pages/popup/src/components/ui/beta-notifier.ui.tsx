@@ -19,7 +19,7 @@ export const BetaNotifier = () => {
     <div className="mt-4 text-center text-[10px] font-normal text-slate-600">
       In beta.{' '}
       <a
-        href="https://app.discord.com/settings?utm_source=extension"
+        href="https://discord.gg/W9XZeWT8dM?utm_source=extension"
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-slate-900">

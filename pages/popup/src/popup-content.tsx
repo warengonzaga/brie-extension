@@ -5,7 +5,7 @@ import { CaptureScreenshotButton } from './components/capture';
 import { Header, BetaNotifier } from './components/ui';
 
 import { authTokensStorage, captureStateStorage, userUUIDStorage } from '@extension/storage';
-import { useLoginGuestMutation } from '@extension/store';
+import { useDeleteSliceByIdMutation, useLoginGuestMutation } from '@extension/store';
 import { useStorage } from '@extension/shared';
 import { Skeleton } from '@extension/ui';
 
@@ -25,17 +25,9 @@ export const PopupContent = () => {
     };
 
     initialGuestLogin();
-  }, []);
+  }, [loginGuest, tokens?.accessToken, uuid]);
 
   const handleOnBack = () => setShowSlicesHistory(false);
-  const handleOnDeleteAll = () => {
-    // Handle delete all logic
-    console.log('All slices deleted');
-  };
-  const handleOnDelete = (id: string) => {
-    // Handle delete all logic
-    console.log('All slices deleted');
-  };
 
   if (isLoading) {
     return (
@@ -64,7 +56,7 @@ export const PopupContent = () => {
   }
 
   return showSlicesHistory ? (
-    <SlicesHistoryContent onBack={handleOnBack} onDelete={handleOnDelete} onDeleteAll={handleOnDeleteAll} />
+    <SlicesHistoryContent onBack={handleOnBack} />
   ) : (
     <>
       <Header />
