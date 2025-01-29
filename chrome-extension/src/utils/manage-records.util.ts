@@ -1,8 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
+const restricted = ['extend.iife', 'briehq', 'fhfdkpfdkimboffigpggibbgggeimpfd'];
+const invalidRecord = (entity: string) => restricted.some(word => entity.includes(word));
+
 const recordsMap = new Map<string, any>();
 
-export type RecordType = 'events' | 'network';
+export type RecordType = 'events' | 'network' | 'console' | 'cookies';
 
 export interface Record {
   recordType: RecordType;
@@ -16,6 +19,16 @@ export interface Record {
 export const getRecords = () => Array.from(recordsMap.values());
 
 export const addOrMergeRecords = (record: Record): void => {
+  if (record.recordType === 'console' && invalidRecord(record.stackTrace.parsed)) {
+    return;
+  }
+
+  if (record.recordType === 'network' && invalidRecord(record?.url || '')) {
+    console.log('record', record);
+
+    return;
+  }
+
   const uuid = uuidv4();
 
   if (record.recordType === 'events') {

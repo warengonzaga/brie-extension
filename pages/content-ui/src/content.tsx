@@ -7,6 +7,7 @@ import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipT
 import AnnotationContainer from './components/annotation/annotation-container';
 import { useViewportSize } from './hooks';
 import { base64ToFile, createJsonFile } from './utils';
+import { getCanvasElement } from './utils/annotation';
 
 const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: { name: string; image: string }[] }) => {
   const { toast } = useToast();
@@ -61,7 +62,18 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
         const formData = new FormData();
         formData.append('records', jsonFile);
 
-        const screenshotFiles = screenshots.map(({ name, image }) => base64ToFile(image, name));
+        const canvas = getCanvasElement();
+
+        if (!canvas) {
+          toast({ variant: 'destructive', description: 'Failed to create records file. Please try again.' });
+          return;
+        }
+
+        const secondaryScreenshot = screenshots.find(s => s.name === 'secondary');
+        const primaryScreenshot = { image: canvas?.toDataURL('image/jpeg'), name: 'primary' };
+        const screenshotFiles = [primaryScreenshot, secondaryScreenshot].map(({ name, image }) =>
+          base64ToFile(image, name),
+        );
 
         screenshotFiles.forEach(file => {
           formData.append(file.name, file);
@@ -69,11 +81,11 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
 
         const { data } = await createSlice(formData);
         if (data?.externalId) {
-          toast({ description: 'The bug report has been created and opened in a new tab.' });
+          toast({ description: 'The report is ready and will open in a new tab.' });
 
           setTimeout(() => {
             window?.open(`https://app.briehq.com/p/${data?.externalId}`, '_blank')?.focus();
-          }, 2000);
+          }, 1000);
 
           onClose();
         } else {

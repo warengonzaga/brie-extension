@@ -466,6 +466,23 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
 
 // Save and notify with screenshots
 const saveAndNotify = ({ secondary, primary }: { secondary: string; primary: string | null }) => {
+  const timestamp = Date.now();
+
+  window.postMessage(
+    {
+      type: 'ADD_RECORD',
+      payload: {
+        type: 'event',
+        event: 'capture',
+        recordType: 'events',
+        domain: 'screenshot',
+        source: 'client',
+        timestamp,
+      },
+    },
+    '*',
+  );
+
   const event = new CustomEvent('DISPLAY_MODAL', {
     detail: {
       screenshots: [...(primary ? [{ name: 'primary', image: primary }] : []), { name: 'secondary', image: secondary }],

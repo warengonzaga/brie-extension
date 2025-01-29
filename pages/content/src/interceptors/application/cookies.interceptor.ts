@@ -1,21 +1,31 @@
 import { isNonProduction, redactSensitiveInfo } from '@src/utils';
 
+interface Cookie {
+  key: string;
+  value: string;
+}
+
 // Get all cookies
 export const interceptCookies = () => {
-  const cookies = document.cookie.split(';').reduce((ac, str) => {
+  const timestamp = Date.now();
+  const cookies: Cookie[] = document.cookie.split(';').reduce<Cookie[]>((ac, str) => {
     const [key, value] = str.split('=').map(s => s.trim());
 
     if (!key) return ac;
 
-    ac[key] = isNonProduction() ? value : redactSensitiveInfo(key, value);
+    // Add cookie as an object with key and value
+    ac.push({
+      key,
+      value: isNonProduction() ? value : redactSensitiveInfo(key, value),
+    });
 
     return ac;
-  }, {});
+  }, []);
 
   window.postMessage(
     {
       type: 'ADD_RECORD',
-      payload: { recordType: 'cookies', source: 'client', items: cookies },
+      payload: { timestamp, recordType: 'cookies', source: 'client', items: cookies },
     },
     '*',
   );

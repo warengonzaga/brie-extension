@@ -1,4 +1,5 @@
 const sensitiveKeywords = [
+  'authorization',
   'oai-sc',
   'access_token',
   'refresh_token',

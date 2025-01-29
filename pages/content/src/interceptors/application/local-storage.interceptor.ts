@@ -2,6 +2,7 @@ import { isNonProduction, redactSensitiveInfo } from '@src/utils';
 
 // Get all localStorage data
 export const interceptLocalStorage = () => {
+  const timestamp = Date.now();
   const localStorageData = [];
 
   for (let i = 0; i < localStorage.length; i++) {
@@ -16,7 +17,7 @@ export const interceptLocalStorage = () => {
   window.postMessage(
     {
       type: 'ADD_RECORD',
-      payload: { recordType: 'local-storage', source: 'client', items: localStorageData },
+      payload: { timestamp, recordType: 'local-storage', source: 'client', items: localStorageData },
     },
     '*',
   );

@@ -611,18 +611,6 @@ const AnnotationContainer = ({ attachments }: { attachments: { name: string; ima
     };
   }, []);
 
-  const getCurrentAttachmentsChanges = useCallback(() => {
-    const base64 = fabricRef?.current?.toDataURL();
-
-    // return attachments?.map((a: any) => {
-    //   if (a.name === selectedImage.name) {
-    //     return { name: a.name, image: base64 };
-    //   }
-
-    //   return a;
-    // });
-  }, [attachments]);
-
   const onChangeSelection = useCallback((options: any) => {
     // if no element is selected, return
     if (!options?.selected) {
@@ -668,85 +656,6 @@ const AnnotationContainer = ({ attachments }: { attachments: { name: string; ima
 
     setActionMenuVisible(true);
   }, []);
-
-  const onNext = async () => {
-    if (!projectId) {
-      toast({
-        variant: 'destructive',
-        description: 'Project or Room is not provided!',
-      });
-      return;
-    }
-
-    setNextIsLoading(true);
-
-    const summary = `Web site Issue ${moment().format('hh:mm MM/DD/YYYY')}`;
-
-    const formData = new FormData();
-
-    const attachmentsList: any = getCurrentAttachmentsChanges();
-
-    for (const a of attachmentsList) {
-      const response = await fetch(a.image);
-      const blob = await response.blob();
-
-      const annotatedImage = new File([blob], summary, {
-        type: 'image/png',
-      });
-
-      formData.append('attachments', annotatedImage);
-    }
-
-    formData.append('projectId', projectId);
-    // formData.append('spaceId', spaceId);
-    // formData.append('type', IssueType.ISSUE);
-    formData.append('summary', summary);
-    // formData.append('priority', IssuePriority.MEDIUM);
-
-    // const issue = get('issue');
-
-    // if (issue?.description) {
-    //   formData.append('description', issue.description);
-    // }
-
-    try {
-      // const result = await createIssue(formData as Partial<IIssue>);
-      const result = {} as any;
-
-      if ('error' in result) {
-        if ('data' in result.error) {
-          toast({ variant: 'destructive', description: (result.error as any).data.message });
-        } else {
-          toast({
-            variant: 'destructive',
-            description: "Unfortunately, we're unable to save your details, please try again later.",
-          });
-        }
-
-        return;
-      }
-
-      toast({ description: 'Issue was created successfully!' });
-
-      await annotationsStorage.setAnnotations([]);
-      await annotationsRedoStorage.setAnnotations([]);
-
-      // navigate(`/inspection/method/${projectId}?spaceId=${spaceId}`);
-
-      // close modal and redirect to the new created slice
-    } catch (e: any) {
-      if ('data' in e.error) {
-        toast({ variant: 'destructive', description: (e.error as any).data.message });
-      } else {
-        toast({
-          variant: 'destructive',
-          description: "Unfortunately, we're unable to save your details, please try again later.",
-        });
-      }
-    } finally {
-      setNextIsLoading(false);
-    }
-  };
 
   const handleOnRemove = () => {
     handleActiveElement({ value: 'delete' } as any);
