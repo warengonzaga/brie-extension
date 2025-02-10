@@ -1,0 +1,13 @@
+{
+  "extensionDescription": {
+    "description": "Опис розширення",
+    "message": "Повідомляйте про помилки швидше!"
+  },
+  "extensionName": {
+    "description": "Ім'я розширення",
+    "message": "Brie"
+  },
+  "loading": {
+    "message": "Завантажується..."
+  }
+}
