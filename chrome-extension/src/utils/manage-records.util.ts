@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const restricted = ['extend.iife', 'briehq', 'fhfdkpfdkimboffigpggibbgggeimpfd'];
+const restricted = ['briehq']; // 'extend.iife',  'kbmbnelnoppneadncmmkfikbcgmilbao'  Note: it blocks the logs
 const invalidRecord = (entity: string) => restricted.some(word => entity.includes(word));
 
-const recordsMap = new Map<string, any>();
+const tabRecordsMap = new Map<number, Map<string, any>>();
 
 export type RecordType = 'events' | 'network' | 'console' | 'cookies';
 
@@ -16,16 +16,27 @@ export interface Record {
   [key: string]: any;
 }
 
-export const getRecords = () => Array.from(recordsMap.values());
+export const getRecords = async (activeTabId: number): Promise<Record[]> => {
+  return activeTabId && tabRecordsMap.has(activeTabId) ? Array.from(tabRecordsMap.get(activeTabId)!.values()) : [];
+};
 
-export const addOrMergeRecords = (record: Record): void => {
-  if (record.recordType === 'console' && invalidRecord(record.stackTrace.parsed)) {
+export const addOrMergeRecords = async (activeTabId: number, record: Record): Promise<void> => {
+  if (!activeTabId) {
+    console.log('activeTabId is null');
     return;
   }
 
-  if (record.recordType === 'network' && invalidRecord(record?.url || '')) {
-    console.log('record', record);
+  // if (record.recordType === 'console' && invalidRecord(record.stackTrace.parsed)) {
+  //   console.log('record console', record);
+  //   return;
+  // }
 
+  if (!tabRecordsMap.has(activeTabId)) {
+    tabRecordsMap.set(activeTabId, new Map());
+  }
+  const recordsMap = tabRecordsMap.get(activeTabId)!;
+
+  if (record.recordType === 'network' && invalidRecord(record?.url || '')) {
     return;
   }
 

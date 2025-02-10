@@ -55,14 +55,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ status: 'success' });
   }
 
-  if (message.type === 'ADD_RECORD') {
-    // Merge fetch request data from content script
-    addOrMergeRecords(message.data);
-    sendResponse({ status: 'success' });
-  }
+  if (sender?.tab?.id) {
+    if (message.type === 'ADD_RECORD') {
+      // Merge fetch request data from content script
+      addOrMergeRecords(sender.tab.id, message.data);
+      sendResponse({ status: 'success' });
+    }
 
-  if (message.type === 'GET_RECORDS') {
-    sendResponse({ records: getRecords() });
+    if (message.type === 'GET_RECORDS') {
+      console.log('get records called,', sender.tab.id, getRecords(sender.tab.id));
+
+      getRecords(sender.tab.id).then(records => sendResponse({ records }));
+    }
+  } else {
+    console.log('[Background] - Add Records: No sender id');
   }
 
   if (message.action === 'checkNativeCapture') {
@@ -102,10 +108,18 @@ chrome.runtime.onInstalled.addListener(async details => {
   }
 });
 
+/**
+ * @todo
+ * there is an scenario when tabId is -1,
+ * but we know the requestId and we can use it to populate the right request data
+ *
+ * related to all 3 web req states
+ */
+
 // Listener for onCompleted
 chrome.webRequest.onCompleted.addListener(
   record => {
-    addOrMergeRecords({ recordType: 'network', source: 'background', ...record });
+    addOrMergeRecords(record.tabId, { recordType: 'network', source: 'background', ...record });
   },
   { urls: ['<all_urls>'] },
 );
@@ -113,7 +127,7 @@ chrome.webRequest.onCompleted.addListener(
 // Listener for onBeforeRequest
 chrome.webRequest.onBeforeRequest.addListener(
   record => {
-    addOrMergeRecords({ recordType: 'network', source: 'background', ...record });
+    addOrMergeRecords(record.tabId, { recordType: 'network', source: 'background', ...record });
   },
   { urls: ['<all_urls>'] },
   ['requestBody'],
@@ -122,7 +136,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 // Listener for onBeforeSendHeaders
 chrome.webRequest.onBeforeSendHeaders.addListener(
   record => {
-    addOrMergeRecords({ recordType: 'network', source: 'background', ...record });
+    addOrMergeRecords(record.tabId, { recordType: 'network', source: 'background', ...record });
   },
   { urls: ['<all_urls>'] },
   ['requestHeaders'],

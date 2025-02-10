@@ -50,7 +50,7 @@ const manifest = withSidePanel({
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
-  permissions: ['webRequest', 'storage', 'scripting', 'tabs', 'notifications', 'activeTab'],
+  permissions: ['webRequest', 'storage', 'tabs', 'activeTab'],
   options_page: 'options/index.html',
   background: {
     service_worker: 'background.iife.js',
@@ -68,7 +68,7 @@ const manifest = withSidePanel({
       }
     : {}),
   icons: {
-    128: 'brie-logo.png',
+    128: 'brie-icon-128x128.png',
   },
   content_scripts: [
     {
@@ -88,7 +88,7 @@ const manifest = withSidePanel({
   ...(activateDevToolsFeature ? { devtools_page: 'devtools/index.html' } : {}),
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.css', '*.svg', 'icon-128.png', 'icon-34.png', 'content/extend.iife.js'],
+      resources: ['*.js', '*.css', '*.svg', 'brie-icon-128x128', 'brie-logo.png', 'content/extend.iife.js'],
       matches: ['*://*/*'],
     },
   ],
