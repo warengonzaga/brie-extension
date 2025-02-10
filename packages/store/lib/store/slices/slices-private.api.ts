@@ -20,15 +20,16 @@ export const slicesPrivateAPI = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ['SLICE', 'SLICES'],
   endpoints: build => ({
-    getSlices: build.query<{ items: Slice[]; total: number; hasItems: boolean }, Pagination>({
+    getSlices: build.query<{ items: Slice[]; total: number; hasItems: boolean; totalToday: number }, Pagination>({
       providesTags: ['SLICES'],
       query: params => ({
         url: '/slices',
         params,
       }),
-      transformResponse: (response: { items: Slice[]; total: number; hasItems: boolean }) => ({
+      transformResponse: (response: { items: Slice[]; total: number; hasItems: boolean; totalToday: number }) => ({
         hasItems: response.hasItems,
         total: response.total,
+        totalToday: response.totalToday,
         items: response.items.map((i: Slice) => ({
           ...i,
           labels: typeof i.labels === 'string' ? JSON.parse(i.labels) : i.labels,

@@ -54,12 +54,12 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
         </h2>
 
         {user.fields?.authMethod === AuthMethod.GUEST && (
-          <p className="text-sm font-medium text-muted-foreground text-red-500">
+          <p className="text-muted-foreground text-sm font-medium text-red-500">
             {totalSlicesCreatedToday}/10 slices daily
           </p>
         )}
       </div>
-      <p className="mb-4 text-xs text-muted-foreground">
+      <p className="text-muted-foreground mb-4 text-xs">
         Slices are saved and automatically <span className="font-medium">deleted</span> after 7 days. There is a limit
         of 10 slices per day.
       </p>
@@ -75,7 +75,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
         </Alert>
       )}
 
-      {!isLoading && slices?.items?.length && (
+      {!isLoading && !!slices?.items?.length && (
         <div className="mt-2 space-y-2">
           {slices.items.map((item, idx) => (
             <Fragment key={item.id}>
@@ -96,7 +96,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
                     onClick={() => navigateTo(`https://app.briehq.com/s/${item.externalId}`)}>
                     {item.externalId}
                   </button>
-                  <p className="text-xs text-muted-foreground">{format(item.createdAt, 'LLL dd, y hh:mm a')}</p>
+                  <p className="text-muted-foreground text-xs">{format(item.createdAt, 'LLL dd, y hh:mm a')}</p>
                 </div>
                 <Button
                   variant="ghost"

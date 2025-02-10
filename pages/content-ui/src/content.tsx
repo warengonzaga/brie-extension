@@ -84,7 +84,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
           toast({ description: 'The report is ready and will open in a new tab.' });
 
           setTimeout(() => {
-            window?.open(`https://app.briehq.com/p/${data?.externalId}`, '_blank')?.focus();
+            window?.open(`https://app.briehq.com/s/${data?.externalId}`, '_blank')?.focus();
           }, 1000);
 
           onClose();
@@ -153,7 +153,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
               onClick={handleOnCreate}
               disabled={isCreateLoading}
               loading={isCreateLoading}>
-              Create
+              Capture & Share
             </Button>
           )}
         </div>
@@ -201,7 +201,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
                   onClick={handleOnCreate}
                   disabled={isCreateLoading}
                   loading={isCreateLoading}>
-                  Create
+                  Capture & Share
                 </Button>
               </div>
               <small className="select-none text-center text-xs text-gray-400">
