@@ -1,0 +1,13 @@
+{
+  "extensionDescription": {
+    "description": "Extension description",
+    "message": "Raportați și remediați erorile mai rapid"
+  },
+  "extensionName": {
+    "description": "Extension name",
+    "message": "Brie"
+  },
+  "loading": {
+    "message": "In procesare..."
+  }
+}

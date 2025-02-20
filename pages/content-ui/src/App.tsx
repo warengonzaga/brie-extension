@@ -1,23 +1,57 @@
-import { useEffect } from 'react';
-import { Button } from '@extension/ui';
-import { useStorage } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
+import { useEffect, useState } from 'react';
+
+import { Toaster, TooltipProvider } from '@extension/ui';
+import { store, ReduxProvider } from '@extension/store';
+import { annotationsRedoStorage, annotationsStorage, captureStateStorage } from '@extension/storage';
+
+import Content from './content';
 
 export default function App() {
-  const theme = useStorage(exampleThemeStorage);
+  const [screenshots, setScreenshots] = useState<{ name: string; image: string }[]>();
 
   useEffect(() => {
-    console.log('content ui loaded');
+    const handleDisplayModal = async event => {
+      setScreenshots(event.detail.screenshots); // Extract data from the event
+      await captureStateStorage.setCaptureState('unsaved');
+    };
+
+    // Attach event listener
+    window.addEventListener('DISPLAY_MODAL', handleDisplayModal);
+    window.addEventListener('CLOSE_MODAL', handleOnCloseModal);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener('DISPLAY_MODAL', handleDisplayModal);
+      window.removeEventListener('CLOSE_MODAL', handleOnCloseModal);
+    };
   }, []);
 
+  const handleOnCloseModal = async () => {
+    setScreenshots(null);
+
+    await captureStateStorage.setCaptureState('idle');
+
+    annotationsStorage.setAnnotations([]);
+    annotationsRedoStorage.setAnnotations([]);
+  };
+
+  // if (!screenshots?.length) return null;
+
   return (
-    <div className="flex items-center justify-between gap-2 rounded bg-blue-100 px-2 py-1">
-      <div className="flex gap-1 text-blue-500">
-        Edit <strong className="text-blue-700">pages/content-ui/src/app.tsx</strong> and save to reload.
-      </div>
-      <Button theme={theme} onClick={exampleThemeStorage.toggle}>
-        Toggle Theme
-      </Button>
-    </div>
+    <ReduxProvider store={store}>
+      <TooltipProvider>
+        <div className="light relative">
+          {screenshots?.length && (
+            <main className="flex-1 md:container md:max-w-screen-xl">
+              <div className="flex items-center justify-between gap-2 rounded bg-white">
+                <Content onClose={handleOnCloseModal} screenshots={screenshots} />
+              </div>
+            </main>
+          )}
+
+          <Toaster />
+        </div>
+      </TooltipProvider>
+    </ReduxProvider>
   );
 }

@@ -1,5 +1,8 @@
-import { toggleTheme } from '@src/toggleTheme';
+import { addRuntimeEventListeners, addWindowEventListeners } from './event-listeners';
+import { injectExtendScript } from './injected-scripts';
 
-console.log('content script loaded');
+injectExtendScript();
 
-void toggleTheme();
+addWindowEventListeners();
+
+addRuntimeEventListeners();
