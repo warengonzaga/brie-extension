@@ -1,0 +1,13 @@
+{
+  "extensionDescription": {
+    "description": "एक्सटेंशन विवरण",
+    "message": "बग की रिपोर्ट तेज़ी से करें!"
+  },
+  "extensionName": {
+    "description": "एक्सटेंशन नाम",
+    "message": "Brie"
+  },
+  "loading": {
+    "message": "लोड हो रहा है..."
+  }
+}

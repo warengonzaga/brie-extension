@@ -1,9 +1,11 @@
+import '@extension/ui/dist/global.css';
+
 import { createRoot } from 'react-dom/client';
 import App from '@src/App';
 import tailwindcssOutput from '../dist/tailwind-output.css?inline';
 
 const root = document.createElement('div');
-root.id = 'chrome-extension-boilerplate-react-vite-content-view-root';
+root.id = 'brie-root';
 
 document.body.append(root);
 

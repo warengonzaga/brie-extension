@@ -14,11 +14,14 @@ export default withPageConfig({
   publicDir: resolve(rootDir, 'public'),
   plugins: [isDev && makeEntryPointPlugin()],
   build: {
-    lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      formats: ['iife'],
-      name: 'ContentScript',
-      fileName: 'index',
+    rollupOptions: {
+      input: {
+        index: resolve(__dirname, 'src/index.ts'),
+        extend: resolve(__dirname, 'src/interceptors/index.ts'),
+      },
+      output: {
+        entryFileNames: '[name].iife.js',
+      },
     },
     outDir: resolve(rootDir, '..', '..', 'dist', 'content'),
   },
