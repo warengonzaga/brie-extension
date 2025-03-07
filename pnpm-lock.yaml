@@ -347,6 +347,7 @@ importers:
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.1
         version: 3.8.0(vite@5.4.9(@types/node@22.13.9)(sass@1.79.4)(terser@5.39.0))
+
       deepmerge:
         specifier: ^4.3.1
         version: 4.3.1
@@ -2130,6 +2131,9 @@ packages:
   '@types/node@22.13.9':
     resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
 
+  '@types/node@22.13.8':
+    resolution: {integrity: sha512-G3EfaZS+iOGYWLLRCEAXdWK9my08oHNZ+FHluRiggIYJPOXzhOiDgpVCUHaUvyIC5/fj7C/p637jdzC666AOKQ==}
+
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
@@ -3074,6 +3078,10 @@ packages:
 
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
+
+  enhanced-resolve@5.18.1:
+    resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
+    engines: {node: '>=10.13.0'}
 
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
@@ -5130,6 +5138,7 @@ packages:
 
   terser-webpack-plugin@5.3.14:
     resolution: {integrity: sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==}
+
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@swc/core': '*'
@@ -6099,12 +6108,14 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@laynezh/vite-plugin-lib-assets@0.5.26(vite@5.4.9(@types/node@22.13.9)(sass@1.79.4)(terser@5.39.0))':
+
     dependencies:
       escape-string-regexp: 4.0.0
       loader-utils: 3.3.1
       mrmime: 1.0.1
       semver: 7.7.1
       vite: 5.4.9(@types/node@22.13.9)(sass@1.79.4)(terser@5.39.0)
+
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
@@ -6905,6 +6916,10 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
+  '@types/node@22.13.8':
+    dependencies:
+      undici-types: 6.20.0
+
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/prop-types@15.7.14': {}
@@ -7028,10 +7043,12 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
+
   '@vitejs/plugin-react-swc@3.8.0(vite@5.4.9(@types/node@22.13.9)(sass@1.79.4)(terser@5.39.0))':
     dependencies:
       '@swc/core': 1.11.8
       vite: 5.4.9(@types/node@22.13.9)(sass@1.79.4)(terser@5.39.0)
+
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -8064,6 +8081,11 @@ snapshots:
   end-of-stream@1.4.4:
     dependencies:
       once: 1.4.0
+
+  enhanced-resolve@5.18.1:
+    dependencies:
+      graceful-fs: 4.2.11
+      tapable: 2.2.1
 
   enhanced-resolve@5.18.1:
     dependencies:
@@ -10539,6 +10561,7 @@ snapshots:
     optional: true
 
   terser-webpack-plugin@5.3.14(@swc/core@1.11.8)(esbuild@0.23.1)(webpack@5.98.0(@swc/core@1.11.8)(esbuild@0.23.1)):
+
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -10546,6 +10569,7 @@ snapshots:
       serialize-javascript: 6.0.2
       terser: 5.39.0
       webpack: 5.98.0(@swc/core@1.11.8)(esbuild@0.23.1)
+
     optionalDependencies:
       '@swc/core': 1.11.8
       esbuild: 0.23.1
@@ -10639,16 +10663,18 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.11.8
     optional: true
-
   ts-node@10.9.2(@swc/core@1.11.8)(@types/node@22.13.9)(typescript@5.5.4):
+
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
+
       '@types/node': 22.13.9
       acorn: 8.14.1
+
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -10836,6 +10862,7 @@ snapshots:
       spdx-expression-parse: 3.0.1
 
   vite@5.4.9(@types/node@20.17.23)(sass@1.79.4)(terser@5.39.0):
+
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.3
@@ -10847,12 +10874,14 @@ snapshots:
       terser: 5.39.0
 
   vite@5.4.9(@types/node@22.13.9)(sass@1.79.4)(terser@5.39.0):
+
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.3
       rollup: 4.34.9
     optionalDependencies:
       '@types/node': 22.13.9
+
       fsevents: 2.3.3
       sass: 1.79.4
       terser: 5.39.0
@@ -10971,6 +11000,7 @@ snapshots:
       schema-utils: 4.3.0
       tapable: 2.2.1
       terser-webpack-plugin: 5.3.14(@swc/core@1.11.8)(esbuild@0.23.1)(webpack@5.98.0(@swc/core@1.11.8)(esbuild@0.23.1))
+
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
