@@ -46,6 +46,9 @@ const sensitiveKeywords = [
   'webhook_secret',
   'master_key',
   'vault_key',
+  'sid',
+  'sidcc',
+  'gmail_at',
 ];
 
 // Compile regex patterns for case-insensitive matching of sensitive keywords
