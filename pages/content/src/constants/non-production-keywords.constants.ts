@@ -1,1 +1,1 @@
-export const nonProductionKeywords = ['uat.', 'test.', 'dev.', 'localhost'];
+export const nonProductionKeywords = ['uat.', 'test.', 'dev.', 'sandbox.', 'localhost'];
