@@ -31,16 +31,16 @@
 
 <br />
 
-<strong>🚀 Capture & Share Instantly</strong>
+<strong>🚀 Capture & Share Instantly:</strong>
 Record exactly what went wrong—no more back-and-forth emails or messy screenshots.
 
-<strong>🛠️ Developer - Ready Reports</strong>
+<strong>🛠️ Developer - Ready Reports:</strong>
 Brie auto-captures console logs, network errors, and user actions so devs get full context instantly.
 
-<strong>🕒 Save Time, Build Faster</strong>
+<strong>🕒 Save Time, Build Faster:</strong>
 No wasted hours on unclear bug reports—just fast fixes and better software.
 
-<strong>🔥 Join Thousands of Fast-Moving Teams</strong>
+<strong>🔥 Join Thousands of Fast-Moving Teams:</strong>
 Install http://briehq.com and start shipping bug-free software today!
 
 ## 💫 Quickstart
