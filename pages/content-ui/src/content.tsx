@@ -149,7 +149,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
 
           {!showRightSidebar && (
             <Button
-              className="relative mt-2 w-full sm:absolute sm:bottom-6 sm:right-4 sm:mt-0 sm:w-[104px]"
+              className="relative mt-2 w-full sm:absolute sm:bottom-6 sm:right-4 sm:mt-0 sm:w-[150px]"
               onClick={handleOnCreate}
               disabled={isCreateLoading}
               loading={isCreateLoading}>
