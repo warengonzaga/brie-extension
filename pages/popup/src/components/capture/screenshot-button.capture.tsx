@@ -4,10 +4,34 @@ import { useSlicesCreatedToday } from '@src/hooks';
 
 import { useStorage } from '@extension/shared';
 import { captureStateStorage, captureTabStorage } from '@extension/storage';
-import { Alert, AlertDescription, AlertTitle, Button, Icon } from '@extension/ui';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Button,
+  cn,
+  Icon,
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from '@extension/ui';
 import { useUser } from '@extension/store';
 
-export const CaptureScreenshotButton = () => {
+const captureTypes = [
+  {
+    name: 'Area',
+    slug: 'area',
+    icon: 'SquareDashed',
+  },
+  { name: 'Visible Window', slug: 'viewport', icon: 'AppWindowMac' },
+  {
+    name: 'Full Page',
+    slug: 'full-page',
+    icon: 'RectangleVertical',
+  },
+];
+
+export const CaptureScreenshotGroup = () => {
   const totalSlicesCreatedToday = useSlicesCreatedToday();
   const user = useUser();
   const captureState = useStorage(captureStateStorage);
@@ -20,6 +44,8 @@ export const CaptureScreenshotButton = () => {
     () => totalSlicesCreatedToday > 10 && user?.fields?.authMethod === 'GUEST',
     [totalSlicesCreatedToday, user?.fields?.authMethod],
   );
+
+  const isCaptureActive = useMemo(() => ['capturing', 'unsaved'].includes(captureState), [captureState]);
 
   useEffect(() => {
     const initializeState = async () => {
@@ -56,7 +82,7 @@ export const CaptureScreenshotButton = () => {
     setActiveTab(prev => ({ ...prev, id: tabId }));
   }, []);
 
-  const handleCaptureScreenshot = async () => {
+  const handleCaptureScreenshot = async (type?: 'full-page' | 'viewport' | 'area') => {
     if (captureState === 'unsaved' && activeTab?.id) {
       handleOnDiscard(activeTab?.id);
     }
@@ -78,15 +104,15 @@ export const CaptureScreenshotButton = () => {
 
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
 
-    if (tabs[0]?.id) {
+    if (tabs[0]?.id && type) {
       await updateCaptureState('capturing');
       await updateActiveTab(tabs[0].id);
 
-      chrome.tabs.sendMessage(tabs[0].id, { action: 'START_SCREENSHOT' }, response => {
+      chrome.tabs.sendMessage(tabs[0].id, { action: 'START_SCREENSHOT', payload: { type } }, response => {
         if (chrome.runtime.lastError) {
-          console.error('Error starting capture:', chrome.runtime.lastError.message);
+          console.error('Error starting capture:', type, chrome.runtime.lastError.message);
         } else {
-          console.log('Capture started:', response);
+          console.log('Capture started:', type, response);
         }
       });
     }
@@ -158,22 +184,47 @@ export const CaptureScreenshotButton = () => {
 
   return (
     <>
-      <Button
-        type="button"
-        size="lg"
-        className="w-full disabled:cursor-not-allowed"
-        onClick={handleCaptureScreenshot}
-        disabled={isCaptureScreenshotDisabled}>
-        <Icon
-          name={['capturing', 'unsaved'].includes(captureState) ? 'X' : 'Camera'}
-          size={20}
-          className="mr-2"
-          strokeWidth={1.5}
-        />
-        <span>
-          {['capturing', 'unsaved'].includes(captureState) ? 'Exit Capture Screenshot' : 'Capture Screenshot'}
-        </span>
-      </Button>
+      <RadioGroup
+        className={cn('border-muted grid w-full gap-4 rounded-xl border bg-slate-100/20 p-2', {
+          'grid-cols-3': !isCaptureActive,
+        })}>
+        {isCaptureActive ? (
+          <button
+            className="hover:bg-accent flex w-full items-center justify-center rounded-md border border-transparent py-4"
+            onClick={() => handleCaptureScreenshot()}>
+            <Icon name="X" size={20} strokeWidth={1.5} className="mr-1" />
+            <span>Exit Capture Screenshot</span>
+          </button>
+        ) : (
+          <>
+            {captureTypes.map(type => (
+              <div key={type.slug}>
+                <RadioGroupItem
+                  value={type.slug}
+                  id={type.slug}
+                  className="peer sr-only"
+                  onClick={() => handleCaptureScreenshot(type.slug)}
+                  disabled={type.slug === 'full-page' || isCaptureScreenshotDisabled}
+                />
+                <Label
+                  htmlFor={type.slug}
+                  className={cn(
+                    'flex flex-col items-center justify-between rounded-md border border-transparent py-3',
+                    {
+                      'text-slate-400': type.slug === 'full-page',
+                      'hover:bg-accent hover:text-accent-foreground hover:border-slate-200 hover:cursor-pointer':
+                        type.slug !== 'full-page',
+                    },
+                  )}>
+                  <Icon name={type.icon} className="mb-3 size-5" strokeWidth={1.5} />
+
+                  <span className="text-nowrap text-[11px]">{type.name}</span>
+                </Label>
+              </div>
+            ))}
+          </>
+        )}
+      </RadioGroup>
 
       {/* {isCaptureScreenshotDisabled && (
         <p>

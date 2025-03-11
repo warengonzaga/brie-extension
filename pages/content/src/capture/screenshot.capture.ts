@@ -358,39 +358,45 @@ const showInstructions = () => {
   document.addEventListener('touchmove', onTouchMove);
 };
 
+const captureTab = (): Promise<string> =>
+  new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
+      if (chrome.runtime.lastError) {
+        // Error from Chrome's runtime
+        console.log('chrome.runtime.lastError.message', chrome.runtime.lastError.message);
+
+        reject(new Error(chrome.runtime.lastError.message));
+      } else if (!response || !response.success) {
+        console.log('response?.message', response?.message);
+        // Error from the response itself
+        reject(new Error(response?.message || 'Failed to capture screenshot.'));
+      } else {
+        // Successfully received data URL
+        resolve(response.dataUrl);
+      }
+    });
+  });
+
+const checkIfNativeCaptureAvailable = () =>
+  new Promise(resolve => {
+    chrome.runtime.sendMessage({ action: 'checkNativeCapture' }, response => {
+      resolve(response?.isAvailable || false);
+    });
+  });
+
 // Screenshot Capturing
 const captureScreenshots = async (x, y, width, height) => {
   try {
     const scaleFactor = window.devicePixelRatio || 2;
 
     // Check if Native Capture API is available
-    const isNativeCaptureAvailable = await new Promise(resolve => {
-      chrome.runtime.sendMessage({ action: 'checkNativeCapture' }, response => {
-        resolve(response?.isAvailable || false);
-      });
-    });
+    const isNativeCaptureAvailable = await checkIfNativeCaptureAvailable();
 
     if (isNativeCaptureAvailable) {
       // Use Native Capture API through the background script
       // if (loadingMessage) loadingMessage.hidden = true;
 
-      const dataUrl = await new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
-          if (chrome.runtime.lastError) {
-            // Error from Chrome's runtime
-            console.log('chrome.runtime.lastError.message', chrome.runtime.lastError.message);
-
-            reject(new Error(chrome.runtime.lastError.message));
-          } else if (!response || !response.success) {
-            console.log('response?.message', response?.message);
-            // Error from the response itself
-            reject(new Error(response?.message || 'Failed to capture screenshot.'));
-          } else {
-            // Successfully received data URL
-            resolve(response.dataUrl);
-          }
-        });
-      });
+      const dataUrl = await captureTab();
 
       // if (loadingMessage) loadingMessage.hidden = false;
 
@@ -492,7 +498,22 @@ const saveAndNotify = ({ secondary, primary }: { secondary: string; primary: str
 };
 
 // Initialization
-export const startScreenshotCapture = () => {
+export const startScreenshotCapture = async ({ type }: { type: 'full-page' | 'viewport' | 'area' }) => {
+  if (type === 'full-page') {
+    /**
+     * @todo
+     */
+    return;
+  }
+
+  if (type === 'viewport') {
+    const viewport = await captureTab();
+
+    saveAndNotify({ primary: null, secondary: viewport });
+
+    return;
+  }
+
   createOverlay();
   showInstructions();
 
