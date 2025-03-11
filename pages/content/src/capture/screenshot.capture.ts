@@ -50,14 +50,6 @@ const cropSelectedArea = (
     throw new Error('Failed to get 2D context for cropped canvas.');
   }
 
-  // Correct cropping offsets and alignment
-  const adjustedStartX = startX - window.scrollX;
-  const adjustedStartY = startY - window.scrollY;
-
-  // Calculate the ratio based on the full-page canvas size and the visible viewport size
-  const ratioX = canvas.width / window.innerWidth;
-  const ratioY = canvas.height / window.innerHeight;
-
   ctx.drawImage(
     canvas,
     x * scaleFactor,
@@ -69,18 +61,6 @@ const cropSelectedArea = (
     width * scaleFactor,
     height * scaleFactor,
   );
-
-  // ctx?.drawImage(
-  //   canvas, // Use the full-page canvas as the sources
-  //   adjustedStartX * ratioX, // Adjust X coordinate
-  //   adjustedStartY * ratioY, // Adjust Y coordinate
-  //   width * ratioX, // Adjust width with ratio
-  //   height * ratioY, // Adjust height with ratio
-  //   0, // X coordinate in the cropped canvas
-  //   0, // Y coordinate in the cropped canvas
-  //   width * scaleFactor, // Apply scale factor for better resolution
-  //   height * scaleFactor, // Apply scale factor for better resolution
-  // );
 
   return croppedCanvas;
 };
