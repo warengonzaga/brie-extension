@@ -1,8 +1,14 @@
 {
   "name": "brie-extension",
-  "version": "0.0.2",
+  "version": "0.1.4",
   "description": "report bugs 10x faster",
-  "license": "MIT",
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Ion Leu",
+      "email": "ask@briehq.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/briehq/brie-extension.git"
@@ -36,7 +42,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.270",
+    "@types/chrome": "^0.1.470",
     "@types/node": "^20.16.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
