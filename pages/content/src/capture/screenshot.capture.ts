@@ -50,24 +50,16 @@ const cropSelectedArea = (
     throw new Error('Failed to get 2D context for cropped canvas.');
   }
 
-  // Correct cropping offsets and alignment
-  const adjustedStartX = startX - window.scrollX;
-  const adjustedStartY = startY - window.scrollY;
-
-  // Calculate the ratio based on the full-page canvas size and the visible viewport size
-  const ratioX = canvas.width / window.innerWidth;
-  const ratioY = canvas.height / window.innerHeight;
-
-  ctx?.drawImage(
-    canvas, // Use the full-page canvas as the source
-    adjustedStartX * ratioX, // Adjust X coordinate
-    adjustedStartY * ratioY, // Adjust Y coordinate
-    width * ratioX, // Adjust width with ratio
-    height * ratioY, // Adjust height with ratio
-    0, // X coordinate in the cropped canvas
-    0, // Y coordinate in the cropped canvas
-    width * scaleFactor, // Apply scale factor for better resolution
-    height * scaleFactor, // Apply scale factor for better resolution
+  ctx.drawImage(
+    canvas,
+    x * scaleFactor,
+    y * scaleFactor,
+    width * scaleFactor,
+    height * scaleFactor,
+    0,
+    0,
+    width * scaleFactor,
+    height * scaleFactor,
   );
 
   return croppedCanvas;
@@ -288,6 +280,9 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
   const clientX = 'touches' in e ? e.touches[0].pageX : (e as MouseEvent).pageX;
   const clientY = 'touches' in e ? e.touches[0].pageY : (e as MouseEvent).pageY;
 
+  const minX = Math.min(startX, clientX);
+  const minY = Math.min(startY, clientY);
+
   const width = Math.abs(clientX - startX);
   const height = Math.abs(clientY - startY);
 
@@ -300,7 +295,7 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
    */
   // showLoadingMessage();
 
-  await captureScreenshots(startX, startY, width, height);
+  await captureScreenshots(minX, minY, width, height);
   // hideLoadingMessage();
 };
 
@@ -358,39 +353,45 @@ const showInstructions = () => {
   document.addEventListener('touchmove', onTouchMove);
 };
 
+const captureTab = (): Promise<string> =>
+  new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
+      if (chrome.runtime.lastError) {
+        // Error from Chrome's runtime
+        console.log('chrome.runtime.lastError.message', chrome.runtime.lastError.message);
+
+        reject(new Error(chrome.runtime.lastError.message));
+      } else if (!response || !response.success) {
+        console.log('response?.message', response?.message);
+        // Error from the response itself
+        reject(new Error(response?.message || 'Failed to capture screenshot.'));
+      } else {
+        // Successfully received data URL
+        resolve(response.dataUrl);
+      }
+    });
+  });
+
+const checkIfNativeCaptureAvailable = () =>
+  new Promise(resolve => {
+    chrome.runtime.sendMessage({ action: 'checkNativeCapture' }, response => {
+      resolve(response?.isAvailable || false);
+    });
+  });
+
 // Screenshot Capturing
 const captureScreenshots = async (x, y, width, height) => {
   try {
     const scaleFactor = window.devicePixelRatio || 2;
 
     // Check if Native Capture API is available
-    const isNativeCaptureAvailable = await new Promise(resolve => {
-      chrome.runtime.sendMessage({ action: 'checkNativeCapture' }, response => {
-        resolve(response?.isAvailable || false);
-      });
-    });
+    const isNativeCaptureAvailable = await checkIfNativeCaptureAvailable();
 
     if (isNativeCaptureAvailable) {
       // Use Native Capture API through the background script
       // if (loadingMessage) loadingMessage.hidden = true;
 
-      const dataUrl = await new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ action: 'captureVisibleTab' }, response => {
-          if (chrome.runtime.lastError) {
-            // Error from Chrome's runtime
-            console.log('chrome.runtime.lastError.message', chrome.runtime.lastError.message);
-
-            reject(new Error(chrome.runtime.lastError.message));
-          } else if (!response || !response.success) {
-            console.log('response?.message', response?.message);
-            // Error from the response itself
-            reject(new Error(response?.message || 'Failed to capture screenshot.'));
-          } else {
-            // Successfully received data URL
-            resolve(response.dataUrl);
-          }
-        });
-      });
+      const dataUrl = await captureTab();
 
       // if (loadingMessage) loadingMessage.hidden = false;
 
@@ -492,7 +493,22 @@ const saveAndNotify = ({ secondary, primary }: { secondary: string; primary: str
 };
 
 // Initialization
-export const startScreenshotCapture = () => {
+export const startScreenshotCapture = async ({ type }: { type: 'full-page' | 'viewport' | 'area' }) => {
+  if (type === 'full-page') {
+    /**
+     * @todo
+     */
+    return;
+  }
+
+  if (type === 'viewport') {
+    const viewport = await captureTab();
+
+    saveAndNotify({ primary: null, secondary: viewport });
+
+    return;
+  }
+
   createOverlay();
   showInstructions();
 

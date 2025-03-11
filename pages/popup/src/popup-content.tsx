@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { SlicesHistoryButton, SlicesHistoryContent } from './components/slices-history';
-import { CaptureScreenshotButton } from './components/capture';
+import { CaptureScreenshotGroup } from './components/capture';
 import { Header, BetaNotifier } from './components/ui';
 
 import { authTokensStorage, captureStateStorage, userUUIDStorage } from '@extension/storage';
@@ -60,7 +60,7 @@ export const PopupContent = () => {
   ) : (
     <>
       <Header />
-      <CaptureScreenshotButton />
+      <CaptureScreenshotGroup />
 
       {captureState === 'idle' && <SlicesHistoryButton onClick={() => setShowSlicesHistory(true)} />}
 
