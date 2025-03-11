@@ -5,8 +5,7 @@ export const addRuntimeEventListeners = () => {
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === 'START_SCREENSHOT') {
       // Call the function to initiate the screenshot capture process
-
-      startScreenshotCapture();
+      startScreenshotCapture(msg.payload);
     }
 
     if (msg.action === 'EXIT_CAPTURE') {
