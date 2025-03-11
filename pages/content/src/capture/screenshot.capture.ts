@@ -58,17 +58,29 @@ const cropSelectedArea = (
   const ratioX = canvas.width / window.innerWidth;
   const ratioY = canvas.height / window.innerHeight;
 
-  ctx?.drawImage(
-    canvas, // Use the full-page canvas as the source
-    adjustedStartX * ratioX, // Adjust X coordinate
-    adjustedStartY * ratioY, // Adjust Y coordinate
-    width * ratioX, // Adjust width with ratio
-    height * ratioY, // Adjust height with ratio
-    0, // X coordinate in the cropped canvas
-    0, // Y coordinate in the cropped canvas
-    width * scaleFactor, // Apply scale factor for better resolution
-    height * scaleFactor, // Apply scale factor for better resolution
+  ctx.drawImage(
+    canvas,
+    x * scaleFactor,
+    y * scaleFactor,
+    width * scaleFactor,
+    height * scaleFactor,
+    0,
+    0,
+    width * scaleFactor,
+    height * scaleFactor,
   );
+
+  // ctx?.drawImage(
+  //   canvas, // Use the full-page canvas as the sources
+  //   adjustedStartX * ratioX, // Adjust X coordinate
+  //   adjustedStartY * ratioY, // Adjust Y coordinate
+  //   width * ratioX, // Adjust width with ratio
+  //   height * ratioY, // Adjust height with ratio
+  //   0, // X coordinate in the cropped canvas
+  //   0, // Y coordinate in the cropped canvas
+  //   width * scaleFactor, // Apply scale factor for better resolution
+  //   height * scaleFactor, // Apply scale factor for better resolution
+  // );
 
   return croppedCanvas;
 };
@@ -288,6 +300,9 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
   const clientX = 'touches' in e ? e.touches[0].pageX : (e as MouseEvent).pageX;
   const clientY = 'touches' in e ? e.touches[0].pageY : (e as MouseEvent).pageY;
 
+  const minX = Math.min(startX, clientX);
+  const minY = Math.min(startY, clientY);
+
   const width = Math.abs(clientX - startX);
   const height = Math.abs(clientY - startY);
 
@@ -300,7 +315,7 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
    */
   // showLoadingMessage();
 
-  await captureScreenshots(startX, startY, width, height);
+  await captureScreenshots(minX, minY, width, height);
   // hideLoadingMessage();
 };
 
