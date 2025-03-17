@@ -22,10 +22,10 @@
     <img src="https://github.com/briehq/brie-extension/actions/workflows/release.yml/badge.svg" alt="Release" />
   </a>
   <a href="https://github.com/briehq/brie-extension/blob/main/LICENSE.md">
-    <img src="https://img.shields.io/github/license/brie-extension/briehq.dev" alt="License" />
+    <img src="https://img.shields.io/github/license/briehq/brie-extension" alt="License" />
   </a>
   <a href="https://github.com/briehq/brie-extension/commits/main">
-    <img src="https://img.shields.io/github/last-commit/brie-extension/lingo.dev" alt="Last Commit" />
+    <img src="https://img.shields.io/github/last-commit/briehq/brie-extension" alt="Last Commit" />
   </a>
 </p>
 
@@ -41,7 +41,7 @@ Brie auto-captures console logs, network errors, and user actions so devs get fu
 No wasted hours on unclear bug reports—just fast fixes and better software.
 
 <strong>🔥 Join Thousands of Fast-Moving Teams:</strong>
-Install http://briehq.com and start shipping bug-free software today!
+Install [Brie](https://go.briehq.com/lp) and start shipping bug-free software today!
 
 ## 💫 Quickstart
 
@@ -66,7 +66,7 @@ Check out the [Good First Issues](https://github.com/briehq/brie-extension/label
 - **[Ion](https://github.com/ionleu)**
 - **[Luminita](https://github.com/luminita)**
 
-Questions or inquiries? Email ion@briehq.com
+Questions or inquiries? Email ask@briehq.com
 
 ## 🌐 Readme in other languages
 
@@ -90,4 +90,5 @@ P.S. Shout out to:
 
 - [React](https://github.com/facebook/react)
 - [Vite](https://github.com/vitejs/vite)
+- [Turborepo](https://github.com/vercel/turborepo)
 - [Ext Boilerplate](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite)
