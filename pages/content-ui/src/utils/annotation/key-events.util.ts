@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CustomFabricObject } from '@src/models';
+import type { CustomFabricObject } from '@src/models';
 
 export const handleCopy = (canvas: fabric.Canvas) => {
   const activeObjects = canvas.getActiveObjects();

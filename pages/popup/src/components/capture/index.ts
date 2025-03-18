@@ -1,1 +1,1 @@
-export * from './screenshot-button.capture';
+export { CaptureScreenshotGroup } from './screenshot-button.capture';

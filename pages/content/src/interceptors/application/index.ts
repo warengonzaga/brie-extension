@@ -1,3 +1,3 @@
-export * from './cookies.interceptor';
-export * from './local-storage.interceptor';
-export * from './session-storage.interceptor';
+export { interceptCookies } from './cookies.interceptor';
+export { interceptLocalStorage } from './local-storage.interceptor';
+export { interceptSessionStorage } from './session-storage.interceptor';

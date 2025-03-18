@@ -5,6 +5,7 @@ import { Alert, AlertDescription, AlertTitle, Button, Icon, Separator } from '@e
 import { useAppSelector, useDeleteSliceByIdMutation, useGetSlicesQuery, useUser } from '@extension/store';
 import type { Pagination } from '@extension/shared';
 import { AuthMethod, ITEMS_PER_PAGE } from '@extension/shared';
+import { t } from '@extension/i18n';
 
 import { useSlicesCreatedToday } from '@src/hooks';
 import { navigateTo } from '@src/utils';
@@ -28,6 +29,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
     // Handle delete all logic
     console.log('All slices deleted');
   };
+
   const onDelete = async (externalId: string) => {
     await deleteSliceByExternalId(externalId);
   };
@@ -42,26 +44,23 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
 
         {user.fields?.authMethod !== AuthMethod.GUEST && (
           <Button variant="link" size="sm" className="text-red-500" onClick={onDeleteAll}>
-            Delete all
+            {t('deleteAll')}
           </Button>
         )}
       </div>
 
       {/* Title and Description */}
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="flex items-center gap-x-1.5 text-base font-semibold">
-          <Icon name="ImagesIcon" className="size-4" /> Slices History
-        </h2>
+        <h2 className="flex items-center gap-x-1.5 text-base font-semibold">{t('sliceHistoryTitle')}</h2>
 
         {user.fields?.authMethod === AuthMethod.GUEST && (
-          <p className="text-muted-foreground text-sm font-medium text-red-500">
-            {totalSlicesCreatedToday}/10 slices daily
+          <p className="text-sm font-medium text-muted-foreground text-red-500">
+            {totalSlicesCreatedToday}/10 {t('slicesLimitLabel')}
           </p>
         )}
       </div>
-      <p className="text-muted-foreground mb-4 text-xs">
-        Slices are saved and automatically <span className="font-medium">deleted</span> after 7 days. There is a limit
-        of 10 slices per day.
+      <p className="mb-4 text-xs text-muted-foreground">
+        {t('slicesSaved')} <span className="font-medium">{t('deleted')}</span> {t('slicesSavedLimit')}
       </p>
 
       <Separator className="inset-x-0 h-px bg-gray-900/5 dark:bg-gray-800" />
@@ -70,8 +69,8 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
 
       {!isLoading && !slices?.items?.length && (
         <Alert className="text-center">
-          <AlertTitle className="text-[14px]">No slices created yet</AlertTitle>
-          <AlertDescription className="text-[12px]">You have not created any slices.</AlertDescription>
+          <AlertTitle className="text-[14px]">{t('noSlicesYet')}</AlertTitle>
+          <AlertDescription className="text-[12px]">{t('noSlicesYetDescription')}</AlertDescription>
         </Alert>
       )}
 
@@ -96,7 +95,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
                     onClick={() => navigateTo(`https://app.briehq.com/s/${item.externalId}`)}>
                     {item.externalId}
                   </button>
-                  <p className="text-muted-foreground text-xs">{format(item.createdAt, 'LLL dd, y hh:mm a')}</p>
+                  <p className="text-xs text-muted-foreground">{format(item.createdAt, 'LLL dd, y hh:mm a')}</p>
                 </div>
                 <Button
                   variant="ghost"

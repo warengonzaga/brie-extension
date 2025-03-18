@@ -1,1 +1,1 @@
-export * from './use-slices-created-today.hook';
+export { useSlicesCreatedToday } from './use-slices-created-today.hook';
