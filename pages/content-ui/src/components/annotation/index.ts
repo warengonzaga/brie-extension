@@ -1,3 +1,5 @@
-export * as AnnotationSidebar from './annotation-sidebar.feature';
-export * as AnnotationContainer from './annotation-container';
-export * from './annotation-section.feature';
+import * as AnnotationSidebar from './annotation-sidebar.feature';
+import * as AnnotationContainer from './annotation-container';
+import { AnnotationSection } from './annotation-section.feature';
+
+export { AnnotationSidebar, AnnotationContainer, AnnotationSection };

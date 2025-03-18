@@ -5,7 +5,7 @@ import { CaptureScreenshotGroup } from './components/capture';
 import { Header, BetaNotifier } from './components/ui';
 
 import { authTokensStorage, captureStateStorage, userUUIDStorage } from '@extension/storage';
-import { useDeleteSliceByIdMutation, useLoginGuestMutation } from '@extension/store';
+import { useLoginGuestMutation } from '@extension/store';
 import { useStorage } from '@extension/shared';
 import { Skeleton } from '@extension/ui';
 
@@ -15,7 +15,7 @@ export const PopupContent = () => {
   const uuid = useStorage(userUUIDStorage);
 
   const [showSlicesHistory, setShowSlicesHistory] = useState(false);
-  const [loginGuest, { isLoading, isError }] = useLoginGuestMutation();
+  const [loginGuest, { isLoading }] = useLoginGuestMutation();
 
   useEffect(() => {
     const initialGuestLogin = async () => {

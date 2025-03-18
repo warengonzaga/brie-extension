@@ -16,16 +16,17 @@ import {
   RadioGroupItem,
 } from '@extension/ui';
 import { useUser } from '@extension/store';
+import { t } from '@extension/i18n';
 
 const captureTypes = [
   {
-    name: 'Area',
+    name: t('area'),
     slug: 'area',
     icon: 'SquareDashed',
   },
-  { name: 'Visible Window', slug: 'viewport', icon: 'AppWindowMac' },
+  { name: t('viewport'), slug: 'viewport', icon: 'AppWindowMac' },
   {
-    name: 'Full Page',
+    name: t('fullPage'),
     slug: 'full-page',
     icon: 'RectangleVertical',
   },
@@ -150,7 +151,7 @@ export const CaptureScreenshotGroup = () => {
   if (isInternalPage && captureState !== 'unsaved' && currentActiveTab !== activeTab.id) {
     return (
       <Alert className="text-center">
-        <AlertDescription className="text-[12px]">Navigate to any website to start capturing bugs.</AlertDescription>
+        <AlertDescription className="text-[12px]">{t('navigateToWebsite')}</AlertDescription>
       </Alert>
     );
   }
@@ -159,9 +160,9 @@ export const CaptureScreenshotGroup = () => {
     return (
       <>
         <Alert className="text-center">
-          <AlertTitle className="text-[14px]">Save or discard your changes</AlertTitle>
+          <AlertTitle className="text-[14px]">{t('saveOrDiscardChanges')}</AlertTitle>
           <AlertDescription className="text-[12px]">
-            It seems like you have an unsaved draft open <br /> in another tab.
+            {t('unsavedChanges')} <br /> {t('inAnotherTab')}
           </AlertDescription>
         </Alert>
 
@@ -172,10 +173,10 @@ export const CaptureScreenshotGroup = () => {
             size="sm"
             className="w-full"
             onClick={() => activeTab?.id && handleOnDiscard(activeTab.id)}>
-            Discard
+            {t('discard')}
           </Button>
           <Button type="button" size="sm" className="w-full" onClick={handleGoToActiveTab}>
-            Go to active tab
+            {t('openActiveTab')}
           </Button>
         </div>
       </>
@@ -193,7 +194,7 @@ export const CaptureScreenshotGroup = () => {
             className="hover:bg-accent flex w-full items-center justify-center rounded-md border border-transparent py-4"
             onClick={() => handleCaptureScreenshot()}>
             <Icon name="X" size={20} strokeWidth={1.5} className="mr-1" />
-            <span>Exit Capture Screenshot</span>
+            <span>{t('exitCaptureScreenshot')}</span>
           </button>
         ) : (
           <>
@@ -234,7 +235,7 @@ export const CaptureScreenshotGroup = () => {
 
       {activeTab.id !== currentActiveTab && ['capturing', 'unsaved'].includes(captureState) && (
         <Button type="button" variant="link" size="sm" className="w-full" onClick={handleGoToActiveTab}>
-          Go to active tab
+          {t('openActiveTab')}
         </Button>
       )}
     </>

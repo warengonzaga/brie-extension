@@ -1,1 +1,1 @@
-export * from './screenshot.capture';
+export { startScreenshotCapture, cleanup } from './screenshot.capture';

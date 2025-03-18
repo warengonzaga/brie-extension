@@ -1,1 +1,1 @@
-export * from './navigate.util';
+export { navigateTo } from './navigate.util';

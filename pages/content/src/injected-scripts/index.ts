@@ -1,1 +1,1 @@
-export * from './extend.inject';
+export { injectExtendScript } from './extend.inject';

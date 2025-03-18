@@ -1,2 +1,2 @@
-export * from './fetch.interceptor';
-export * from './xhr.interceptor';
+export { interceptFetch } from './fetch.interceptor';
+export { interceptXHR } from './xhr.interceptor';

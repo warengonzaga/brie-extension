@@ -1,1 +1,1 @@
-export * from './console.interceptor';
+export { interceptConsole } from './console.interceptor';

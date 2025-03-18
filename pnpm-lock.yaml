@@ -108,6 +108,9 @@ importers:
 
   chrome-extension:
     dependencies:
+      '@extension/i18n':
+        specifier: workspace:*
+        version: link:../packages/i18n
       '@extension/shared':
         specifier: workspace:*
         version: link:../packages/shared
@@ -371,6 +374,9 @@ importers:
 
   pages/content:
     dependencies:
+      '@extension/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@extension/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -415,6 +421,9 @@ importers:
 
   pages/content-ui:
     dependencies:
+      '@extension/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@extension/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -576,6 +585,9 @@ importers:
       '@extension/content-runtime-script':
         specifier: workspace:*
         version: link:../content-runtime
+      '@extension/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@extension/shared':
         specifier: workspace:*
         version: link:../../packages/shared

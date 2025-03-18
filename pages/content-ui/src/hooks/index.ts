@@ -1,1 +1,1 @@
-export * from './use-viewport-size.hook';
+export { useViewportSize } from './use-viewport-size.hook';
