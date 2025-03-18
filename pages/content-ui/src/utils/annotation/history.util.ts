@@ -13,8 +13,6 @@ export const saveHistory = async (currentState: any) => {
 export const undoAnnotation = async () => {
   const stateHistory = (await annotationsStorage.getAnnotations()) || [];
 
-  console.log('stateHistory', stateHistory);
-
   if (stateHistory.length > 1) {
     const redoStack = (await annotationsStorage.getAnnotations()) || [];
 

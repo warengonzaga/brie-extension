@@ -1,3 +1,4 @@
+import { t } from '@extension/i18n';
 import html2canvas from 'html2canvas';
 
 let startX: number, startY: number;
@@ -344,7 +345,7 @@ const showInstructions = () => {
     fontWeight: '600',
     zIndex: '10000000',
   });
-  message.textContent = 'Click or drag to select area for screenshot';
+  message.textContent = t('selectArea');
   document.body.appendChild(message);
 
   // Move instructions message on mouse/touch move

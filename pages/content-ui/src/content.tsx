@@ -1,5 +1,6 @@
 import { memo, useMemo, useState } from 'react';
 
+import { t } from '@extension/i18n';
 import { AuthMethod } from '@extension/shared';
 import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
 import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, useToast } from '@extension/ui';
@@ -55,7 +56,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
         const jsonFile = createJsonFile(records.flat(), 'records.json');
 
         if (!jsonFile) {
-          toast({ variant: 'destructive', description: 'Failed to create records file. Please try again.' });
+          toast({ variant: 'destructive', description: t('failedToCreateRecords') });
           return;
         }
 
@@ -65,7 +66,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
         const canvas = getCanvasElement();
 
         if (!canvas) {
-          toast({ variant: 'destructive', description: 'Failed to create records file. Please try again.' });
+          toast({ variant: 'destructive', description: t('failedToCreateRecords') });
           return;
         }
 
@@ -81,7 +82,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
 
         const { data } = await createSlice(formData);
         if (data?.externalId) {
-          toast({ description: 'The report is ready and will open in a new tab.' });
+          toast({ description: t('openReport') });
 
           setTimeout(() => {
             window?.open(`https://app.briehq.com/s/${data?.externalId}`, '_blank')?.focus();
@@ -90,14 +91,14 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
           onClose();
         } else {
           // GUEST_DAILY_LIMIT and other errors
-          toast({ variant: 'destructive', description: data?.message || 'Failed to create slice. Please try again.' });
+          toast({ variant: 'destructive', description: data?.message || t('failedToCreateSlice') });
         }
       } else {
-        toast({ variant: 'destructive', description: 'No requests captured. Please try again later.' });
+        toast({ variant: 'destructive', description: t('noRecordsCaptured') });
       }
     } catch (error) {
       console.error('[OnCreate Error]:', error);
-      toast({ variant: 'destructive', description: 'An unexpected error occurred. Please try again.' });
+      toast({ variant: 'destructive', description: t('unexpectedError') });
     } finally {
       setIsCreateLoading(false);
     }
@@ -141,10 +142,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
 
           {/* Footer Section */}
           <div className="mt-4 flex justify-center">
-            <p className="max-w-lg select-none text-center text-xs text-gray-400">
-              Brie will include a fullscreen screenshot, along with browser and OS details, network requests, and
-              console logs to assist developers in debugging effectively.
-            </p>
+            <p className="max-w-lg select-none text-center text-xs text-gray-400">{t('additionalInformation')}</p>
           </div>
 
           {!showRightSidebar && (
@@ -153,7 +151,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
               onClick={handleOnCreate}
               disabled={isCreateLoading}
               loading={isCreateLoading}>
-              Capture & Share
+              {t('captureAndShare')}
             </Button>
           )}
         </div>
@@ -164,9 +162,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
             <div className="space-y-4 sm:mt-8">
               <Textarea placeholder="Add a description" rows={width < 500 ? 3 : 10} className="w-full" />
 
-              <small className="select-none text-xs text-gray-400">
-                This is the issue&apos;s description. Please provide detailed information.
-              </small>
+              <small className="select-none text-xs text-gray-400">{t('sliceDescription')}</small>
             </div>
 
             {/* Action Buttons */}
@@ -180,7 +176,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" sideOffset={14}>
-                      Attach file
+                      {t('attachFile')}
                     </TooltipContent>
                   </Tooltip>
 
@@ -191,7 +187,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top" align="start" sideOffset={14}>
-                      Add to folder
+                      {t('addFolder')}
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -201,12 +197,10 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
                   onClick={handleOnCreate}
                   disabled={isCreateLoading}
                   loading={isCreateLoading}>
-                  Capture & Share
+                  {t('captureAndShare')}
                 </Button>
               </div>
-              <small className="select-none text-center text-xs text-gray-400">
-                This will create a link you can share.
-              </small>
+              <small className="select-none text-center text-xs text-gray-400">{t('captureAndShareMemo')}</small>
             </div>
           </div>
         )}

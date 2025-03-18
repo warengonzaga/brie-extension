@@ -1,2 +1,2 @@
-export * from './window.event-listeners';
-export * from './runtime.event-listeners';
+export { addWindowEventListeners } from './window.event-listeners';
+export { addRuntimeEventListeners } from './runtime.event-listeners';

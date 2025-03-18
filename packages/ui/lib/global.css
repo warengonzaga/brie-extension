@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+body,
+#shadow-root {
+  font-family:
+    'Montserrat',
+    -apple-system,
+    BlinkMacSystemFont,
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 @layer base {
   :host,
   :root {

@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver';
 
-import { base64ToBlob } from './base64-to-blob.util';
+import { base64ToBlob } from '../base64-to-blob.util';
 
 export const exportToPng = (name: string) => {
   const canvas = document.querySelector('canvas');

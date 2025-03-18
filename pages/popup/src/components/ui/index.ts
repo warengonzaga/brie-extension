@@ -1,2 +1,2 @@
-export * from './beta-notifier.ui';
-export * from './header.ui';
+export { BetaNotifier } from './beta-notifier.ui';
+export { Header } from './header.ui';
