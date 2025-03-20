@@ -40,11 +40,11 @@ _Brie auto-captures console logs, network errors, and user actions so devs get f
 _No wasted hours on unclear bug reports—just fast fixes and better software._
 
 **🔥 Join Thousands of Fast-Moving Teams:**
-_Install [Brie](https://go.briehq.com/lp){:target="\_blank"} and start shipping bug-free software today!_
+_Install [Brie](https://go.briehq.com/lp?target=_blank) and start shipping bug-free software today!_
 
 ## 💫 Quickstart
 
-1. Add Brie from <a href="https://go.briehq.com/lp" target="_blank">the website</a>, then pin it for quick access.
+1. Add Brie from <a href="https://go.briehq.com/lp?target=_blank" target="_blank">the website</a>, then pin it for quick access.
 
 2. Click the Brie icon to capture and annotate a screenshot.
 
