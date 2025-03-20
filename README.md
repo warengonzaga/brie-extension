@@ -18,8 +18,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/briehq/brie-extension/actions/workflows/release.yml">
-    <img src="https://github.com/briehq/brie-extension/actions/workflows/release.yml/badge.svg" alt="Release" />
+  <a href="https://github.com/briehq/brie-extension/actions/workflows/build-zip.yml">
+    <img src="https://github.com/briehq/brie-extension/actions/workflows/build-zip.yml/badge.svg" alt="Release" />
   </a>
   <a href="https://github.com/briehq/brie-extension/blob/main/LICENSE.md">
     <img src="https://img.shields.io/github/license/briehq/brie-extension" alt="License" />
@@ -63,7 +63,7 @@ Check out the [Good First Issues](https://github.com/briehq/brie-extension/label
 
 ## 👨‍💻 Team
 
-- **[Ion](https://github.com/ionleu)**
+- **[Ion](https://x.com/intent/follow?screen_name=ionleu)**
 - **[Luminita](https://github.com/luminita)**
 
 Questions or inquiries? Email ask@briehq.com
