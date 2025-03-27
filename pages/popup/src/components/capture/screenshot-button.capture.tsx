@@ -109,13 +109,20 @@ export const CaptureScreenshotGroup = () => {
       await updateCaptureState('capturing');
       await updateActiveTab(tabs[0].id);
 
-      chrome.tabs.sendMessage(tabs[0].id, { action: 'START_SCREENSHOT', payload: { type } }, response => {
-        if (chrome.runtime.lastError) {
-          console.error('Error starting capture:', type, chrome.runtime.lastError.message);
-        } else {
-          console.log('Capture started:', type, response);
-        }
-      });
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        {
+          action: 'START_SCREENSHOT',
+          payload: { type },
+        },
+        response => {
+          if (chrome.runtime.lastError) {
+            console.error('Error starting capture:', type, chrome.runtime.lastError.message);
+          } else {
+            console.log('Capture started:', type, response);
+          }
+        },
+      );
     }
 
     window.close();
@@ -205,19 +212,14 @@ export const CaptureScreenshotGroup = () => {
                   id={type.slug}
                   className="peer sr-only"
                   onClick={() => handleCaptureScreenshot(type.slug)}
-                  disabled={type.slug === 'full-page' || isCaptureScreenshotDisabled}
+                  disabled={isCaptureScreenshotDisabled || isFullScreenshotLoading}
                 />
                 <Label
                   htmlFor={type.slug}
                   className={cn(
-                    'flex flex-col items-center justify-between rounded-md border border-transparent py-3',
-                    {
-                      'text-slate-400': type.slug === 'full-page',
-                      'hover:bg-accent hover:text-accent-foreground hover:border-slate-200 hover:cursor-pointer':
-                        type.slug !== 'full-page',
-                    },
+                    'flex flex-col items-center justify-between rounded-md border border-transparent py-3 hover:bg-accent hover:text-accent-foreground hover:border-slate-200 hover:cursor-pointer',
                   )}>
-                  <Icon name={type.icon} className="mb-3 size-5" strokeWidth={1.5} />
+                  <Icon name={type.icon} className="mb-3 size-5" strokeWidth={type.slug === 'area' ? 2 : 1.5} />
 
                   <span className="text-nowrap text-[11px]">{type.name}</span>
                 </Label>
