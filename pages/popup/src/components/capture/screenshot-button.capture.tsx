@@ -212,7 +212,7 @@ export const CaptureScreenshotGroup = () => {
                   id={type.slug}
                   className="peer sr-only"
                   onClick={() => handleCaptureScreenshot(type.slug)}
-                  disabled={isCaptureScreenshotDisabled || isFullScreenshotLoading}
+                  disabled={isCaptureScreenshotDisabled}
                 />
                 <Label
                   htmlFor={type.slug}
