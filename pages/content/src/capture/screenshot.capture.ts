@@ -496,9 +496,18 @@ const saveAndNotify = ({ secondary, primary }: { secondary: string; primary: str
 // Initialization
 export const startScreenshotCapture = async ({ type }: { type: 'full-page' | 'viewport' | 'area' }) => {
   if (type === 'full-page') {
-    /**
-     * @todo
-     */
+    const scaleFactor = window.devicePixelRatio || 2;
+    const fullCanvas = await html2canvas(document.body, {
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      removeContainer: true,
+      scale: scaleFactor,
+      width: document.documentElement.scrollWidth,
+      height: document.documentElement.scrollHeight,
+    });
+
+    saveAndNotify({ primary: null, secondary: fullCanvas.toDataURL('image/png', 1.0) });
     return;
   }
 

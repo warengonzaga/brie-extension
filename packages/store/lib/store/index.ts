@@ -9,6 +9,7 @@ import { spacesAPI } from './spaces';
 import { subscriptionsAPI } from './subscriptions';
 import { userAPI } from './user';
 import { organizationAPI } from './organization';
+import { screenshotAPI } from './screenshot';
 
 const rootReducer = combineReducers({
   [authPublicAPI.reducerPath]: authPublicAPI.reducer,
@@ -31,6 +32,8 @@ const rootReducer = combineReducers({
   [subscriptionsAPI.reducerPath]: subscriptionsAPI.reducer,
 
   [organizationAPI.reducerPath]: organizationAPI.reducer,
+
+  [screenshotAPI.reducerPath]: screenshotAPI.reducer,
 });
 
 const setupStore = () =>
@@ -46,7 +49,8 @@ const setupStore = () =>
         .concat(slicesPublicAPI.middleware)
         .concat(spacesAPI.middleware)
         .concat(subscriptionsAPI.middleware)
-        .concat(organizationAPI.middleware),
+        .concat(organizationAPI.middleware)
+        .concat(screenshotAPI.middleware),
   });
 
 export const store = setupStore();
@@ -66,6 +70,7 @@ export const { useGetPublicSliceByIdQuery } = slicesPublicAPI;
 export const { useGetOverviewQuery, useLazyGetOverviewQuery } = overviewAPI;
 export const { useLoginGuestMutation } = authPublicAPI;
 export const { useGetOrganizationByIdQuery } = organizationAPI;
+export const { useLazyGetFullScreenshotQuery } = screenshotAPI;
 
 // export const { setFilters, clearFilters } = slicesSlice.actions;
 // export const { setFilters, clearFilters } = workspacesSlice.actions;
