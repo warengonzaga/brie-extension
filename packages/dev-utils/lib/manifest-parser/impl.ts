@@ -27,6 +27,11 @@ function convertToFirefoxCompatibleManifest(manifest: Manifest) {
   };
   manifestCopy.browser_specific_settings = {
     gecko: {
+      /**
+       * @todo add it to env
+       * Must be unique to your extension to upload to addons.mozilla.org
+       * (you can delete if you only want a chrome extension)
+       */
       id: 'ion.leu@gmail.com',
       strict_min_version: '109.0',
     },
