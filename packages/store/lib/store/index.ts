@@ -41,6 +41,7 @@ const setupStore = () =>
     reducer: rootReducer,
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware()
+        .concat(authPublicAPI.middleware)
         .concat(userAPI.middleware)
         .concat(overviewAPI.middleware)
         .concat(workspacesPrivateAPI.middleware)

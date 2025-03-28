@@ -9,6 +9,7 @@ import {
   userUUIDStorage,
 } from '@extension/storage';
 import { addOrMergeRecords, getRecords } from '@src/utils';
+import { traverseInformation } from '@extension/shared';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
   const captureTabId = await captureTabStorage.getCaptureTabId();
@@ -118,16 +119,24 @@ chrome.runtime.onInstalled.addListener(async details => {
 
 // Listener for onCompleted
 chrome.webRequest.onCompleted.addListener(
-  record => {
-    addOrMergeRecords(record.tabId, { recordType: 'network', source: 'background', ...record });
+  request => {
+    addOrMergeRecords(request.tabId, {
+      recordType: 'network',
+      source: 'background',
+      ...traverseInformation(structuredClone(request), request?.url),
+    });
   },
   { urls: ['<all_urls>'] },
 );
 
 // Listener for onBeforeRequest
 chrome.webRequest.onBeforeRequest.addListener(
-  record => {
-    addOrMergeRecords(record.tabId, { recordType: 'network', source: 'background', ...record });
+  request => {
+    addOrMergeRecords(request.tabId, {
+      recordType: 'network',
+      source: 'background',
+      ...structuredClone(request),
+    } as any);
   },
   { urls: ['<all_urls>'] },
   ['requestBody'],
@@ -135,8 +144,14 @@ chrome.webRequest.onBeforeRequest.addListener(
 
 // Listener for onBeforeSendHeaders
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  record => {
-    addOrMergeRecords(record.tabId, { recordType: 'network', source: 'background', ...record });
+  request => {
+    console.log('onBeforeSendHeaders', traverseInformation(structuredClone(request), request?.url));
+
+    addOrMergeRecords(request.tabId, {
+      recordType: 'network',
+      source: 'background',
+      ...traverseInformation(structuredClone(request), request?.url),
+    });
   },
   { urls: ['<all_urls>'] },
   ['requestHeaders'],

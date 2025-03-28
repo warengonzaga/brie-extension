@@ -1,4 +1,6 @@
-import { extractQueryParams, parseHeaders } from '@src/utils';
+import { traverseInformation } from '@extension/shared';
+
+import { extractQueryParams } from '@src/utils';
 
 interface FetchOptions extends RequestInit {
   headers?: HeadersInit;
@@ -38,33 +40,44 @@ export const interceptFetch = (): void => {
       const response = await originalFetch.apply(this, args);
       const endTime = new Date().toISOString();
 
-      // Clone the response for body parsing
-      const responseClone = response.clone();
-      const responseHeaders = parseHeaders(responseClone.headers);
+      // Check if the response is large or a binary stream before cloning
+      const contentType = response.headers.get('Content-Type');
+      const isBinary =
+        contentType?.includes('application/octet-stream') ||
+        contentType?.includes('image') ||
+        contentType?.includes('audio');
+      const isLargeResponse =
+        response.headers.get('Content-Length') && parseInt(response.headers.get('Content-Length')!, 10) > 1000000; // Arbitrary size limit (1MB)
 
       let responseBody: string | object;
-      try {
-        // Handling content types for JSON, text, and binary responses
-        const contentType = responseClone.headers.get('Content-Type');
-        if (contentType?.includes('application/json')) {
-          responseBody = await responseClone.json();
-        } else if (contentType?.includes('text')) {
-          responseBody = await responseClone.text();
-        } else if (contentType?.includes('application/xml') || contentType?.includes('text/xml')) {
-          responseBody = await responseClone.text();
-        } else if (contentType?.includes('application/octet-stream')) {
-          responseBody = 'BRIE: Binary content - Unable to display';
-        } else {
-          responseBody = 'BRIE: Unsupported content type';
+      if (isBinary || isLargeResponse) {
+        // Don't clone large or binary responses to save resources
+        responseBody = 'BRIE: Binary or Large content - Unable to display';
+      } else {
+        // Clone the response for body parsing (only for non-binary and small responses)
+        const responseClone = response.clone();
+        const responseHeaders = responseClone.headers || {};
+
+        try {
+          // Handle content types for JSON, text, and other responses
+          if (contentType?.includes('application/json')) {
+            responseBody = await responseClone.json();
+          } else if (contentType?.includes('text')) {
+            responseBody = await responseClone.text();
+          } else if (contentType?.includes('application/xml') || contentType?.includes('text/xml')) {
+            responseBody = await responseClone.text();
+          } else {
+            responseBody = 'BRIE: Unsupported content type';
+          }
+        } catch (error) {
+          console.error('Failed to parse fetch response body:', error);
+          responseBody = 'BRIE: Error parsing response body';
         }
-      } catch (error) {
-        console.error('Failed to parse fetch response body:', error);
-        responseBody = 'BRIE: Error parsing response body';
       }
 
       // Post message to main thread (ensure compatibility)
       try {
-        if (window.postMessage) {
+        if (typeof window !== 'undefined' && window?.postMessage) {
           window.postMessage(
             {
               type: 'ADD_RECORD',
@@ -74,10 +87,13 @@ export const interceptFetch = (): void => {
                 method,
                 url: url.toString(),
                 queryParams,
-                requestHeaders,
-                requestBody,
-                responseHeaders,
-                responseBody,
+                requestHeaders: traverseInformation(requestHeaders),
+                requestBody:
+                  requestBody && typeof requestBody === 'string'
+                    ? traverseInformation(JSON.parse(requestBody)) // Only parse if it's a string
+                    : requestBody && traverseInformation(requestBody),
+                responseHeaders: traverseInformation(response.headers),
+                responseBody: responseBody && typeof responseBody !== 'string' && traverseInformation(responseBody),
                 requestStart: startTime,
                 requestEnd: endTime,
                 status: response.status,
@@ -94,7 +110,7 @@ export const interceptFetch = (): void => {
 
       return response;
     } catch (error) {
-      console.error('Error intercepting fetch:', error);
+      console.error('[Fetch] Error intercepting:', error);
       return originalFetch.apply(this, args);
     }
   };

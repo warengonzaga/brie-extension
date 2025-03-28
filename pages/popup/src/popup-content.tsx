@@ -6,7 +6,7 @@ import { Header, BetaNotifier } from './components/ui';
 
 import { authTokensStorage, captureStateStorage, userUUIDStorage } from '@extension/storage';
 import { useLoginGuestMutation } from '@extension/store';
-import { APP_NAME, BASE_URL, useStorage } from '@extension/shared';
+import { useStorage } from '@extension/shared';
 import { Skeleton } from '@extension/ui';
 
 export const PopupContent = () => {
