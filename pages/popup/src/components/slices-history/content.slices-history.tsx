@@ -37,7 +37,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
   return (
     <div>
       {/* Top Bar */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <Button variant="ghost" size="icon" onClick={onBack}>
           <Icon name="ArrowLeftIcon" className="size-5" />
         </Button>
@@ -51,7 +51,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
 
       {/* Title and Description */}
       <div className="mb-2 flex items-center justify-between">
-        <h2 className="flex items-center gap-x-1.5 text-base font-semibold">{t('sliceHistoryTitle')}</h2>
+        <h2 className="flex items-center text-base font-semibold">{t('sliceHistoryTitle')}</h2>
 
         {user.fields?.authMethod === AuthMethod.GUEST && (
           <p className="text-sm font-medium text-muted-foreground text-red-500">
@@ -68,7 +68,7 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
       {isLoading && <CardSkeleton />}
 
       {!isLoading && !slices?.items?.length && (
-        <Alert className="text-center">
+        <Alert className="text-center mt-5">
           <AlertTitle className="text-[14px]">{t('noSlicesYet')}</AlertTitle>
           <AlertDescription className="text-[12px]">{t('noSlicesYetDescription')}</AlertDescription>
         </Alert>

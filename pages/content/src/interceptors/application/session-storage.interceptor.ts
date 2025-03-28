@@ -1,4 +1,4 @@
-import { isNonProduction, redactSensitiveInfo } from '@src/utils';
+import { isNonProduction, redactSensitiveInfo } from '@extension/shared';
 
 // Get all sessionStorage data
 export const interceptSessionStorage = () => {
@@ -7,6 +7,8 @@ export const interceptSessionStorage = () => {
 
   for (let i = 0; i < sessionStorage.length; i++) {
     const key = sessionStorage.key(i);
+    if (!key) continue; // Skip null keys
+
     const value = sessionStorage.getItem(key);
     sessionStorageData.push({
       key,

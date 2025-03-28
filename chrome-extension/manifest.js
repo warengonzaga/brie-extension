@@ -88,7 +88,7 @@ const manifest = withSidePanel({
   ...(activateDevToolsFeature ? { devtools_page: 'devtools/index.html' } : {}),
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.css', '*.svg', 'brie-icon-128x128', 'brie-logo.png', 'content/extend.iife.js'],
+      resources: ['*.js', '*.css', '*.svg', '*.png', 'content/extend.iife.js'],
       matches: ['*://*/*'],
     },
   ],

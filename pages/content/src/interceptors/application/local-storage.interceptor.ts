@@ -1,4 +1,4 @@
-import { isNonProduction, redactSensitiveInfo } from '@src/utils';
+import { isNonProduction, redactSensitiveInfo } from '@extension/shared';
 
 // Get all localStorage data
 export const interceptLocalStorage = () => {
@@ -7,6 +7,8 @@ export const interceptLocalStorage = () => {
 
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
+    if (!key) continue; // Skip null keys
+
     const value = localStorage.getItem(key);
     localStorageData.push({
       key,

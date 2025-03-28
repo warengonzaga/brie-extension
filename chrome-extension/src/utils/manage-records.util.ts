@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { traverseInformation } from '@extension/shared';
+
 const restricted = ['briehq']; // 'extend.iife',  'kbmbnelnoppneadncmmkfikbcgmilbao'  Note: it blocks the logs
 const invalidRecord = (entity: string) => restricted.some(word => entity.includes(word));
 
@@ -71,21 +73,24 @@ export const addOrMergeRecords = async (activeTabId: number, record: Record): Pr
     }
 
     if (key === 'requestBody' && recordData[key]?.raw) {
-      const rowRequestBody = recordData[key].raw;
+      const rawRequestBody = recordData[key].raw;
 
-      if (!rowRequestBody.length) {
+      if (!rawRequestBody.length) {
         recordData[key].parsed = null;
         continue;
       }
 
-      const rawBytes = rowRequestBody[0].bytes;
+      const rawBytes = rawRequestBody[0].bytes;
       const byteArray = new Uint8Array(rawBytes);
       const decoder = new TextDecoder('utf-8');
       const decodedBody = decoder.decode(byteArray);
 
       try {
-        recordData[key].parsed = JSON.parse(decodedBody);
+        recordData[key].parsed =
+          typeof decodedBody !== 'string' && traverseInformation(JSON.parse(decodedBody), record?.url);
       } catch (e) {
+        console.log('decodedBody', recordData[key], decodedBody);
+
         console.error('[addOrMergeRecords] Failed to parse JSON:', e);
       }
     }
