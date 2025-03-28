@@ -1,4 +1,4 @@
-import { parseHeaders } from '@src/utils';
+import { traverseInformation } from '@extension/shared';
 
 // Define interfaces for request details and payload
 interface RequestDetails {
@@ -63,12 +63,38 @@ export const interceptXHR = (): void => {
         // Request completed
         const endTime = new Date().toISOString();
         const rawHeaders = this.getAllResponseHeaders();
-        const responseHeaders = parseHeaders(
+        const responseHeaders = traverseInformation(
           rawHeaders
             .split('\r\n')
             .filter(line => line.includes(':'))
             .map(line => line.split(':').map(str => str.trim())),
         );
+        const { requestBody } = this._requestDetails;
+
+        // Check for large or binary content (skip cloning and parsing for binary data)
+        const contentType = this.getResponseHeader('Content-Type');
+        const isBinary =
+          contentType?.includes('application/octet-stream') ||
+          contentType?.includes('image') ||
+          contentType?.includes('audio');
+        const isLargeResponse =
+          this.getResponseHeader('Content-Length') && parseInt(this.getResponseHeader('Content-Length')!, 10) > 1000000; // Arbitrary 1MB size limit
+
+        let responseBody: string;
+        if (isBinary || isLargeResponse) {
+          // Don't clone large or binary responses
+          responseBody = 'BRIE: Binary or Large content - Unable to display';
+        } else {
+          // Parse the response as JSON or text for non-binary/small responses
+          try {
+            responseBody = this.responseText
+              ? traverseInformation(JSON.parse(this.responseText))
+              : 'BRIE: No response body';
+          } catch (error) {
+            console.error('[XHR] Failed to parse response body:', error);
+            responseBody = 'BRIE: Error parsing response body';
+          }
+        }
 
         // Ensure message posting is supported
         try {
@@ -80,10 +106,14 @@ export const interceptXHR = (): void => {
                   recordType: 'network',
                   source: 'client',
                   ...this._requestDetails,
+                  requestBody:
+                    requestBody && typeof requestBody !== 'string'
+                      ? traverseInformation(JSON.parse(this.requestBody as string))
+                      : requestBody,
                   requestEnd: endTime,
                   status: this.status,
                   responseHeaders,
-                  responseBody: this.responseText,
+                  responseBody,
                 },
               },
               '*',

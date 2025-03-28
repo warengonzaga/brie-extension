@@ -1,4 +1,4 @@
-import { isNonProduction, redactSensitiveInfo } from '@src/utils';
+import { isNonProduction, redactSensitiveInfo } from '@extension/shared';
 
 interface Cookie {
   key: string;

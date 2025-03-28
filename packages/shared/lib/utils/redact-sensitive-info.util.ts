@@ -1,7 +1,7 @@
-import { REDACTED_KEYWORD, sensitivePatterns } from '@src/constants';
+import { REDACTED_KEYWORD, sensitivePatterns } from '../constants';
 import { isNonProduction } from './is-non-production.util';
 
-export const redactSensitiveInfo = (key, value) => {
+export const redactSensitiveInfo = (key, value, url) => {
   // Helper to check if a key matches any sensitive pattern
   const isSensitiveKey = k => sensitivePatterns.some(pattern => pattern.test(k));
 
@@ -18,12 +18,12 @@ export const redactSensitiveInfo = (key, value) => {
   try {
     const parsed = typeof value === 'string' ? JSON.parse(value) : value;
     if (typeof parsed === 'object') {
-      return isNonProduction() ? value : JSON.stringify(redactObject(parsed));
+      return isNonProduction(url) ? value : JSON.stringify(redactObject(parsed));
     }
   } catch {
     // Not JSON, continue with string logic
   }
 
   // Redact plain strings
-  return isSensitiveKey(key) ? REDACTED_KEYWORD : value;
+  return !isNonProduction(url) && isSensitiveKey(key) ? REDACTED_KEYWORD : value;
 };
