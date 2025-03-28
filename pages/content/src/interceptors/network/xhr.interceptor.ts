@@ -87,9 +87,10 @@ export const interceptXHR = (): void => {
         } else {
           // Parse the response as JSON or text for non-binary/small responses
           try {
-            responseBody = this.responseText
-              ? traverseInformation(JSON.parse(this.responseText))
-              : 'BRIE: No response body';
+            responseBody =
+              this.responseText && typeof this.responseText !== 'string'
+                ? traverseInformation(JSON.parse(this.responseText))
+                : 'BRIE: No response body';
           } catch (error) {
             console.error('[XHR] Failed to parse response body:', error);
             responseBody = 'BRIE: Error parsing response body';
@@ -98,7 +99,7 @@ export const interceptXHR = (): void => {
 
         // Ensure message posting is supported
         try {
-          if (window.postMessage) {
+          if (typeof window !== 'undefined' && window?.postMessage) {
             window.postMessage(
               {
                 type: 'ADD_RECORD',
@@ -108,7 +109,7 @@ export const interceptXHR = (): void => {
                   ...this._requestDetails,
                   requestBody:
                     requestBody && typeof requestBody !== 'string'
-                      ? traverseInformation(JSON.parse(this.requestBody as string))
+                      ? traverseInformation(JSON.parse(requestBody as any))
                       : requestBody,
                   requestEnd: endTime,
                   status: this.status,

@@ -77,7 +77,7 @@ export const interceptFetch = (): void => {
 
       // Post message to main thread (ensure compatibility)
       try {
-        if (window.postMessage) {
+        if (typeof window !== 'undefined' && window?.postMessage) {
           window.postMessage(
             {
               type: 'ADD_RECORD',
@@ -89,9 +89,9 @@ export const interceptFetch = (): void => {
                 queryParams,
                 requestHeaders: traverseInformation(requestHeaders),
                 requestBody:
-                  requestBody && typeof requestBody !== 'string'
-                    ? traverseInformation(JSON.parse(requestBody))
-                    : requestBody,
+                  requestBody && typeof requestBody === 'string'
+                    ? traverseInformation(JSON.parse(requestBody)) // Only parse if it's a string
+                    : requestBody && traverseInformation(requestBody),
                 responseHeaders: traverseInformation(response.headers),
                 responseBody: responseBody && typeof responseBody !== 'string' && traverseInformation(responseBody),
                 requestStart: startTime,

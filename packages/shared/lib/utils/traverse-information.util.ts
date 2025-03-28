@@ -20,19 +20,19 @@ export const traverseInformation = (
       // Handle array of objects with key-value pairs
       information.forEach(obj => {
         Object.entries(obj).forEach(([key, value]) => {
-          parsedInformation[key] = redactSensitiveInfo(key, value, url);
+          (parsedInformation as any)[key] = redactSensitiveInfo(key, value, url);
         });
       });
     } else {
       // Handle array of key-value pairs
-      information.forEach(([key, value]) => {
-        parsedInformation[key] = redactSensitiveInfo(key, value, url);
+      information.forEach(([key, value]: any) => {
+        (parsedInformation as any)[key] = redactSensitiveInfo(key, value, url);
       });
     }
   } else {
     // Handle object with key-value pairs
     Object.entries(information).forEach(([key, value]) => {
-      parsedInformation[key] = redactSensitiveInfo(key, value, url);
+      (parsedInformation as any)[key] = redactSensitiveInfo(key, value, url);
     });
   }
 
