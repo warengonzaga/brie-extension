@@ -30,7 +30,7 @@
     "@extension/vite-config": "workspace:*",
     "cross-env": "^7.0.3",
     "postcss-load-config": "^6.0.1",
-    "sass": "1.79.4"
+    "sass": "1.86.0"
   },
   "postcss": {
     "plugins": {
