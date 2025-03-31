@@ -26,7 +26,7 @@
     "@extension/hmr": "workspace:*",
     "@extension/tsconfig": "workspace:*",
     "@extension/vite-config": "workspace:*",
-    "@laynezh/vite-plugin-lib-assets": "^0.5.23",
+    "@laynezh/vite-plugin-lib-assets": "^1.1.0",
     "@types/webextension-polyfill": "^0.12.1",
     "@types/ws": "^8.5.13",
     "cross-env": "^7.0.3",
