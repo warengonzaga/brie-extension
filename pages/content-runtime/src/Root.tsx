@@ -1,12 +1,10 @@
 import { createRoot } from 'react-dom/client';
 import App from '@src/App';
-// eslint-disable-next-line
-// @ts-ignore
 import injectedStyle from '@src/index.css?inline';
 
 export function mount() {
   const root = document.createElement('div');
-  root.id = 'brie-runtime-root';
+  root.id = 'chrome-extension-boilerplate-react-vite-runtime-content-view-root';
 
   document.body.append(root);
 
