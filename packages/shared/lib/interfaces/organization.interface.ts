@@ -1,5 +1,5 @@
-import type { Plan } from '../constants';
-import type { Subscription } from './subscription.interface';
+import type { Plan } from '../constants/index.js';
+import type { Subscription } from './subscription.interface.js';
 
 export interface Organization {
   id: string;

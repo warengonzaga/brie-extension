@@ -1,4 +1,4 @@
-import type { AuthMethod } from '../constants';
+import type { AuthMethod } from '../constants/index.js';
 
 export interface AuthState {
   user: User;

@@ -1,1 +1,1 @@
-export { subscriptionsAPI } from './subscriptions.api';
+export { subscriptionsAPI } from './subscriptions.api.js';

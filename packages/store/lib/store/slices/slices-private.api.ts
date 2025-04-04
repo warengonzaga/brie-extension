@@ -3,7 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import type { Slice, Pagination } from '@extension/shared';
 import { BASE_URL } from '@extension/shared';
 
-import { baseQueryWithReauth } from '../../services';
+import { baseQueryWithReauth } from '../../services/index.js';
 
 export const attachmentUrlPath = (a: Slice) => {
   const uploadPaths = {
@@ -11,7 +11,7 @@ export const attachmentUrlPath = (a: Slice) => {
     default: 'records',
   };
 
-  const uploadPath = uploadPaths[a.type] || uploadPaths.default;
+  const uploadPath = (uploadPaths as any)[a.type] || uploadPaths.default;
   return `${BASE_URL}/uploads/${uploadPath}/${a.externalId}`;
 };
 
@@ -33,7 +33,7 @@ export const slicesPrivateAPI = createApi({
         items: response.items.map((i: Slice) => ({
           ...i,
           labels: typeof i.labels === 'string' ? JSON.parse(i.labels) : i.labels,
-          attachments: i.attachments.map(a => ({
+          attachments: i.attachments.map((a: any) => ({
             ...a,
             preview: attachmentUrlPath(a),
           })),

@@ -1,5 +1,5 @@
-export type { ValueOf } from './shared-types';
-export { redactSensitiveInfo } from './redact-sensitive-info.util';
-export { isNonProduction } from './is-non-production.util';
-export { traverseInformation } from './traverse-information.util';
-export { isValidJSON } from './is-valid-json.util';
+export type { ValueOf } from './shared-types.js';
+export { redactSensitiveInfo } from './redact-sensitive-info.util.js';
+export { isNonProduction } from './is-non-production.util.js';
+export { traverseInformation } from './traverse-information.util.js';
+export { isValidJSON } from './is-valid-json.util.js';

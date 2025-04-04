@@ -1,5 +1,5 @@
 import { Provider as ReduxProvider } from 'react-redux';
 
 export { ReduxProvider };
-export * from './lib/store';
-export * from './lib/hooks';
+export * from './lib/store/index.js';
+export * from './lib/hooks/index.js';

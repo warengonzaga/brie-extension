@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import type { Organization } from '@extension/shared';
 
-import { useGetOrganizationByIdQuery } from '../store';
+import { useGetOrganizationByIdQuery } from '../store/index.js';
 
 export const useUserOrganization = (): {
   fields: Organization | undefined;

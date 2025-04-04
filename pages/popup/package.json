@@ -30,12 +30,7 @@
   "devDependencies": {
     "@extension/tailwindcss-config": "workspace:*",
     "@extension/tsconfig": "workspace:*",
-    "@extension/vite-config": "workspace:*"
-  },
-  "postcss": {
-    "plugins": {
-      "tailwindcss": {},
-      "autoprefixer": {}
-    }
+    "@extension/vite-config": "workspace:*",
+    "@extension/env": "workspace:*"
   }
 }

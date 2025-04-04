@@ -1,4 +1,4 @@
-import { redactSensitiveInfo } from './redact-sensitive-info.util';
+import { redactSensitiveInfo } from './redact-sensitive-info.util.js';
 
 /**
  * Utility to traverse information, accepting an array of key-value pairs, an object with key-value pairs,

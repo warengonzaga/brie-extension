@@ -1,4 +1,4 @@
-import type { Slice, Workspace } from '.';
+import type { Slice, Workspace } from './index.js';
 
 export interface Space {
   id: string;
