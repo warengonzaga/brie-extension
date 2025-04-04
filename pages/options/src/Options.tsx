@@ -1,11 +1,11 @@
 import '@src/Options.css';
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
-import { ToggleButton } from '@extension/ui';
+import { themeStorage } from '@extension/storage';
+import { Button } from '@extension/ui';
 import { t } from '@extension/i18n';
 
 const Options = () => {
-  const theme = useStorage(exampleThemeStorage);
+  const theme = useStorage(themeStorage);
   const isLight = theme === 'light';
   const logo = isLight ? 'options/logo_horizontal.svg' : 'options/logo_horizontal_dark.svg';
   const goGithubSite = () =>
@@ -19,7 +19,7 @@ const Options = () => {
       <p>
         Edit <code>pages/options/src/Options.tsx</code>
       </p>
-      <ToggleButton onClick={exampleThemeStorage.toggle}>{t('toggleTheme')}</ToggleButton>
+      <Button onClick={themeStorage.toggle}>{t('toggleTheme')}</Button>
     </div>
   );
 };

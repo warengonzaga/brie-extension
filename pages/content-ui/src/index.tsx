@@ -1,10 +1,9 @@
 import { createRoot } from 'react-dom/client';
 import App from '@src/App';
-// @ts-expect-error Because file doesn't exist before build
 import tailwindcssOutput from '../dist/tailwind-output.css?inline';
 
 const root = document.createElement('div');
-root.id = 'chrome-extension-boilerplate-react-vite-content-view-root';
+root.id = 'brie-root';
 
 document.body.append(root);
 

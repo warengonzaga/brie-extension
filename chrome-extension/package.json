@@ -23,13 +23,16 @@
     "@extension/shared": "workspace:*",
     "@extension/storage": "workspace:*",
     "vite-plugin-node-polyfills": "^0.23.0",
-    "webextension-polyfill": "^0.12.0"
+    "webextension-polyfill": "^0.12.0",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@extension/dev-utils": "workspace:*",
     "@extension/hmr": "workspace:*",
     "@extension/tsconfig": "workspace:*",
     "@extension/vite-config": "workspace:*",
+    "@extension/shared": "workspace:*",
+    "@extension/storage": "workspace:*",
     "@laynezh/vite-plugin-lib-assets": "^0.6.1",
     "magic-string": "^0.30.10",
     "ts-loader": "^9.5.1"

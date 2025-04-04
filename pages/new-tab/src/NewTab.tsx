@@ -1,12 +1,12 @@
 import '@src/NewTab.css';
 import '@src/NewTab.scss';
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
-import { exampleThemeStorage } from '@extension/storage';
-import { ToggleButton } from '@extension/ui';
+import { themeStorage } from '@extension/storage';
+import { Button } from '@extension/ui';
 import { t } from '@extension/i18n';
 
 const NewTab = () => {
-  const theme = useStorage(exampleThemeStorage);
+  const theme = useStorage(themeStorage);
   const isLight = theme === 'light';
   const logo = isLight ? 'new-tab/logo_horizontal.svg' : 'new-tab/logo_horizontal_dark.svg';
   const goGithubSite = () =>
@@ -23,7 +23,7 @@ const NewTab = () => {
           Edit <code>pages/new-tab/src/NewTab.tsx</code>
         </p>
         <h6>The color of this paragraph is defined using SASS.</h6>
-        <ToggleButton onClick={exampleThemeStorage.toggle}>{t('toggleTheme')}</ToggleButton>
+        <Button onClick={themeStorage.toggle}>{t('toggleTheme')}</Button>
       </header>
     </div>
   );

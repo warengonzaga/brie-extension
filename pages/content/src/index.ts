@@ -1,6 +1,8 @@
-import { sampleFunction } from '@src/sampleFunction';
+import { addRuntimeEventListeners, addWindowEventListeners } from './event-listeners';
+import { injectExtendScript } from './injected-scripts';
 
-console.log('content script loaded');
+injectExtendScript();
 
-// Shows how to call a function defined in another module
-sampleFunction();
+addWindowEventListeners();
+
+addRuntimeEventListeners();

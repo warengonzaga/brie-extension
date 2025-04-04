@@ -1,6 +1,12 @@
 import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature, activateOptionsFeature } = {
+  activateNewTabFeature: false,
+  activateDevToolsFeature: false,
+  activateSidePanelFeature: false,
+  activateOptionsFeature: false,
+};
 
 /**
  * @prop default_locale
@@ -22,34 +28,46 @@ const manifest = {
   default_locale: 'en',
   name: '__MSG_extensionName__',
   browser_specific_settings: {
+    /**
+     * @todo add it to env
+     */
     gecko: {
-      id: 'example@example.com',
+      id: 'ion.leu@gmail.com',
       strict_min_version: '109.0',
     },
   },
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
-  permissions: ['storage', 'scripting', 'tabs', 'notifications', 'sidePanel'],
-  options_page: 'options/index.html',
+  permissions: ['webRequest', 'storage', 'tabs', 'activeTab'],
+  ...(activateOptionsFeature
+    ? {
+        options_page: 'options/index.html',
+      }
+    : {}),
   background: {
     service_worker: 'background.js',
     type: 'module',
   },
   action: {
     default_popup: 'popup/index.html',
-    default_icon: 'icon-34.png',
+    default_icon: 'brie-logo.png',
   },
-  chrome_url_overrides: {
-    newtab: 'new-tab/index.html',
-  },
+  ...(activateNewTabFeature
+    ? {
+        chrome_url_overrides: {
+          newtab: 'new-tab/index.html',
+        },
+      }
+    : {}),
   icons: {
-    128: 'icon-128.png',
+    128: 'brie-icon-128x128.png',
   },
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
       js: ['content/index.iife.js'],
+      run_at: 'document_start',
     },
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
@@ -57,19 +75,23 @@ const manifest = {
     },
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      css: ['content.css'],
+      css: ['content.css'], // public folder
     },
   ],
-  devtools_page: 'devtools/index.html',
+  ...(activateDevToolsFeature ? { devtools_page: 'devtools/index.html' } : {}),
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.css', '*.svg', 'icon-128.png', 'icon-34.png'],
+      resources: ['*.js', '*.css', '*.svg', '*.png', 'content/extend.iife.js'],
       matches: ['*://*/*'],
     },
   ],
-  side_panel: {
-    default_path: 'side-panel/index.html',
-  },
+  ...(activateSidePanelFeature
+    ? {
+        side_panel: {
+          default_path: 'side-panel/index.html',
+        },
+      }
+    : {}),
 } satisfies chrome.runtime.ManifestV3;
 
 export default manifest;
