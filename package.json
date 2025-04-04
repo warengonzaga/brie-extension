@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-boilerplate-react-vite",
-  "version": "0.4.3",
+  "version": "0.3.0",
   "description": "chrome extension boilerplate",
   "license": "MIT",
   "private": true,
@@ -35,8 +35,7 @@
     "update-version": "bash bash-scripts/update_version.sh",
     "copy_env": "bash bash-scripts/copy_env.sh",
     "set-global-env": "bash bash-scripts/set_global_env.sh",
-    "postinstall": "pnpm build:eslint && pnpm copy_env",
-    "module-manager": "pnpm -F module-manager start"
+    "postinstall": "pnpm build:eslint && pnpm copy_env"
   },
   "dependencies": {
     "react": "19.0.0",
