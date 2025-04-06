@@ -8,6 +8,10 @@
 **/dist
 **/build
 **/dist-zip
+chrome-extension/manifest.js
+chrome-extension/pre-build.tsconfig.tsbuildinfo
+eslint.config.js
+tsconfig.tsbuildinfo
 
 # env
 **/.env.*
@@ -19,8 +23,4 @@
 **/.turbo
 
 # compiled
-chrome-extension/public/manifest.json
 **/tailwind-output.css
-
-# vite timestamp (because of bug from lib, remove it after fix will have been realased)
-**/vite.config.mts.timestamp-*

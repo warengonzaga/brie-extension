@@ -11,7 +11,7 @@ export const Header = () => {
       IS_PROD: {IS_PROD ? 't' : 'fs'}
       <br />
       <button
-        onClick={() => navigateTo('https://go.briehq.com/lp?utm_source=extension')}
+        onClick={() => navigateTo('https://go.brie.io/lp?utm_source=extension')}
         className="flex items-center gap-x-2">
         <img src={logo} className="size-10" alt="Brie" />
 
@@ -23,7 +23,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://go.briehq.com/github?utm_source=extension')}>
+          onClick={() => navigateTo('https://go.brie.io/github?utm_source=extension')}>
           <Icon name="GitHubLogoIcon" size={20} className="size-4" />
         </Button>
 
@@ -32,7 +32,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://go.briehq.com/discord?utm_source=extension')}>
+          onClick={() => navigateTo('https://go.brie.io/discord?utm_source=extension')}>
           <Icon name="DiscordLogoIcon" size={20} className="size-4" />
         </Button>
         <Button
@@ -40,7 +40,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://go.briehq.com/lp?utm_source=extension')}>
+          onClick={() => navigateTo('https://go.brie.io/lp?utm_source=extension')}>
           <Icon name="House" size={20} className="size-4" strokeWidth={1.5} />
         </Button>
       </div>

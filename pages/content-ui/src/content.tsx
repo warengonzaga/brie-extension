@@ -85,7 +85,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
           toast({ description: t('openReport') });
 
           setTimeout(() => {
-            window?.open(`https://app.briehq.com/s/${data?.externalId}`, '_blank')?.focus();
+            window?.open(`https://app.brie.io/s/${data?.externalId}`, '_blank')?.focus();
           }, 1000);
 
           onClose();
