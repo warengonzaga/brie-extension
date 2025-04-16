@@ -92,7 +92,10 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
                 <div className="flex-1">
                   <button
                     className="max-w-[240px] truncate text-sm font-medium text-slate-700 hover:underline"
-                    onClick={() => navigateTo(`https://app.brie.io/s/${item.externalId}`)}>
+                    /**
+                     * @todo move to env
+                     */
+                    onClick={() => navigateTo(`https://app.briehq.com/s/${item.externalId}`)}>
                     {item.externalId}
                   </button>
                   <p className="text-xs text-muted-foreground">{format(item.createdAt, 'LLL dd, y hh:mm a')}</p>

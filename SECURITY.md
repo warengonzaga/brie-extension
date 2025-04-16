@@ -1,6 +1,6 @@
 # Security
 
-**Contact:** [ask@brie.io](mailto:ask@brie.io)
+**Contact:** [ask[at]brie[dot]io](mailto:ask@brie.io)
 
 At Brie, security is our top priority. Despite our best efforts, vulnerabilities may still exist.
 

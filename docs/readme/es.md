@@ -54,7 +54,7 @@ Revisa los [Problemas iniciales buenos](https://github.com/briehq/brie-extension
 - **[Ion](https://github.com/ionleu)**
 - **[Luminita](https://github.com/luminita)**
 
-¿Preguntas o consultas? Escribe a ask@brie.io
+¿Preguntas o consultas? Escribe a ask[at]brie[dot]io
 
 ## 🌐 Léeme en otros idiomas
 

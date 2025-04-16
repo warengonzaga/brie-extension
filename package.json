@@ -1,13 +1,19 @@
 {
-  "name": "chrome-extension-boilerplate-react-vite",
+  "name": "brie-extension",
   "version": "0.3.0",
-  "description": "chrome extension boilerplate",
-  "license": "MIT",
+  "description": "report bugs 10x faster",
+  "license": "Apache-2.0",
+  "contributors": [
+    {
+      "name": "Ion Leu",
+      "email": "ion@brie.io"
+    }
+  ],
   "private": true,
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite.git"
+    "url": "https://github.com/briehq/brie-extension.git"
   },
   "type": "module",
   "scripts": {

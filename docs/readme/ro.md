@@ -64,7 +64,7 @@ Verifică [Good First Issues](https://github.com/briehq/brie-extension/labels/go
 - **[Ion](https://github.com/ionleu)**
 - **[Luminita](https://github.com/luminita)**
 
-Întrebări sau nelămuriri? Trimite un e-mail la ion@brie.io
+Întrebări sau nelămuriri? Trimite un e-mail la ask[at]brie[dot]io
 
 ## 🌐 Readme în alte limbi
 
