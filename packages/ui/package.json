@@ -41,10 +41,10 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cmdk": "1.0.0",
+    "cmdk": "1.1.1",
     "lucide-react": "^0.485.0",
     "react-hook-form": "^7.54.2",
-    "tailwind-merge": "^2.5.2",
+    "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
   },
