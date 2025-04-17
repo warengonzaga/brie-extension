@@ -51,8 +51,8 @@ Revisa los [Problemas iniciales buenos](https://github.com/briehq/brie-extension
 
 ## 👨‍💻 Equipo
 
-- **[Ion](https://github.com/ionleu)**
-- **[Luminita](https://github.com/luminita)**
+- <a href="https://x.com/intent/follow?screen_name=ionleu" target="_blank"><strong>Ion</strong></a>
+- <a href="https://github.com/luminital" target="_blank"><strong>Luminita</strong></a>
 
 ¿Preguntas o consultas? Escribe a ask[at]brie[dot]io
 

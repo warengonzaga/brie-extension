@@ -63,7 +63,7 @@ Check out the [Good First Issues](https://github.com/briehq/brie-extension/label
 ## 👨‍💻 Team
 
 - <a href="https://x.com/intent/follow?screen_name=ionleu" target="_blank"><strong>Ion</strong></a>
-- <a href="https://github.com/luminita" target="_blank"><strong>Luminita</strong></a>
+- <a href="https://github.com/luminital" target="_blank"><strong>Luminita</strong></a>
 
 Questions or inquiries? Email <a href="mailto:ask@brie.io" target="_blank">ask[at]brie[dot]io</a>
 
