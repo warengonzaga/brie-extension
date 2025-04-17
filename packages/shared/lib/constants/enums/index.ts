@@ -1,5 +1,5 @@
-export * from './slices';
+export { SlicePriority, SliceStatus, SliceType } from './slices/index.js';
 
-export * from './auth-method.enum';
-export * from './plan.enum';
-export * from './subscription-status.enum';
+export { AuthMethod } from './auth-method.enum.js';
+export { Plan } from './plan.enum.js';
+export { SubscriptionStatus } from './subscription-status.enum.js';

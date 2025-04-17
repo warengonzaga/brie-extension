@@ -17,7 +17,7 @@ Before submitting your contribution, be sure to take a moment and read the follo
 
 If you are interested to contribute to Brie project, start by
 reviewing pull requests. Suggest us your favorite best practices and standards that can improve our project. Your can join our small team by requesting to join the contributors team in the
-[Discord Chat](https://go.briehq.com/discord?utm_source=github) or we will reach out and ask you if you want to join or you can ask one of the current maintainers to add you.
+[Discord Chat](https://go.brie.io/discord?utm_source=github) or we will reach out and ask you if you want to join or you can ask one of the current maintainers to add you.
 
 Being a contributor is not an obligation. You can help when you have time and be
 less active when you don't, being busy with your projects tasks.

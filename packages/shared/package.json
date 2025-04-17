@@ -1,21 +1,22 @@
 {
   "name": "@extension/shared",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "chrome extension - shared code",
+  "type": "module",
   "private": true,
   "sideEffects": false,
   "files": [
     "dist/**"
   ],
-  "types": "index.ts",
-  "main": "./dist/index.js",
+  "types": "index.mts",
+  "main": "dist/index.mjs",
   "scripts": {
     "clean:bundle": "rimraf dist",
     "clean:node_modules": "pnpx rimraf node_modules",
     "clean:turbo": "rimraf .turbo",
     "clean": "pnpm clean:bundle && pnpm clean:node_modules && pnpm clean:turbo",
-    "ready": "node build.mjs",
-    "lint": "eslint . --ext .ts,.tsx",
+    "ready": "tsc -b",
+    "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier . --write --ignore-path ../../.prettierignore",
     "type-check": "tsc --noEmit"
@@ -23,11 +24,5 @@
   "devDependencies": {
     "@extension/storage": "workspace:*",
     "@extension/tsconfig": "workspace:*"
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.5.0",
-    "async-mutex": "^0.5.0",
-    "react-hot-toast": "^2.5.1",
-    "redux": "^5.0.1"
   }
 }

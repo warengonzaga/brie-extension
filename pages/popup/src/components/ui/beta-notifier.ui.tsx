@@ -20,7 +20,7 @@ export const BetaNotifier = () => {
     <div className="mt-4 text-center text-[10px] font-normal text-slate-600">
       {t('inBeta')}{' '}
       <a
-        href="https://go.briehq.com/discord?utm_source=extension"
+        href="https://go.brie.io/discord?utm_source=extension"
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-slate-900">

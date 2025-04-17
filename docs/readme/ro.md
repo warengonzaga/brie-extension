@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://go.briehq.com/lp">
+  <a href="https://go.brie.io/lp">
     <img src="https://github.com/briehq/.github/raw/main/profile/content/brie-icon-400x400.png" width="100px" alt="Brie - Capturează bug-uri" />
   </a>
 </p>
@@ -11,10 +11,10 @@
 <br />
 
 <p align="center">
-   <a href="https://go.briehq.com/github" target="_blank">Repo</a> •
-  <a href="https://go.briehq.com/lp" target="_blank">Website</a> •
-  <a href="https://go.briehq.com/discord" target="_blank">Discord</a> •
-  <a href="https://go.briehq.com/docs" target="_blank">Documentație</a>
+   <a href="https://go.brie.io/github" target="_blank">Repo</a> •
+  <a href="https://go.brie.io/lp" target="_blank">Website</a> •
+  <a href="https://go.brie.io/discord" target="_blank">Discord</a> •
+  <a href="https://go.brie.io/docs" target="_blank">Documentație</a>
 </p>
 
 <p align="center">
@@ -41,17 +41,17 @@ Brie capturează automat jurnalele din consolă, erorile de rețea și acțiunil
 Fără ore pierdute pe rapoarte de bug-uri neclare—doar remedieri rapide și software mai bun.
 
 **🔥 Alătură-te Miilor de Echipe Dinamice**  
-Instalează http://briehq.com și începe să livrezi software fără bug-uri chiar azi!
+Instalează http://brie.io și începe să livrezi software fără bug-uri chiar azi!
 
 ## 💫 Ghid Rapid
 
-1. Adaugă Brie de pe [website](https://go.briehq.com/lp), apoi fixează-l pentru acces rapid.
+1. Adaugă Brie de pe [website](https://go.brie.io/lp), apoi fixează-l pentru acces rapid.
 2. Apasă pe pictograma Brie pentru a captura și adnota o captură de ecran.
 3. Trimite linkul generat al raportului prin e-mail, Slack sau orice altă platformă.
 
 ## 📚 Documentație
 
-Pentru ghiduri detaliate și referințe API, vizitează [documentația](https://go.briehq.com/docs).
+Pentru ghiduri detaliate și referințe API, vizitează [documentația](https://go.brie.io/docs).
 
 ## 🤝 Contribuie
 
@@ -64,7 +64,7 @@ Verifică [Good First Issues](https://github.com/briehq/brie-extension/labels/go
 - **[Ion](https://github.com/ionleu)**
 - **[Luminita](https://github.com/luminita)**
 
-Întrebări sau nelămuriri? Trimite un e-mail la ion@briehq.com
+Întrebări sau nelămuriri? Trimite un e-mail la ask[at]brie[dot]io
 
 ## 🌐 Readme în alte limbi
 

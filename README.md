@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://go.briehq.com/lp" target="_blank">
+  <a href="https://go.brie.io/lp" target="_blank">
     <img src="https://github.com/briehq/.github/raw/main/profile/content/brie-icon-400x400.png" width="100px" alt="Brie - Capture bugs" />
   </a>
 </p>
@@ -11,9 +11,9 @@
 <br />
 
 <p align="center">
-  <a href="https://go.briehq.com/lp" target="_blank">Website</a> •
-  <a href="https://go.briehq.com/docs" target="_blank">Docs</a> •
-  <a href="https://go.briehq.com/discord" target="_blank">Discord</a>
+  <a href="https://go.brie.io/lp" target="_blank">Website</a> •
+  <a href="https://go.brie.io/docs" target="_blank">Docs</a> •
+  <a href="https://go.brie.io/discord" target="_blank">Discord</a>
 </p>
 
 <p align="center">
@@ -40,11 +40,11 @@ _Brie auto-captures console logs, network errors, and user actions so devs get f
 _No wasted hours on unclear bug reports—just fast fixes and better software._
 
 **🔥 Join Thousands of Fast-Moving Teams:**
-_Install <a href="https://go.briehq.com/lp" target="_blank">Brie</a> and start shipping bug-free software today!_
+_Install <a href="https://go.brie.io/lp" target="_blank">Brie</a> and start shipping bug-free software today!_
 
 ## 💫 Quickstart
 
-1. Add Brie from <a href="https://go.briehq.com/lp" target="_blank">the website</a>, then pin it for quick access.
+1. Add Brie from <a href="https://go.brie.io/lp" target="_blank">the website</a>, then pin it for quick access.
 
 2. Click the Brie icon to capture and annotate a screenshot.
 
@@ -52,7 +52,7 @@ _Install <a href="https://go.briehq.com/lp" target="_blank">Brie</a> and start s
 
 ## 📚 Documentation
 
-For detailed guides and API references, visit the <a href="https://go.briehq.com/docs" target="_blank">documentation</a>.
+For detailed guides and API references, visit the <a href="https://go.brie.io/docs" target="_blank">documentation</a>.
 
 ## 🤝 Contribute
 
@@ -65,7 +65,7 @@ Check out the [Good First Issues](https://github.com/briehq/brie-extension/label
 - <a href="https://x.com/intent/follow?screen_name=ionleu" target="_blank"><strong>Ion</strong></a>
 - <a href="https://github.com/luminita" target="_blank"><strong>Luminita</strong></a>
 
-Questions or inquiries? Email <a href="mailto:ask@briehq.com" target="_blank">ask[at]briehq[dot]com</a>
+Questions or inquiries? Email <a href="mailto:ask@brie.io" target="_blank">ask[at]brie[dot]io</a>
 
 ## 🌐 Readme in other languages
 

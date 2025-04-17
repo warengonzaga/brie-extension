@@ -9,7 +9,8 @@ const NewTab = () => {
   const theme = useStorage(themeStorage);
   const isLight = theme === 'light';
   const logo = isLight ? 'new-tab/logo_horizontal.svg' : 'new-tab/logo_horizontal_dark.svg';
-  const goGithubSite = () => chrome.tabs.create({ url: 'https://briehq.com' });
+  const goGithubSite = () =>
+    chrome.tabs.create({ url: 'https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite' });
 
   console.log(t('hello', 'World'));
   return (
@@ -22,9 +23,7 @@ const NewTab = () => {
           Edit <code>pages/new-tab/src/NewTab.tsx</code>
         </p>
         <h6>The color of this paragraph is defined using SASS.</h6>
-        <Button className="mt-4" onClick={themeStorage.toggle} theme={theme}>
-          {t('toggleTheme')}
-        </Button>
+        <Button onClick={themeStorage.toggle}>{t('toggleTheme')}</Button>
       </header>
     </div>
   );

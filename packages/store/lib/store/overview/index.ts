@@ -1,1 +1,1 @@
-export { overviewAPI } from './overview.api';
+export { overviewAPI } from './overview.api.js';

@@ -1,5 +1,5 @@
-import type { Space } from './space.interface';
-import type { Slice } from './slice.interface';
+import type { Space } from './space.interface.js';
+import type { Slice } from './slice.interface.js';
 
 export interface Workspace {
   externalId: string;

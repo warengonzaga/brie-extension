@@ -1,3 +1,3 @@
-export * from './slice-priority.enum';
-export * from './slice-status.enum';
-export * from './slice-type.enum';
+export { SlicePriority } from './slice-priority.enum.js';
+export { SliceStatus } from './slice-status.enum.js';
+export { SliceType } from './slice-type.enum.js';

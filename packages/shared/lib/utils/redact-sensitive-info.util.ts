@@ -1,5 +1,5 @@
-import { REDACTED_KEYWORD, sensitivePatterns } from '../constants';
-import { isNonProduction } from './is-non-production.util';
+import { REDACTED_KEYWORD, sensitivePatterns } from '../constants/index.js';
+import { isNonProduction } from './is-non-production.util.js';
 
 /**
  * Redacts sensitive information from a given key-value pair.

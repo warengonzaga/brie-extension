@@ -1,14 +1,15 @@
 import '@src/Panel.css';
-import type { ComponentPropsWithoutRef } from 'react';
-
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
 import { themeStorage } from '@extension/storage';
+import type { ComponentPropsWithoutRef } from 'react';
+import { t } from '@extension/i18n';
 
 const Panel = () => {
   const theme = useStorage(themeStorage);
   const isLight = theme === 'light';
   const logo = isLight ? 'devtools-panel/logo_horizontal.svg' : 'devtools-panel/logo_horizontal_dark.svg';
-  const goGithubSite = () => chrome.tabs.create({ url: 'https://briehq.com' });
+  const goGithubSite = () =>
+    chrome.tabs.create({ url: 'https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite' });
 
   return (
     <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
@@ -19,13 +20,13 @@ const Panel = () => {
         <p>
           Edit <code>pages/devtools-panel/src/Panel.tsx</code>
         </p>
-        <ToggleButton>Toggle theme</ToggleButton>
+        <Button onClick={themeStorage.toggle}>{t('toggleTheme')}</Button>
       </header>
     </div>
   );
 };
 
-const ToggleButton = (props: ComponentPropsWithoutRef<'button'>) => {
+const Button = (props: ComponentPropsWithoutRef<'button'>) => {
   const theme = useStorage(themeStorage);
   return (
     <button

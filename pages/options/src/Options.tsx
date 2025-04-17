@@ -2,12 +2,14 @@ import '@src/Options.css';
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
 import { themeStorage } from '@extension/storage';
 import { Button } from '@extension/ui';
+import { t } from '@extension/i18n';
 
 const Options = () => {
   const theme = useStorage(themeStorage);
   const isLight = theme === 'light';
   const logo = isLight ? 'options/logo_horizontal.svg' : 'options/logo_horizontal_dark.svg';
-  const goGithubSite = () => chrome.tabs.create({ url: 'https://briehq.com' });
+  const goGithubSite = () =>
+    chrome.tabs.create({ url: 'https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite' });
 
   return (
     <div className={`App ${isLight ? 'bg-slate-50 text-gray-900' : 'bg-gray-800 text-gray-100'}`}>
@@ -17,9 +19,7 @@ const Options = () => {
       <p>
         Edit <code>pages/options/src/Options.tsx</code>
       </p>
-      <Button className="mt-4" onClick={themeStorage.toggle} theme={theme}>
-        Toggle theme
-      </Button>
+      <Button onClick={themeStorage.toggle}>{t('toggleTheme')}</Button>
     </div>
   );
 };

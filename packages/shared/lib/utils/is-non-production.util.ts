@@ -1,4 +1,4 @@
-import { nonProductionKeywords } from '../constants';
+import { nonProductionKeywords } from '../constants/index.js';
 
 /**
  * Check if the given URL belongs to a non-production environment.

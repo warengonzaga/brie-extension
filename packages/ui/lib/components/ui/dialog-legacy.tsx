@@ -34,7 +34,7 @@ export const DialogLegacy = ({
                 {actions}
 
                 <Button size="icon" variant="secondary" onClick={onClose} type="button" className="size-6">
-                  <Icon name="X" className="size-4" strokeWidth="1.5" />
+                  <Icon name={'X' as any} className="size-4" strokeWidth="1.5" />
                 </Button>
               </div>
             </div>

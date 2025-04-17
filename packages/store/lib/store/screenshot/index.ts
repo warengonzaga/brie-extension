@@ -1,1 +1,1 @@
-export { screenshotAPI } from './screenshot.api';
+export { screenshotAPI } from './screenshot.api.js';

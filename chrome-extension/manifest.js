@@ -1,59 +1,50 @@
-import fs from 'node:fs';
-import deepmerge from 'deepmerge';
-
-const packageJson = JSON.parse(fs.readFileSync('../package.json', 'utf8'));
-const isFirefox = process.env.__FIREFOX__ === 'true';
-const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature } = {
+import { readFileSync } from 'node:fs';
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature, activateOptionsFeature } = {
   activateNewTabFeature: false,
   activateDevToolsFeature: false,
   activateSidePanelFeature: false,
+  activateOptionsFeature: false,
 };
-
 /**
- * If you want to disable the sidePanel, you can delete withSidePanel function and remove the sidePanel HoC on the manifest declaration.
+ * @prop default_locale
+ * if you want to support multiple languages, you can use the following reference
+ * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization
  *
- * ```js
- * const manifest = { // remove `withSidePanel()`
- * ```
+ * @prop browser_specific_settings
+ * Must be unique to your extension to upload to addons.mozilla.org
+ * (you can delete if you only want a chrome extension)
+ *
+ * @prop permissions
+ * Firefox doesn't support sidePanel (It will be deleted in manifest parser)
+ *
+ * @prop content_scripts
+ * css: ['content.css'], // public folder
  */
-const withSidePanel = manifest => {
-  // Firefox does not support sidePanel
-  if (isFirefox) {
-    return manifest;
-  }
-
-  return deepmerge(
-    manifest,
-    activateSidePanelFeature
-      ? {
-          side_panel: {
-            default_path: 'side-panel/index.html',
-          },
-          permissions: ['sidePanel'],
-        }
-      : {},
-  );
-};
-
-/**
- * After changing, please reload the extension at `chrome://extensions`
- * @type {chrome.runtime.ManifestV3}
- */
-const manifest = withSidePanel({
+const manifest = {
   manifest_version: 3,
   default_locale: 'en',
-  /**
-   * if you want to support multiple languages, you can use the following reference
-   * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization
-   */
   name: '__MSG_extensionName__',
+  browser_specific_settings: {
+    /**
+     * @todo add it to env
+     */
+    gecko: {
+      id: 'ion.leu@gmail.com',
+      strict_min_version: '109.0',
+    },
+  },
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
   permissions: ['webRequest', 'storage', 'tabs', 'activeTab'],
-  options_page: 'options/index.html',
+  ...(activateOptionsFeature
+    ? {
+        options_page: 'options/index.html',
+      }
+    : {}),
   background: {
-    service_worker: 'background.iife.js',
+    service_worker: 'background.js',
     type: 'module',
   },
   action: {
@@ -92,6 +83,12 @@ const manifest = withSidePanel({
       matches: ['*://*/*'],
     },
   ],
-});
-
+  ...(activateSidePanelFeature
+    ? {
+        side_panel: {
+          default_path: 'side-panel/index.html',
+        },
+      }
+    : {}),
+};
 export default manifest;
