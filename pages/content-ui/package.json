@@ -39,8 +39,6 @@
     "@extension/tsconfig": "workspace:*",
     "@extension/vite-config": "workspace:*",
     "@types/fabric": "^5.3.9",
-    "@types/file-saver": "^2.0.7",
-    "concurrently": "^9.0.1",
-    "cross-env": "^7.0.3"
+    "@types/file-saver": "^2.0.7"
   }
 }
