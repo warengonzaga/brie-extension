@@ -41,7 +41,7 @@ export default withUI({
 Add the following to the `index.tsx` file.
 
 ```tsx
-import '@extension/ui/lib/global.css';
+import '@extension/ui/global.css';
 ```
 
 ## Add Custom Component
@@ -228,7 +228,8 @@ file. ([`Configure styles`](https://ui.shadcn.com/docs/installation/manual))
 @tailwind utilities;
 
 @layer base {
-  :host, :root {
+  :host,
+  :root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
@@ -311,7 +312,7 @@ export * from './lib/components/ui/button';
 If you want to use shadcn components in content-ui ShadowDOM, you need to import ui package's global.css in the content-ui `tailwind-input.css`
 
 ```css
-@import '@extension/ui/lib/global.css';
+@import '@extension/ui/global.css';
 
 @tailwind base;
 @tailwind components;
@@ -321,7 +322,7 @@ If you want to use shadcn components in content-ui ShadowDOM, you need to import
 If you want to use shadcn components in other pages, you need to import ui package's global.css in the `src/index.css`
 
 ```css
-@import '@extension/ui/lib/global.css';
+@import '@extension/ui/global.css';
 
 @tailwind base;
 @tailwind components;

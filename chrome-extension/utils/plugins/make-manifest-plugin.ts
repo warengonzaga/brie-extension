@@ -1,11 +1,11 @@
+import { colorLog, ManifestParser } from '@extension/dev-utils';
+import { IS_DEV, IS_FIREFOX } from '@extension/env';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { platform } from 'node:process';
-import type { Manifest } from '@extension/dev-utils';
-import { colorLog, ManifestParser } from '@extension/dev-utils';
+import { pathToFileURL } from 'node:url';
+import type { ManifestType } from '@extension/dev-utils';
 import type { PluginOption } from 'vite';
-import { IS_DEV, IS_FIREFOX } from '@extension/env';
 
 const manifestFile = resolve(import.meta.dirname, '..', '..', 'manifest.js');
 const refreshFilePath = resolve(
@@ -39,8 +39,16 @@ const getManifestWithCacheBurst = async () => {
   }
 };
 
+const addRefreshContentScript = (manifest: ManifestType) => {
+  manifest.content_scripts = manifest.content_scripts || [];
+  manifest.content_scripts.push({
+    matches: ['http://*/*', 'https://*/*', '<all_urls>'],
+    js: ['refresh.js'], // for public's HMR(refresh) support
+  });
+};
+
 export default (config: { outDir: string }): PluginOption => {
-  const makeManifest = (manifest: Manifest, to: string) => {
+  const makeManifest = (manifest: ManifestType, to: string) => {
     if (!existsSync(to)) {
       mkdirSync(to);
     }
@@ -74,11 +82,3 @@ export default (config: { outDir: string }): PluginOption => {
     },
   };
 };
-
-function addRefreshContentScript(manifest: Manifest) {
-  manifest.content_scripts = manifest.content_scripts || [];
-  manifest.content_scripts.push({
-    matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-    js: ['refresh.js'], // for public's HMR(refresh) support
-  });
-}
