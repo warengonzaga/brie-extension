@@ -60,7 +60,7 @@ Some shared packages:
 - `i18n` - custom internationalization package; provides i18n function with type safety and other validation
 - `shared` - shared code for the entire project (types, constants, custom hooks, components etc.)
 - `storage` - helpers for easier integration with [storage](https://developer.chrome.com/docs/extensions/reference/api/storage), e.g. local/session storages
-- `tailwind-config` - shared Tailwind config for entire project
+- `tailwindcss-config` - shared Tailwind config for entire project
 - `tsconfig` - shared tsconfig for the entire project
 - `ui` - function to merge your Tailwind config with the global one; you can save components here
 - `vite-config` - shared Vite config for the entire project
