@@ -50,7 +50,6 @@
   "devDependencies": {
     "@extension/tailwindcss-config": "workspace:*",
     "@extension/tsconfig": "workspace:*",
-    "tsc-alias": "^1.8.10",
-    "deepmerge": "^4.3.1"
+    "tsc-alias": "^1.8.10"
   }
 }
