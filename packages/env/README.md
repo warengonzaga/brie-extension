@@ -1,31 +1,74 @@
 # Environment Package
 
-This package contains code which creates env values.
-To use the code in the package, you need to follow those steps:
+This package manages environment variables for the browser extension.
 
-1. Add a new record to `.env` (NEED TO CONTAIN `CEB_` PREFIX),
+## How It Works
 
-    - If you want via cli:
-    - Add it as argument like: `pnpm set-global-env CLI_CEB_NEXT_VALUE=new_data ...` (NEED TO CONTAIN `CLI_CEB_` PREFIX)
+This setup supports scoped and environment-based builds via the following pattern:
 
-   > [!IMPORTANT]
-   > `CLI_CEB_DEV` and `CLI_CEB_FIREFOX` are `false` by default \
-   > All CLI values are overwriting in each call, that's mean you'll have access to values from current script run only.
+```
+pnpm <action>:<scope>:<env>
+```
 
-    - If you want dynamic variables go to `lib/index.ts` and edit `dynamicEnvValues` object.
+- **Actions**: `run` | `build`
+- **Scopes**: `chrome` | `firefox`
+- **Environments**: `local` | `production`
 
-2. Use it, for example:
-    ```ts
-    console.log(process.env['CEB_EXAMPLE']);
-    ```
-   or
-   ```ts
-   console.log(process.env.CEB_EXAMPLE);
-   ```
-   but with first solution, autofill should work for IDE:
-   ![img.png](use-env-example.png)
-3. You are also able to import const like `IS_DEV` from `@extension/env` like:
-   ```ts
-    import { IS_DEV } from '@extension/env';
-    ```
-   For more look [ENV CONST](lib/const.ts)
+### Example Commands
+
+```bash
+pnpm run:chrome:local       # Dev Chrome with Local env
+pnpm run:firefox:production # Dev Firefox with Production env
+```
+
+## CLI Env Setup
+
+Under the hood, this uses the `set-global-env` script to write values into `.env`. You can still manually or programmatically modify values using:
+
+```bash
+pnpm set-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=false CEB_ENV=development
+```
+
+> **IMPORTANT**
+>
+> - All `CLI_CEB_` values are **overwritten on each call**.
+> - Default values: `CLI_CEB_DEV=false`, `CLI_CEB_FIREFOX=false`.
+
+## Add a New Environment Variable
+
+### Option 1: CLI (for temporary CLI use only)
+
+```bash
+pnpm set-env CLI_CEB_MY_FLAG=true
+```
+
+### Option 2: Base Environment File
+
+Edit or add to your `.env.development` or `.env.production` files using the `CEB_` prefix:
+
+```env
+CEB_API_URL=https://api.local
+```
+
+## 🔁 Accessing the Variables in Code
+
+```ts
+console.log(process.env['CEB_MY_FLAG']);
+console.log(process.env.CEB_MY_FLAG); // Also works, but no auto-complete
+```
+
+> Use bracket notation for better IDE auto-completion.
+
+## 🔂 Using Constants from `@extension/env`
+
+```ts
+import { IS_DEV } from '@extension/env';
+```
+
+For more, see [`lib/const.ts`](lib/const.ts)
+
+---
+
+**TL;DR**  
+Use `pnpm run:chrome:local` or similar to inject the correct environment.  
+Your app will automatically adjust based on `.env.<ENV>` + CLI values.
