@@ -1,12 +1,16 @@
 {
   "name": "brie-extension",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "report bugs 10x faster",
   "license": "Apache-2.0",
   "contributors": [
     {
       "name": "Ion Leu",
       "email": "ion@brie.io"
+    },
+    {
+      "name": "Luminita Leu",
+      "email": "luminita@brie.io"
     }
   ],
   "private": true,
@@ -24,29 +28,32 @@
     "clean:install": "pnpm clean:node_modules && pnpm install --frozen-lockfile",
     "type-check": "turbo type-check",
     "base-build": "pnpm clean:bundle && turbo build",
-    "build": "pnpm set-global-env && pnpm base-build",
-    "build:firefox": "pnpm set-global-env CLI_CEB_FIREFOX=true && pnpm base-build",
     "base-dev": "pnpm clean:bundle && turbo ready && turbo watch dev --concurrency 20",
-    "dev": "pnpm set-global-env CLI_CEB_DEV=true && pnpm base-dev",
-    "dev:firefox": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=true && pnpm base-dev",
-    "build:eslint": "tsc -b",
-    "zip": "pnpm build && pnpm -F zipper zip",
-    "zip:firefox": "pnpm build:firefox && pnpm -F zipper zip",
+    "zip": "pnpm build:chrome:production && pnpm -F zipper zip",
+    "zip:firefox": "pnpm build:firefox:production && pnpm -F zipper zip",
     "e2e": "pnpm zip && turbo e2e",
     "e2e:firefox": "pnpm zip:firefox && turbo e2e",
-    "lint": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
-    "lint:fix": "turbo lint:fix --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
-    "prettier": "turbo prettier --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
+    "lint": "turbo lint --continue",
+    "lint:fix": "turbo lint:fix --continue",
+    "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "prepare": "husky",
     "update-version": "bash bash-scripts/update_version.sh",
     "copy_env": "bash bash-scripts/copy_env.sh",
     "set-global-env": "bash bash-scripts/set_global_env.sh",
-    "postinstall": "pnpm build:eslint && pnpm copy_env"
+    "postinstall": "pnpm copy_env",
+    "run:chrome:local": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=false CLI_CEB_ENV=development && pnpm base-dev",
+    "run:firefox:local": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=true CLI_CEB_ENV=development && pnpm base-dev",
+    "build:chrome:local": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=false CLI_CEB_ENV=development && pnpm build",
+    "build:firefox:local": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=true CLI_CEB_ENV=development && pnpm build:firefox",
+    "run:chrome:production": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=false CLI_CEB_ENV=production && pnpm base-dev",
+    "run:firefox:production": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=true CLI_CEB_ENV=production && pnpm base-dev",
+    "build:chrome:production": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=false CLI_CEB_ENV=production && pnpm build",
+    "build:firefox:production": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=true CLI_CEB_ENV=production && pnpm build:firefox"
   },
   "dependencies": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "html2canvas": "^1.4.1"
+    "html2canvas": "^1.4.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
@@ -59,6 +66,7 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@typescript-eslint/parser": "^8.28.0",
     "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
     "deepmerge": "^4.3.1",
@@ -75,9 +83,11 @@
     "eslint-plugin-react-hooks": "5.1.0",
     "eslint-plugin-tailwindcss": "^3.17.5",
     "fast-glob": "^3.3.3",
+    "fflate": "^0.8.2",
     "globals": "^15.14.0",
     "husky": "^9.1.4",
-    "lint-staged": "^15.2.7",
+    "jiti": "^2.4.2",
+    "lint-staged": "^15.5.1",
     "postcss": "^8.5.2",
     "postcss-load-config": "^6.0.1",
     "prettier": "^3.3.3",
@@ -88,7 +98,8 @@
     "turbo": "^2.4.2",
     "typescript": "5.8.1-rc",
     "typescript-eslint": "^8.20.0",
-    "vite": "6.1.0"
+    "vite": "6.1.0",
+    "vite-plugin-node-polyfills": "^0.23.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json}": [

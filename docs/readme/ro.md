@@ -61,8 +61,8 @@ Verifică [Good First Issues](https://github.com/briehq/brie-extension/labels/go
 
 ## 👨‍💻 Echipa
 
-- **[Ion](https://github.com/ionleu)**
-- **[Luminita](https://github.com/luminita)**
+- <a href="https://x.com/intent/follow?screen_name=ionleu" target="_blank"><strong>Ion</strong></a>
+- <a href="https://github.com/luminital" target="_blank"><strong>Luminita</strong></a>
 
 Întrebări sau nelămuriri? Trimite un e-mail la ask[at]brie[dot]io
 

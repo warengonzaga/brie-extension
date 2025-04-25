@@ -1,5 +1,5 @@
 import { Button, Icon } from '@extension/ui';
-import { IS_DEV, IS_PROD } from '@extension/env';
+import { CEB_NAME } from '@extension/env';
 import { navigateTo } from '@src/utils';
 
 export const Header = () => {
@@ -7,15 +7,12 @@ export const Header = () => {
 
   return (
     <header className="mb-4 flex items-center justify-between">
-      IS_DEVs: {IS_DEV ? 't' : 'f'} <br />
-      IS_PROD: {IS_PROD ? 't' : 'fs'}
-      <br />
       <button
         onClick={() => navigateTo('https://go.brie.io/lp?utm_source=extension')}
         className="flex items-center gap-x-2">
         <img src={logo} className="size-10" alt="Brie" />
 
-        <h1 className="text-xl font-semibold text-[#df8801] -ml-1.5">brie</h1>
+        <h1 className="text-xl font-semibold text-[#df8801] -ml-1.5">{CEB_NAME}</h1>
       </button>
       <div className="flex items-center">
         <Button

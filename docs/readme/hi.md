@@ -61,8 +61,8 @@ Brie ऑटो-कैप्चर करता है कन्सोल लॉ�
 
 ## 👨‍💻 टीम
 
-- **[Ion](https://github.com/ionleu)**
-- **[Luminita](https://github.com/luminita)**
+- <a href="https://x.com/intent/follow?screen_name=ionleu" target="_blank"><strong>Ion</strong></a>
+- <a href="https://github.com/luminital" target="_blank"><strong>Luminita</strong></a>
 
 कोई प्रश्न या जानकारी चाहिए? ईमेल करें: ask[at]brie[dot]io
 
