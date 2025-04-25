@@ -3,33 +3,32 @@
 # Default values
 CLI_CEB_DEV=false
 CLI_CEB_FIREFOX=false
+CLI_CEB_ENV="development"
 
 validate_is_boolean() {
   if [[ "$1" != "true" && "$1" != "false" ]]; then
-    echo "Invalid value for <$2>. Please use 'true' or 'false'."
+    echo "Invalid value for <$2>. Use 'true' or 'false'."
     exit 1
   fi
 }
 
-# Validate if a key starts with CLI_CEB_ or CEB_
 validate_key() {
   local key="$1"
-  local is_editable_section="${2:-false}"
+  local is_editable="${2:-false}"
 
   if [[ -n "$key" && ! "$key" =~ ^# ]]; then
-    if [[ "$is_editable_section" == true && ! "$key" =~ ^CEB_ ]]; then
-      echo "Invalid key: <$key>. All keys in the editable section must start with 'CEB_'."
+    if [[ "$is_editable" == true && ! "$key" =~ ^CEB_ ]]; then
+      echo "Invalid key: <$key>. Must start with 'CEB_'."
       exit 1
-    elif [[ "$is_editable_section" == false && ! "$key" =~ ^CLI_CEB_ ]]; then
-      echo "Invalid key: <$key>. All CLI keys must start with 'CLI_CEB_'."
+    elif [[ "$is_editable" == false && ! "$key" =~ ^CLI_CEB_ ]]; then
+      echo "Invalid key: <$key>. Must start with 'CLI_CEB_'."
       exit 1
     fi
   fi
 }
 
 parse_arguments() {
-  for arg in "$@"
-  do
+  for arg in "$@"; do
     key="${arg%%=*}"
     value="${arg#*=}"
 
@@ -44,6 +43,9 @@ parse_arguments() {
         CLI_CEB_FIREFOX="$value"
         validate_is_boolean "$CLI_CEB_FIREFOX" "CLI_CEB_FIREFOX"
         ;;
+      CLI_CEB_ENV)
+        CLI_CEB_ENV="$value"
+        ;;
       *)
         cli_values+=("$key=$value")
         ;;
@@ -51,7 +53,18 @@ parse_arguments() {
   done
 }
 
-# Validate keys in .env file
+load_env_base() {
+  ENV_FILE=".env.$CLI_CEB_ENV"
+
+  if [[ -f "$ENV_FILE" ]]; then
+    echo "Using environment: $ENV_FILE"
+    cp "$ENV_FILE" .env
+  else
+    echo "Missing env file: $ENV_FILE"
+    exit 1
+  fi
+}
+
 validate_env_keys() {
   editable_section_starts=false
 
@@ -69,23 +82,22 @@ create_new_file() {
   temp_file=$(mktemp)
 
   {
-    echo "# THOSE VALUES ARE EDITABLE ONLY VIA CLI"
+    echo "# DO NOT EDIT CLI VALUES BELOW MANUALLY"
     echo "CLI_CEB_DEV=$CLI_CEB_DEV"
     echo "CLI_CEB_FIREFOX=$CLI_CEB_FIREFOX"
     for value in "${cli_values[@]}"; do
       echo "$value"
     done
     echo ""
-    echo "# THOSE VALUES ARE EDITABLE"
-
-    # Copy existing env values, without CLI section
+    echo "# Editable values (copied from .env.$CLI_CEB_ENV)"
     grep -E '^CEB_' .env
   } > "$temp_file"
 
   mv "$temp_file" .env
 }
 
-# Main script execution
+# Main flow
 parse_arguments "$@"
+load_env_base
 validate_env_keys
 create_new_file

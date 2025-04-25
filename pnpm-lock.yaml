@@ -283,6 +283,9 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
     devDependencies:
+      '@extension/env':
+        specifier: workspace:*
+        version: link:../env
       '@extension/shared':
         specifier: workspace:*
         version: link:../shared

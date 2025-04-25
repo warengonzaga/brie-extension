@@ -2,6 +2,7 @@ import { memo, useMemo, useState } from 'react';
 
 import { t } from '@extension/i18n';
 import { AuthMethod } from '@extension/shared';
+import { CEB_APP_BASE_URL } from '@extension/env';
 import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
 import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, useToast } from '@extension/ui';
 
@@ -88,7 +89,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
            * @todo move to env
            */
           setTimeout(() => {
-            window?.open(`https://app.briehq.com/s/${data?.externalId}`, '_blank')?.focus();
+            window?.open(`${CEB_APP_BASE_URL}/s/${data?.externalId}`, '_blank')?.focus();
           }, 1000);
 
           onClose();
