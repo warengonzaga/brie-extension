@@ -64,8 +64,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     if (message.type === 'GET_RECORDS') {
-      console.log('get records called,', sender.tab.id, getRecords(sender.tab.id));
-
       getRecords(sender.tab.id).then(records => sendResponse({ records }));
     }
   } else {
@@ -120,10 +118,12 @@ chrome.runtime.onInstalled.addListener(async details => {
 // Listener for onCompleted
 chrome.webRequest.onCompleted.addListener(
   request => {
+    console.log('request', request);
+
     addOrMergeRecords(request.tabId, {
       recordType: 'network',
       source: 'background',
-      ...traverseInformation(structuredClone(request), request?.url),
+      ...structuredClone(request),
     });
   },
   { urls: ['<all_urls>'] },
@@ -145,12 +145,10 @@ chrome.webRequest.onBeforeRequest.addListener(
 // Listener for onBeforeSendHeaders
 chrome.webRequest.onBeforeSendHeaders.addListener(
   request => {
-    console.log('onBeforeSendHeaders', traverseInformation(structuredClone(request), request?.url));
-
     addOrMergeRecords(request.tabId, {
       recordType: 'network',
       source: 'background',
-      ...traverseInformation(structuredClone(request), request?.url),
+      ...structuredClone(request),
     });
   },
   { urls: ['<all_urls>'] },

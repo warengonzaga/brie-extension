@@ -23,6 +23,8 @@ export const getRecords = async (activeTabId: number): Promise<Record[]> => {
 };
 
 export const addOrMergeRecords = async (activeTabId: number, record: Record): Promise<void> => {
+  console.log('activeTabIds:', activeTabId, record);
+
   if (!activeTabId) {
     console.log('activeTabId is null');
     return;
@@ -89,8 +91,6 @@ export const addOrMergeRecords = async (activeTabId: number, record: Record): Pr
         recordData[key].parsed =
           typeof decodedBody !== 'string' && traverseInformation(JSON.parse(decodedBody), record?.url);
       } catch (e) {
-        console.log('decodedBody', recordData[key], decodedBody);
-
         console.error('[addOrMergeRecords] Failed to parse JSON:', e);
       }
     }
