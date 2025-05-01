@@ -1,5 +1,3 @@
-import { isNonProduction, redactSensitiveInfo } from '@extension/shared';
-
 // Get all sessionStorage data
 export const interceptSessionStorage = () => {
   const timestamp = Date.now();
@@ -12,7 +10,7 @@ export const interceptSessionStorage = () => {
     const value = sessionStorage.getItem(key);
     sessionStorageData.push({
       key,
-      value: isNonProduction() ? value : redactSensitiveInfo(key, value),
+      value,
     });
   }
 

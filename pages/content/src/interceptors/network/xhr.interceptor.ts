@@ -1,24 +1,9 @@
-import { traverseInformation } from '@extension/shared';
-
 // Define interfaces for request details and payload
 interface RequestDetails {
   method: string;
   url: string;
   requestStart: string;
   requestBody: Document | XMLHttpRequestBodyInit | null;
-}
-
-interface XHRPayload {
-  recordType: string;
-  source: string;
-  method: string;
-  url: string;
-  requestStart: string;
-  requestEnd: string;
-  requestBody: Document | XMLHttpRequestBodyInit | null;
-  status: number;
-  responseHeaders: Record<string, string>;
-  responseBody: string;
 }
 
 // Extend the XMLHttpRequest type to include custom properties
@@ -63,12 +48,11 @@ export const interceptXHR = (): void => {
         // Request completed
         const endTime = new Date().toISOString();
         const rawHeaders = this.getAllResponseHeaders();
-        const responseHeaders = traverseInformation(
-          rawHeaders
-            .split('\r\n')
-            .filter(line => line.includes(':'))
-            .map(line => line.split(':').map(str => str.trim())),
-        );
+        const responseHeaders = rawHeaders
+          .split('\r\n')
+          .filter(line => line.includes(':'))
+          .map(line => line.split(':').map(str => str.trim()));
+
         const { requestBody } = this._requestDetails;
 
         // Check for large or binary content (skip cloning and parsing for binary data)
@@ -87,10 +71,7 @@ export const interceptXHR = (): void => {
         } else {
           // Parse the response as JSON or text for non-binary/small responses
           try {
-            responseBody =
-              this.responseText && typeof this.responseText !== 'string'
-                ? traverseInformation(JSON.parse(this.responseText))
-                : 'BRIE: No response body';
+            responseBody = this.responseText || 'BRIE: No response body';
           } catch (error) {
             console.error('[XHR] Failed to parse response body:', error);
             responseBody = 'BRIE: Error parsing response body';
@@ -107,10 +88,7 @@ export const interceptXHR = (): void => {
                   recordType: 'network',
                   source: 'client',
                   ...this._requestDetails,
-                  requestBody:
-                    requestBody && typeof requestBody !== 'string'
-                      ? traverseInformation(JSON.parse(requestBody as any))
-                      : requestBody,
+                  requestBody,
                   requestEnd: endTime,
                   status: this.status,
                   responseHeaders,

@@ -6,10 +6,16 @@ import { nonProductionKeywords } from '../constants/index.js';
  * @param {string} url - The URL to check.
  * @returns {boolean} - Returns true if the URL contains any non-production keywords.
  */
+
+let i = 0;
 export const isNonProduction = (url?: string): boolean => {
   if (!url) {
     url = typeof window !== 'undefined' ? window?.location?.href.toLowerCase() : '';
   }
+
+  i++;
+
+  console.log('i', i);
 
   return nonProductionKeywords.some(env => url.includes(env.toLowerCase()));
 };

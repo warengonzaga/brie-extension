@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { traverseInformation } from '@extension/shared';
+import { deepRedactSensitiveInfo } from '@extension/shared';
 
 const restricted = ['briehq']; // 'extend.iife',  'kbmbnelnoppneadncmmkfikbcgmilbao'  Note: it blocks the logs
 const invalidRecord = (entity: string) => restricted.some(word => entity.includes(word));
@@ -18,81 +18,82 @@ export interface Record {
   [key: string]: any;
 }
 
-export const getRecords = async (activeTabId: number): Promise<Record[]> => {
-  return activeTabId && tabRecordsMap.has(activeTabId) ? Array.from(tabRecordsMap.get(activeTabId)!.values()) : [];
+export const getRecords = async (tabId: number): Promise<Record[]> => {
+  return tabId && tabRecordsMap.has(tabId) ? Array.from(tabRecordsMap.get(tabId)!.values()) : [];
 };
 
-export const addOrMergeRecords = async (activeTabId: number, record: Record): Promise<void> => {
-  console.log('activeTabIds:', activeTabId, record);
-
-  if (!activeTabId) {
-    console.log('activeTabId is null');
+export const addOrMergeRecords = async (tabId: number, record: Record | any): Promise<void> => {
+  if (!tabId || tabId === -1) {
+    console.log('[addOrMergeRecords] tabId is null OR -1');
     return;
   }
+
+  if (invalidRecord(record?.url || '')) {
+    return;
+  }
+
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
 
   // if (record.recordType === 'console' && invalidRecord(record.stackTrace.parsed)) {
   //   console.log('record console', record);
   //   return;
   // }
 
-  if (!tabRecordsMap.has(activeTabId)) {
-    tabRecordsMap.set(activeTabId, new Map());
-  }
-  const recordsMap = tabRecordsMap.get(activeTabId)!;
+  const tabUrl = tab?.url || record?.url;
 
-  if (record.recordType === 'network' && invalidRecord(record?.url || '')) {
-    return;
+  if (!tabRecordsMap.has(tabId)) {
+    tabRecordsMap.set(tabId, new Map());
   }
+
+  const recordsMap = tabRecordsMap.get(tabId)!;
 
   const uuid = uuidv4();
 
-  if (record.recordType === 'events') {
-    recordsMap.set(uuid, record);
-    return;
-  }
-
-  if (record.recordType !== 'network') {
-    recordsMap.set(uuid, { uuid, ...record });
-    return;
-  }
-
-  const { url, ...others } = record;
-
-  if (!url) {
-    console.warn('[addOrMergeRecords] Missing URL for network record.');
-    return;
-  }
-
-  if (!recordsMap.has(url)) {
-    recordsMap.set(url, { url, uuid, ...others });
-  }
-
-  const recordData = recordsMap.get(url);
-
-  for (const [key, value] of Object.entries(others)) {
-    if (!recordData[key]) {
-      recordData[key] = value;
+  try {
+    if (record.recordType !== 'network') {
+      recordsMap.set(uuid, { uuid, ...deepRedactSensitiveInfo(record, tabUrl) });
+      return;
     }
 
-    if (key === 'requestBody' && recordData[key]?.raw) {
-      const rawRequestBody = recordData[key].raw;
+    const { url, ...rest } = record;
 
-      if (!rawRequestBody.length) {
-        recordData[key].parsed = null;
-        continue;
+    if (!url) {
+      console.warn('[addOrMergeRecords] Missing URL for network record.');
+      return;
+    }
+
+    if (!recordsMap.has(url)) {
+      recordsMap.set(url, { uuid, ...deepRedactSensitiveInfo(record, tabUrl) });
+    }
+
+    const recordData = recordsMap.get(url);
+
+    for (const [key, value] of Object.entries(rest)) {
+      if (!recordData[key]) {
+        recordData[key] = value;
       }
 
-      const rawBytes = rawRequestBody[0].bytes;
-      const byteArray = new Uint8Array(rawBytes);
-      const decoder = new TextDecoder('utf-8');
-      const decodedBody = decoder.decode(byteArray);
+      if (key === 'requestBody' && recordData[key]?.raw) {
+        const rawRequestBody = recordData[key].raw;
 
-      try {
-        recordData[key].parsed =
-          typeof decodedBody !== 'string' && traverseInformation(JSON.parse(decodedBody), record?.url);
-      } catch (e) {
-        console.error('[addOrMergeRecords] Failed to parse JSON:', e);
+        if (!rawRequestBody.length) {
+          recordData[key].parsed = null;
+          continue;
+        }
+
+        const rawBytes = rawRequestBody[0].bytes;
+        const byteArray = new Uint8Array(rawBytes);
+        const decoder = new TextDecoder('utf-8');
+        const decodedBody = decoder.decode(byteArray);
+
+        try {
+          recordData[key].parsed = deepRedactSensitiveInfo(JSON.parse(decodedBody), tabUrl);
+        } catch (e) {
+          console.error('[addOrMergeRecords] Failed to parse JSON:', e);
+        }
       }
     }
+  } catch (e) {
+    console.error('[addOrMergeRecords] Primary: Failed to parse JSON:', e);
   }
 };
