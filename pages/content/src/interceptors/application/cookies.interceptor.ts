@@ -1,5 +1,3 @@
-import { isNonProduction, redactSensitiveInfo } from '@extension/shared';
-
 interface Cookie {
   key: string;
   value: string;
@@ -16,7 +14,7 @@ export const interceptCookies = () => {
     // Add cookie as an object with key and value
     ac.push({
       key,
-      value: isNonProduction() ? value : redactSensitiveInfo(key, value),
+      value,
     });
 
     return ac;

@@ -1,5 +1,3 @@
-import { traverseInformation } from '@extension/shared';
-
 import { extractQueryParams } from '@src/utils';
 
 interface FetchOptions extends RequestInit {
@@ -49,15 +47,14 @@ export const interceptFetch = (): void => {
       const isLargeResponse =
         response.headers.get('Content-Length') && parseInt(response.headers.get('Content-Length')!, 10) > 1000000; // Arbitrary size limit (1MB)
 
+      // Clone the response for body parsing (only for non-binary and small responses)
+      const responseClone = response.clone();
+
       let responseBody: string | object;
       if (isBinary || isLargeResponse) {
         // Don't clone large or binary responses to save resources
         responseBody = 'BRIE: Binary or Large content - Unable to display';
       } else {
-        // Clone the response for body parsing (only for non-binary and small responses)
-        const responseClone = response.clone();
-        const responseHeaders = responseClone.headers || {};
-
         try {
           // Handle content types for JSON, text, and other responses
           if (contentType?.includes('application/json')) {
@@ -77,6 +74,11 @@ export const interceptFetch = (): void => {
 
       // Post message to main thread (ensure compatibility)
       try {
+        const serializedHeaders: Record<string, string> = {};
+        responseClone?.headers?.forEach((value, key) => {
+          serializedHeaders[key] = value;
+        });
+
         if (typeof window !== 'undefined' && window?.postMessage) {
           window.postMessage(
             {
@@ -87,16 +89,13 @@ export const interceptFetch = (): void => {
                 method,
                 url: url.toString(),
                 queryParams,
-                requestHeaders: traverseInformation(requestHeaders),
-                requestBody:
-                  requestBody && typeof requestBody === 'string'
-                    ? traverseInformation(JSON.parse(requestBody)) // Only parse if it's a string
-                    : requestBody && traverseInformation(requestBody),
-                responseHeaders: traverseInformation(response.headers),
-                responseBody: responseBody && typeof responseBody !== 'string' && traverseInformation(responseBody),
+                requestHeaders,
+                requestBody,
+                responseHeaders: serializedHeaders,
+                responseBody,
                 requestStart: startTime,
                 requestEnd: endTime,
-                status: response.status,
+                status: responseClone.status,
               },
             },
             '*',

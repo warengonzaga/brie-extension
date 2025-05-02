@@ -1,38 +1,119 @@
-import { REDACTED_KEYWORD, sensitivePatterns } from '../constants/index.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { sensitiveKeywordsPatterns } from '../constants/sensitive-keywords.constants.js';
+import { REDACTED_KEYWORD } from '../constants/redacted-keyword.constants.js';
+import { sensitivePatterns } from '../constants/sensitive-patterns.constants.js';
 import { isNonProduction } from './is-non-production.util.js';
 
+const redactSkipCache = new Map<string, boolean>();
+
 /**
- * Redacts sensitive information from a given key-value pair.
- * @param key - The key associated with the value.
- * @param value - The value to be redacted if sensitive.
- * @param url - (Optional) The URL to determine if the environment is non-production.
- * @returns The redacted or original value.
+ * Allows external code to register custom redaction patterns.
  */
-export const redactSensitiveInfo = (key: string, value: unknown, url?: string): unknown => {
-  // Helper to check if a key matches any sensitive pattern
-  const isSensitiveKey = (k: string): boolean => sensitivePatterns.some(pattern => pattern.test(k));
+export const registerCustomRedactionPattern = (pattern: RegExp, groupIndex?: number) => {
+  sensitivePatterns.push({ pattern, groupIndex });
+};
 
-  // Helper to recursively redact keys in objects
-  const redactObject = (obj: unknown): unknown => {
-    if (typeof obj !== 'object' || obj === null) return obj;
+/**
+ * Handle context-based pairs like { name: 'cvv', value: '123' }
+ */
+const shouldRedactByNameValueContext = (obj: any): boolean => {
+  return (
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj.name === 'string' &&
+    typeof obj.value === 'string' &&
+    sensitiveKeywordsPatterns.some(({ pattern }) => pattern.test(obj.name))
+  );
+};
 
-    const redactedObj: Record<string, unknown> = { ...obj };
-    for (const [k, v] of Object.entries(redactedObj)) {
-      redactedObj[k] = isSensitiveKey(k) ? REDACTED_KEYWORD : redactObject(v);
-    }
-    return redactedObj;
-  };
+/**
+ * Redacts sensitive info in a string using regex patterns.
+ */
+const safeRedact = (value: string): string => {
+  let result = value;
 
-  // Check if the value is JSON (object or stringified)
-  try {
-    const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-    if (typeof parsed === 'object' && parsed !== null) {
-      return isNonProduction(url) ? value : JSON.stringify(redactObject(parsed));
-    }
-  } catch {
-    // Not JSON, continue with string logic
+  for (const { pattern, groupIndex } of sensitivePatterns) {
+    result = result.replace(pattern, (...args) => {
+      if (groupIndex !== undefined && args[groupIndex]) {
+        const fullMatch = args[0];
+        const sensitivePart = args[groupIndex];
+        return fullMatch.replace(sensitivePart, REDACTED_KEYWORD);
+      }
+      return REDACTED_KEYWORD;
+    });
   }
 
-  // Redact plain strings
-  return !isNonProduction(url) && isSensitiveKey(key) ? REDACTED_KEYWORD : value;
+  return result;
+};
+
+/**
+ * Internal recursive function that uses a single precomputed redaction flag.
+ */
+const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
+  if (shouldSkipRedaction) return input;
+
+  if (typeof input !== 'object' && typeof input !== 'string') return input;
+
+  if (typeof input === 'string') {
+    const trimmed = input.trim();
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(input);
+        return deepRedactInternal(parsed, shouldSkipRedaction);
+      } catch {
+        return safeRedact(input);
+      }
+    }
+    return safeRedact(input);
+  }
+
+  if (Array.isArray(input)) {
+    return input.map(item => deepRedactInternal(item, shouldSkipRedaction));
+  }
+
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(input)) {
+    // Case 1: nested { name: 'token', value: '...' }
+    if (key === 'value' && typeof value === 'string' && shouldRedactByNameValueContext(input)) {
+      result[key] = REDACTED_KEYWORD;
+      continue;
+    }
+
+    // Case 2: direct key match like { token: '...' }
+    if (
+      typeof key === 'string' &&
+      typeof value === 'string' &&
+      sensitiveKeywordsPatterns.some(({ pattern }) => pattern.test(key))
+    ) {
+      result[key] = REDACTED_KEYWORD;
+      continue;
+    }
+
+    // Default recursion
+    result[key] = deepRedactInternal(value, shouldSkipRedaction);
+  }
+
+  return result;
+};
+
+/**
+ * Deeply redacts sensitive information from any object, array, or string.
+ * Redaction mode is determined once per top-level object using its UUID.
+ */
+export const deepRedactSensitiveInfo = (input: any, url?: string): any => {
+  let shouldSkipRedaction = false;
+
+  if (input && typeof input === 'object' && input.uuid) {
+    const cached = redactSkipCache.get(input.uuid);
+    if (cached !== undefined) {
+      shouldSkipRedaction = cached;
+    } else {
+      shouldSkipRedaction = isNonProduction(url);
+      redactSkipCache.set(input.uuid, shouldSkipRedaction);
+    }
+  } else {
+    shouldSkipRedaction = isNonProduction(url);
+  }
+
+  return deepRedactInternal(input, shouldSkipRedaction);
 };

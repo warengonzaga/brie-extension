@@ -9,7 +9,6 @@ import {
   userUUIDStorage,
 } from '@extension/storage';
 import { addOrMergeRecords, getRecords } from '@src/utils';
-import { traverseInformation } from '@extension/shared';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
   const captureTabId = await captureTabStorage.getCaptureTabId();
@@ -64,8 +63,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     if (message.type === 'GET_RECORDS') {
-      console.log('get records called,', sender.tab.id, getRecords(sender.tab.id));
-
       getRecords(sender.tab.id).then(records => sendResponse({ records }));
     }
   } else {
@@ -119,11 +116,11 @@ chrome.runtime.onInstalled.addListener(async details => {
 
 // Listener for onCompleted
 chrome.webRequest.onCompleted.addListener(
-  request => {
+  (request: chrome.webRequest.WebResponseCacheDetails) => {
     addOrMergeRecords(request.tabId, {
       recordType: 'network',
       source: 'background',
-      ...traverseInformation(structuredClone(request), request?.url),
+      ...structuredClone(request),
     });
   },
   { urls: ['<all_urls>'] },
@@ -131,12 +128,12 @@ chrome.webRequest.onCompleted.addListener(
 
 // Listener for onBeforeRequest
 chrome.webRequest.onBeforeRequest.addListener(
-  request => {
+  (request: chrome.webRequest.WebRequestBodyDetails) => {
     addOrMergeRecords(request.tabId, {
       recordType: 'network',
       source: 'background',
       ...structuredClone(request),
-    } as any);
+    });
   },
   { urls: ['<all_urls>'] },
   ['requestBody'],
@@ -144,13 +141,11 @@ chrome.webRequest.onBeforeRequest.addListener(
 
 // Listener for onBeforeSendHeaders
 chrome.webRequest.onBeforeSendHeaders.addListener(
-  request => {
-    console.log('onBeforeSendHeaders', traverseInformation(structuredClone(request), request?.url));
-
+  (request: chrome.webRequest.WebRequestHeadersDetails) => {
     addOrMergeRecords(request.tabId, {
       recordType: 'network',
       source: 'background',
-      ...traverseInformation(structuredClone(request), request?.url),
+      ...structuredClone(request),
     });
   },
   { urls: ['<all_urls>'] },
