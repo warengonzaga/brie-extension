@@ -28,17 +28,14 @@ export const addOrMergeRecords = async (tabId: number, record: Record | any): Pr
     return;
   }
 
-  if (invalidRecord(record?.url || '')) {
-    return;
-  }
-
-  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  if (invalidRecord(record?.url || '')) return;
 
   // if (record.recordType === 'console' && invalidRecord(record.stackTrace.parsed)) {
   //   console.log('record console', record);
   //   return;
   // }
 
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   const tabUrl = tab?.url || record?.url;
 
   if (!tabRecordsMap.has(tabId)) {
@@ -46,7 +43,6 @@ export const addOrMergeRecords = async (tabId: number, record: Record | any): Pr
   }
 
   const recordsMap = tabRecordsMap.get(tabId)!;
-
   const uuid = uuidv4();
 
   try {
@@ -62,13 +58,19 @@ export const addOrMergeRecords = async (tabId: number, record: Record | any): Pr
       return;
     }
 
+    const redactedRest = deepRedactSensitiveInfo(rest, tabUrl);
+
     if (!recordsMap.has(url)) {
-      recordsMap.set(url, { uuid, ...deepRedactSensitiveInfo(record, tabUrl) });
+      recordsMap.set(url, { uuid, url, ...redactedRest });
     }
 
     const recordData = recordsMap.get(url);
 
-    for (const [key, value] of Object.entries(rest)) {
+    if (!recordData) {
+      console.warn("[addOrMergeRecords] Record with this URL doesn't exist.");
+    }
+
+    for (const [key, value] of Object.entries(redactedRest)) {
       if (!recordData[key]) {
         recordData[key] = value;
       }
@@ -87,7 +89,7 @@ export const addOrMergeRecords = async (tabId: number, record: Record | any): Pr
         const decodedBody = decoder.decode(byteArray);
 
         try {
-          recordData[key].parsed = deepRedactSensitiveInfo(JSON.parse(decodedBody), tabUrl);
+          recordData[key].parsed = typeof decodedBody !== 'string' && deepRedactSensitiveInfo(decodedBody, tabUrl);
         } catch (e) {
           console.error('[addOrMergeRecords] Failed to parse JSON:', e);
         }

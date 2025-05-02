@@ -53,6 +53,6 @@ const sensitiveKeywords = [
 
 // Compile regex patterns for case-insensitive matching of sensitive keywords
 export const sensitiveKeywordsPatterns = sensitiveKeywords.map(keyword => {
-  const pattern = new RegExp(`(?:\\w+_)?${keyword.replace(/_/g, '[_-]?')}[_-]?key`, 'i');
+  const pattern = new RegExp(`\\b${keyword.replace(/_/g, '[_-]?')}\\b`, 'i');
   return { pattern };
 });

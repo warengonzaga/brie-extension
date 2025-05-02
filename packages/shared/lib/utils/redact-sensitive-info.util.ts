@@ -22,7 +22,7 @@ const shouldRedactByNameValueContext = (obj: any): boolean => {
     typeof obj === 'object' &&
     typeof obj.name === 'string' &&
     typeof obj.value === 'string' &&
-    sensitiveKeywordsPatterns.some((keyword: any) => obj.name.toLowerCase().includes(keyword))
+    sensitiveKeywordsPatterns.some(({ pattern }) => pattern.test(obj.name))
   );
 };
 
@@ -73,11 +73,24 @@ const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
 
   const result: Record<string, any> = {};
   for (const [key, value] of Object.entries(input)) {
-    if (key === 'value' && shouldRedactByNameValueContext(input)) {
-      result[key] = safeRedact(value as string);
-    } else {
-      result[key] = deepRedactInternal(value, shouldSkipRedaction);
+    // Case 1: nested { name: 'token', value: '...' }
+    if (key === 'value' && typeof value === 'string' && shouldRedactByNameValueContext(input)) {
+      result[key] = REDACTED_KEYWORD;
+      continue;
     }
+
+    // Case 2: direct key match like { token: '...' }
+    if (
+      typeof key === 'string' &&
+      typeof value === 'string' &&
+      sensitiveKeywordsPatterns.some(({ pattern }) => pattern.test(key))
+    ) {
+      result[key] = REDACTED_KEYWORD;
+      continue;
+    }
+
+    // Default recursion
+    result[key] = deepRedactInternal(value, shouldSkipRedaction);
   }
 
   return result;
