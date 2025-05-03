@@ -1,10 +1,9 @@
 import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
-const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature } = {
+const { activateNewTabFeature, activateDevToolsFeature } = {
   activateNewTabFeature: false,
   activateDevToolsFeature: false,
-  activateSidePanelFeature: false,
 };
 
 /**
@@ -79,13 +78,6 @@ const manifest = {
       matches: ['*://*/*'],
     },
   ],
-  ...(activateSidePanelFeature
-    ? {
-        side_panel: {
-          default_path: 'side-panel/index.html',
-        },
-      }
-    : {}),
 } satisfies chrome.runtime.ManifestV3;
 
 export default manifest;
