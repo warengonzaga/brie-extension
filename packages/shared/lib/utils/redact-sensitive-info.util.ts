@@ -50,7 +50,7 @@ const safeRedact = (value: string): string => {
  * Internal recursive function that uses a single precomputed redaction flag.
  */
 const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
-  if (shouldSkipRedaction) return input;
+  if (shouldSkipRedaction || !input) return input;
 
   if (typeof input !== 'object' && typeof input !== 'string') return input;
 
@@ -70,6 +70,8 @@ const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
   if (Array.isArray(input)) {
     return input.map(item => deepRedactInternal(item, shouldSkipRedaction));
   }
+
+  if (typeof input !== 'object') return input;
 
   const result: Record<string, any> = {};
   for (const [key, value] of Object.entries(input)) {

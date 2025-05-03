@@ -10,6 +10,8 @@ let dimensionLabel: HTMLDivElement;
 let message: HTMLDivElement | null = null;
 let loadingMessage: HTMLDivElement | null = null;
 
+const waitForRepaint = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
+
 // Helper Functions
 const addBoundaryBox = (
   canvas: HTMLCanvasElement,
@@ -108,6 +110,7 @@ const createSelectionBox = () => {
     zIndex: '10000000',
     border: '1px solid rgba(252, 229, 25, 0.7)',
   });
+  selectionBox.id = 'selection-box';
   document.body.appendChild(selectionBox);
 };
 
@@ -125,6 +128,7 @@ const createDimensionLabel = () => {
     pointerEvents: 'none',
     zIndex: '10000000',
   });
+  dimensionLabel.id = 'dimension-label';
   document.body.appendChild(dimensionLabel);
 };
 
@@ -146,7 +150,7 @@ const showLoadingMessage = () => {
     whiteSpace: 'nowrap',
   });
   loadingMessage.textContent = 'Preparing Screenshot...';
-
+  loadingMessage.id = 'screenshot-loading-message';
   document.documentElement.appendChild(loadingMessage);
 };
 
@@ -157,31 +161,26 @@ const hideLoadingMessage = () => {
 };
 
 // Clean up all temporary elements
-export const cleanup = (): Promise<void> => {
-  return new Promise(resolve => {
-    isSelecting = false;
+export const cleanup = (): void => {
+  isSelecting = false;
 
-    // Reset any necessary state
-    // startX = 0;
-    // startY = 0;
-    // cancelled = true;
+  // Reset any necessary state
+  // startX = 0;
+  // startY = 0;
+  // cancelled = true;
 
-    overlay?.remove();
-    selectionBox?.remove();
-    dimensionLabel?.remove();
-    message?.remove();
-    loadingMessage?.remove();
+  overlay?.remove();
+  selectionBox?.remove();
+  dimensionLabel?.remove();
+  message?.remove();
+  loadingMessage?.remove();
 
-    document.body.style.overflow = '';
-    document.removeEventListener('keydown', onKeyDown);
-    document.removeEventListener('mousemove', updateSelectionBox);
-    // document.removeEventListener('mouseup', onMouseUp);
-    document.removeEventListener('touchmove', updateSelectionBox);
-    document.removeEventListener('touchend', onTouchEnd);
-
-    // Resolve the promise to signal that cleanup is complete
-    resolve();
-  });
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', onKeyDown);
+  document.removeEventListener('mousemove', updateSelectionBox);
+  // document.removeEventListener('mouseup', onMouseUp);
+  document.removeEventListener('touchmove', updateSelectionBox);
+  document.removeEventListener('touchend', onTouchEnd);
 };
 
 // Position the instructions message dynamically
@@ -287,7 +286,7 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
   const width = Math.abs(clientX - startX);
   const height = Math.abs(clientY - startY);
 
-  await cleanup();
+  cleanup();
 
   /**
    * @todo
@@ -295,6 +294,8 @@ const onMouseUp = async (e: MouseEvent | TouchEvent) => {
    * Note: The message should not be visible on screenshots. Only for user.
    */
   // showLoadingMessage();
+
+  await waitForRepaint();
 
   await captureScreenshots(minX, minY, width, height);
   // hideLoadingMessage();
@@ -320,6 +321,8 @@ const onTouchEnd = async (e: TouchEvent) => {
 
   cleanup();
   showLoadingMessage();
+
+  await waitForRepaint();
 
   await captureScreenshots(startX, startY, width, height);
   hideLoadingMessage();
@@ -412,17 +415,14 @@ const captureScreenshots = async (x, y, width, height) => {
         y: window.scrollY,
         width: window.innerWidth,
         height: window.innerHeight,
-        // ignoreElements: element => {
-        //   // Exclude hidden elements or those with specific attributes
-
-        //   return (
-        //     // element.tagName === 'IFRAME' || // Ignore iframes
-        //     element.hasAttribute('aria-hidden') || // Accessibility-related hidden elements
-        //     element.style.display === 'none' || // Elements explicitly hidden
-        //     element.style.visibility === 'hidden' || // Invisible elements
-        //     element.style.opacity === '0' // Fully transparent elements
-        //   );
-        // },
+        ignoreElements: (element: Element) => {
+          return (
+            element.id === 'screenshot-overlay' ||
+            element.id === 'selection-box' ||
+            element.id === 'dimension-label' ||
+            element.id === 'screenshot-loading-message'
+          );
+        },
       });
 
       return processScreenshot(fullCanvas.toDataURL('image/png', 1.0), x, y, width, height, scaleFactor);
