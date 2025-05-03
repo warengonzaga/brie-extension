@@ -1,11 +1,10 @@
 import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
-const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature, activateOptionsFeature } = {
+const { activateNewTabFeature, activateDevToolsFeature, activateSidePanelFeature } = {
   activateNewTabFeature: false,
   activateDevToolsFeature: false,
   activateSidePanelFeature: false,
-  activateOptionsFeature: false,
 };
 
 /**
@@ -40,11 +39,6 @@ const manifest = {
   description: '__MSG_extensionDescription__',
   host_permissions: ['<all_urls>'],
   permissions: ['webRequest', 'storage', 'tabs', 'activeTab'],
-  ...(activateOptionsFeature
-    ? {
-        options_page: 'options/index.html',
-      }
-    : {}),
   background: {
     service_worker: 'background.js',
     type: 'module',
