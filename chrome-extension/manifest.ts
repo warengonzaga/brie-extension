@@ -1,9 +1,6 @@
 import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
-const { activateNewTabFeature } = {
-  activateNewTabFeature: false,
-};
 
 /**
  * @prop default_locale
@@ -45,13 +42,6 @@ const manifest = {
     default_popup: 'popup/index.html',
     default_icon: 'brie-logo.png',
   },
-  ...(activateNewTabFeature
-    ? {
-        chrome_url_overrides: {
-          newtab: 'new-tab/index.html',
-        },
-      }
-    : {}),
   icons: {
     128: 'brie-icon-128x128.png',
   },
