@@ -1,9 +1,6 @@
 import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
-const { activateDevToolsFeature } = {
-  activateDevToolsFeature: false,
-};
 
 /**
  * @prop default_locale
@@ -63,7 +60,6 @@ const manifest = {
       css: ['content.css'], // public folder
     },
   ],
-  ...(activateDevToolsFeature ? { devtools_page: 'devtools/index.html' } : {}),
   web_accessible_resources: [
     {
       resources: ['*.js', '*.css', '*.svg', '*.png', 'content/extend.iife.js'],
