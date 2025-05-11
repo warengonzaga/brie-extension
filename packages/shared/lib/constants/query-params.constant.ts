@@ -1,6 +1,6 @@
-import type { Pagination } from '../interfaces';
-import { OrderBy } from '../interfaces';
-import { ITEMS_PER_PAGE } from './pagination.constant';
+import type { Pagination } from '../interfaces/index.js';
+import { OrderBy } from '../interfaces/index.js';
+import { ITEMS_PER_PAGE } from './pagination.constant.js';
 
 export const INITIAL_PARAMS: Pagination = {
   limit: 1,

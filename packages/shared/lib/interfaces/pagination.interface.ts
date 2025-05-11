@@ -1,4 +1,4 @@
-import type { OrderBy } from './query-filter.interface';
+import type { OrderBy } from './query-filter.interface.js';
 
 export interface Pagination {
   limit: number;

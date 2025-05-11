@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://go.briehq.com/lp">
+  <a href="https://go.brie.io/lp">
     <img src="https://github.com/briehq/.github/raw/main/profile/content/brie-icon-400x400.png" width="100px" alt="Brie - Capturează bug-uri" />
   </a>
 </p>
@@ -11,10 +11,10 @@
 <br />
 
 <p align="center">
-   <a href="https://go.briehq.com/github" target="_blank">Repositorio</a> •
-  <a href="https://go.briehq.com/lp" target="_blank">Sitio web</a> •
-  <a href="https://go.briehq.com/discord" target="_blank">Discord</a> •
-  <a href="https://go.briehq.com/docs" target="_blank">Documentación</a>
+   <a href="https://go.brie.io/github" target="_blank">Repositorio</a> •
+  <a href="https://go.brie.io/lp" target="_blank">Sitio web</a> •
+  <a href="https://go.brie.io/discord" target="_blank">Discord</a> •
+  <a href="https://go.brie.io/docs" target="_blank">Documentación</a>
 </p>
 
 <br />
@@ -29,11 +29,11 @@ Brie captura automáticamente registros de consola, errores de red y acciones de
 Basta de horas perdidas en informes de errores poco claros: solo correcciones rápidas y software mejorado.
 
 <strong>🔥 Únete a miles de equipos ágiles:</strong>  
-Instala [Brie](https://go.briehq.com/lp) y comienza a lanzar software sin errores hoy mismo.
+Instala [Brie](https://go.brie.io/lp) y comienza a lanzar software sin errores hoy mismo.
 
 ## 💫 Inicio rápido
 
-1. Agrega Brie desde [el sitio web](https://go.briehq.com/lp), luego fíjalo como acceso rápido.
+1. Agrega Brie desde [el sitio web](https://go.brie.io/lp), luego fíjalo como acceso rápido.
 
 2. Haz clic en el ícono de Brie para capturar y anotar una pantalla.
 
@@ -41,7 +41,7 @@ Instala [Brie](https://go.briehq.com/lp) y comienza a lanzar software sin errore
 
 ## 📚 Documentación
 
-Para guías detalladas y referencias de la API, visita la [documentación oficial](https://go.briehq.com/docs).
+Para guías detalladas y referencias de la API, visita la [documentación oficial](https://go.brie.io/docs).
 
 ## 🤝 Contribuir
 
@@ -51,32 +51,32 @@ Revisa los [Problemas iniciales buenos](https://github.com/briehq/brie-extension
 
 ## 👨‍💻 Equipo
 
-- **[Ion](https://github.com/ionleu)**  
-- **[Luminita](https://github.com/luminita)**  
+- <a href="https://x.com/intent/follow?screen_name=ionleu" target="_blank"><strong>Ion</strong></a>
+- <a href="https://github.com/luminital" target="_blank"><strong>Luminita</strong></a>
 
-¿Preguntas o consultas? Escribe a ask@briehq.com
+¿Preguntas o consultas? Escribe a ask[at]brie[dot]io
 
 ## 🌐 Léeme en otros idiomas
 
-- [Inglés](https://github.com/briehq/brie-extension)  
-- [Español](./docs/readme/es.md)  
-- [Francés](./docs/readme/fr.md)  
-- [Rumano](./docs/readme/ro.md)  
-- [Ucraniano](./docs/readme/ua.md)  
-- [Alemán](./docs/readme/de.md)  
-- [Chino](./docs/readme/zh-Hans.md)  
-- [Coreano](./docs/readme/ko.md)  
-- [Japonés](./docs/readme/ja.md)  
-- [Italiano](./docs/readme/it.md)  
-- [Ruso](./docs/readme/ru.md)  
-- [Árabe](./docs/readme/ar.md)  
-- [Hindi](./docs/readme/hi.md)  
+- [Inglés](https://github.com/briehq/brie-extension)
+- [Español](./docs/readme/es.md)
+- [Francés](./docs/readme/fr.md)
+- [Rumano](./docs/readme/ro.md)
+- [Ucraniano](./docs/readme/ua.md)
+- [Alemán](./docs/readme/de.md)
+- [Chino](./docs/readme/zh-Hans.md)
+- [Coreano](./docs/readme/ko.md)
+- [Japonés](./docs/readme/ja.md)
+- [Italiano](./docs/readme/it.md)
+- [Ruso](./docs/readme/ru.md)
+- [Árabe](./docs/readme/ar.md)
+- [Hindi](./docs/readme/hi.md)
 
 ¿No ves tu idioma? Solo agrega un nuevo idioma a los archivos [`i18n/locales`](./packages/i18n/locales) y [`docs/readme`](./docs/readme) y abre un PR.
 
 P.D. Un saludo a:
 
-- [React](https://github.com/facebook/react)  
-- [Vite](https://github.com/vitejs/vite)  
-- [Turborepo](https://github.com/vercel/turborepo)  
-- [Ext Boilerplate](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite)  
+- [React](https://github.com/facebook/react)
+- [Vite](https://github.com/vitejs/vite)
+- [Turborepo](https://github.com/vercel/turborepo)
+- [Ext Boilerplate](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite)

@@ -1,4 +1,5 @@
 import { Button, Icon } from '@extension/ui';
+import { CEB_NAME } from '@extension/env';
 import { navigateTo } from '@src/utils';
 
 export const Header = () => {
@@ -7,11 +8,11 @@ export const Header = () => {
   return (
     <header className="mb-4 flex items-center justify-between">
       <button
-        onClick={() => navigateTo('https://go.briehq.com/lp?utm_source=extension')}
+        onClick={() => navigateTo('https://go.brie.io/lp?utm_source=extension')}
         className="flex items-center gap-x-2">
         <img src={logo} className="size-10" alt="Brie" />
 
-        <h1 className="text-xl font-semibold text-[#df8801] -ml-1.5">brie</h1>
+        <h1 className="text-xl font-semibold text-[#df8801] -ml-1.5">{CEB_NAME}</h1>
       </button>
       <div className="flex items-center">
         <Button
@@ -19,7 +20,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://go.briehq.com/github?utm_source=extension')}>
+          onClick={() => navigateTo('https://go.brie.io/github?utm_source=extension')}>
           <Icon name="GitHubLogoIcon" size={20} className="size-4" />
         </Button>
 
@@ -28,7 +29,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://go.briehq.com/discord?utm_source=extension')}>
+          onClick={() => navigateTo('https://go.brie.io/discord?utm_source=extension')}>
           <Icon name="DiscordLogoIcon" size={20} className="size-4" />
         </Button>
         <Button
@@ -36,7 +37,7 @@ export const Header = () => {
           size="icon"
           variant="ghost"
           className="hover:bg-slate-50 dark:hover:text-black"
-          onClick={() => navigateTo('https://go.briehq.com/lp?utm_source=extension')}>
+          onClick={() => navigateTo('https://go.brie.io/lp?utm_source=extension')}>
           <Icon name="House" size={20} className="size-4" strokeWidth={1.5} />
         </Button>
       </div>

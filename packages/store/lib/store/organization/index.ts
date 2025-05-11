@@ -1,1 +1,1 @@
-export { organizationAPI } from './organization.api';
+export { organizationAPI } from './organization.api.js';

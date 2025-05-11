@@ -3,8 +3,8 @@ import { differenceInCalendarDays, isWithinInterval, addDays, parseISO } from 'd
 
 import type { Subscription } from '@extension/shared';
 
-import { useUserOrganization } from './use-user-organization.hook';
-import { useLazyGetSubscriptionByIdQuery } from '../store';
+import { useUserOrganization } from './use-user-organization.hook.js';
+import { useLazyGetSubscriptionByIdQuery } from '../store/index.js';
 
 export const useSubscription = (): {
   fields:
@@ -36,10 +36,10 @@ export const useSubscription = (): {
       isError,
       fields: {
         ...fields,
-        trialExpireInDays: differenceInCalendarDays(parseISO(fields?.trialEnd), new Date()),
+        trialExpireInDays: differenceInCalendarDays(parseISO(fields?.trialEnd as any), new Date()),
         isTrialExpired: isWithinInterval(new Date(), {
-          start: parseISO(fields?.trialEnd),
-          end: addDays(parseISO(fields?.trialEnd), 7),
+          start: parseISO(fields?.trialEnd as any),
+          end: addDays(parseISO(fields?.trialEnd as any), 7),
         }),
         isPaymentMethodRequired: !org?.fields?.defaultPaymentMethodId,
       },

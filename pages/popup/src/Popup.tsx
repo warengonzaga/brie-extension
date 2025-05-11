@@ -4,6 +4,7 @@ import { withErrorBoundary, withSuspense } from '@extension/shared';
 import { store, ReduxProvider } from '@extension/store';
 
 import { PopupContent } from './popup-content';
+import { Skeleton } from './components/ui';
 
 const Popup = () => (
   <ReduxProvider store={store}>
@@ -13,4 +14,4 @@ const Popup = () => (
   </ReduxProvider>
 );
 
-export default withErrorBoundary(withSuspense(Popup, <div>Loading...</div>), <div>Error Occurred</div>);
+export default withErrorBoundary(withSuspense(Popup, <Skeleton />), <div>Error Occurred</div>);

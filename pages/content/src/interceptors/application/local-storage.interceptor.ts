@@ -1,5 +1,3 @@
-import { isNonProduction, redactSensitiveInfo } from '@extension/shared';
-
 // Get all localStorage data
 export const interceptLocalStorage = () => {
   const timestamp = Date.now();
@@ -12,7 +10,7 @@ export const interceptLocalStorage = () => {
     const value = localStorage.getItem(key);
     localStorageData.push({
       key,
-      value: isNonProduction() ? value : redactSensitiveInfo(key, value),
+      value,
     });
   }
 

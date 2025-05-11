@@ -92,6 +92,9 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
                 <div className="flex-1">
                   <button
                     className="max-w-[240px] truncate text-sm font-medium text-slate-700 hover:underline"
+                    /**
+                     * @todo move to env
+                     */
                     onClick={() => navigateTo(`https://app.briehq.com/s/${item.externalId}`)}>
                     {item.externalId}
                   </button>
