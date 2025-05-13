@@ -7,9 +7,10 @@ import { pathToFileURL } from 'node:url';
 import type { ManifestType } from '@extension/dev-utils';
 import type { PluginOption } from 'vite';
 
-const manifestFile = resolve(import.meta.dirname, '..', '..', 'manifest.js');
+const manifestFile = resolve(import.meta.dirname, '..', '..', '..', 'manifest.js');
 const refreshFilePath = resolve(
   import.meta.dirname,
+  '..',
   '..',
   '..',
   '..',
