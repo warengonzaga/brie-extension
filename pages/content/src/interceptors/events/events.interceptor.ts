@@ -87,6 +87,43 @@ export const interceptEvents = () => {
     });
   });
 
+  document.addEventListener('mouseover', ({ target }) => {
+    if (!interactionStarted) return;
+
+    trackEvent({
+      event: 'MouseOver',
+      url: window.location.href,
+      target,
+    });
+  });
+
+  document.addEventListener('change', ({ target }) => {
+    const tag = target?.tagName;
+    if (!interactionStarted || !tag) return;
+
+    if (['SELECT', 'INPUT'].includes(tag)) {
+      const inputType = target.type;
+
+      if (['checkbox', 'radio'].includes(inputType)) {
+        trackEvent({
+          event: 'InputChange',
+          inputType,
+          value: target.checked,
+          url: window.location.href,
+          target,
+        });
+      } else if (inputType === 'select-one') {
+        trackEvent({
+          event: 'InputChange',
+          inputType: 'select',
+          value: target.value,
+          url: window.location.href,
+          target,
+        });
+      }
+    }
+  });
+
   // window.addEventListener('beforeunload', () => {
   //   trackEvent({ event: 'BeforeUnload', url: window.location.href });
   // });
@@ -128,6 +165,17 @@ export const interceptEvents = () => {
         event: 'TabNavigation',
         url: window.location.href,
         target,
+      });
+    }
+
+    if (event.metaKey || event.ctrlKey || event.altKey) {
+      trackEvent({
+        event: 'KeyboardShortcut',
+        keys: [event.ctrlKey && 'Ctrl', event.metaKey && 'Meta', event.altKey && 'Alt', event.key]
+          .filter(Boolean)
+          .join('+'),
+        url: window.location.href,
+        target: document.activeElement,
       });
     }
   });
