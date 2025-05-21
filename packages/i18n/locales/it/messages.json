@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Clicca o trascina per selezionare l'area da catturare"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "Sfortunatamente, hai raggiunto il limite giornaliero."
   }
 }

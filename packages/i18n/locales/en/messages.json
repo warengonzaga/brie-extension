@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Click or drag to select area for screenshot"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "Unfortunately, you’ve hit the daily limit."
   }
 }

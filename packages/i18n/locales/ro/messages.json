@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Click sau trage pentru a selecta zona pentru screenshot"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "Din păcate, ai atins limita zilnică."
   }
 }
