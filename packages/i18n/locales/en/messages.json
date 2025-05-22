@@ -1,11 +1,11 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "Report bugs faster!"
+    "message": "Bug Reports Devs Actually Love!"
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Brie"
+    "message": "Brie - Bug Capture"
   },
   "loading": {
     "message": "Is loading..."
@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Click or drag to select area for screenshot"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "Unfortunately, you’ve hit the daily limit."
   }
 }

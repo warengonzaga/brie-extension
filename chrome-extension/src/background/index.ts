@@ -9,6 +9,7 @@ import {
   userUUIDStorage,
 } from '@extension/storage';
 import { addOrMergeRecords, getRecords } from '@src/utils';
+import { deleteRecords } from '@src/utils/manage-records.util';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
   const captureTabId = await captureTabStorage.getCaptureTabId();
@@ -18,6 +19,8 @@ chrome.tabs.onRemoved.addListener(async tabId => {
 
     annotationsStorage.setAnnotations([]);
     annotationsRedoStorage.setAnnotations([]);
+
+    deleteRecords(tabId);
   }
 });
 

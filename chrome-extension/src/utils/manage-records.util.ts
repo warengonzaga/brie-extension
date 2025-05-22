@@ -18,6 +18,12 @@ export interface Record {
   [key: string]: any;
 }
 
+export const deleteRecords = async (tabId: number) => {
+  if (!tabId && !tabRecordsMap.has(tabId)) return;
+
+  tabRecordsMap.delete(tabId);
+};
+
 export const getRecords = async (tabId: number): Promise<Record[]> => {
   return tabId && tabRecordsMap.has(tabId) ? Array.from(tabRecordsMap.get(tabId)!.values()) : [];
 };

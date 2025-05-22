@@ -1,4 +1,5 @@
 const sensitiveKeywords = [
+  'okta',
   'authorization',
   'oai-sc',
   'access_token',

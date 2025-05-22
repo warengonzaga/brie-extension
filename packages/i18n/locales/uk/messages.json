@@ -5,7 +5,7 @@
   },
   "extensionName": {
     "description": "Назва розширення",
-    "message": "Brie"
+    "message": "Brie - Виявлення помилок"
   },
   "loading": {
     "message": "Завантаження..."
@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Клацніть або перетягніть для вибору області для скріншоту"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "На жаль, ви досягли денного ліміту."
   }
 }

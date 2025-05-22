@@ -5,7 +5,7 @@
   },
   "extensionName": {
     "description": "Название расширения",
-    "message": "Brie"
+    "message": "Brie - Захват ошибок"
   },
   "loading": {
     "message": "Загрузка..."
@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Кликните или перетащите для выбора области скриншота"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "К сожалению, вы достигли дневного лимита."
   }
 }

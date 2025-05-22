@@ -5,7 +5,7 @@
   },
   "extensionName": {
     "description": "Nombre de extensión",
-    "message": "Brie"
+    "message": "Brie - Captura de errores"
   },
   "loading": {
     "message": "Cargando..."
@@ -105,5 +105,8 @@
   },
   "selectArea": {
     "message": "Haz click o arrastra la selección de un área para tomar una captura"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "Desafortunadamente has alcanzado el límite diario."
   }
 }
