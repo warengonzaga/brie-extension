@@ -9,7 +9,7 @@ import {
 import { historyApiInterceptor } from './history.interceptor';
 
 export const trackEvent = ({ target, ...others }: any) => {
-  const description = getElementDescription(target);
+  const description = target ? getElementDescription(target) : null;
   const baseTimestamp = Date.now();
   const timestamp = others?.event === 'Navigate' ? baseTimestamp + 1000 : baseTimestamp;
 
@@ -102,19 +102,7 @@ export const interceptEvents = () => {
   });
 
   window.addEventListener('load', async () => {
-    const systemInfo = await getSystemInfo();
-
     trackEvent({ event: 'PageLoaded' });
-
-    trackEvent({
-      ...systemInfo,
-      event: 'metadata',
-      rowTimestamp: new Date().toISOString(),
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      url: document.location.href,
-      window: { width: window.innerWidth, height: window.innerHeight },
-      screen: { width: window.screen.width, height: window.screen.height },
-    });
   });
 
   let hiddenAt: number | null = null;
@@ -249,6 +237,21 @@ export const interceptEvents = () => {
 
   document.addEventListener('mousedown', activateTracking);
   document.addEventListener('focusin', activateTracking, true);
+
+  // Custom Events
+  window.addEventListener('metadata', async () => {
+    const systemInfo = await getSystemInfo();
+
+    await trackEvent({
+      ...systemInfo,
+      event: 'metadata',
+      rowTimestamp: new Date().toISOString(),
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      url: document.location.href,
+      window: { width: window.innerWidth, height: window.innerHeight },
+      screen: { width: window.screen.width, height: window.screen.height },
+    });
+  });
 
   historyApiInterceptor();
 };
