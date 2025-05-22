@@ -8,7 +8,11 @@ export const addWindowEventListeners = () => {
     if (event.source !== window || !event.data.type) return;
 
     if (event.data.type === 'ADD_RECORD') {
-      chrome.runtime.sendMessage({ type: 'ADD_RECORD', data: event.data.payload });
+      try {
+        chrome.runtime.sendMessage({ type: 'ADD_RECORD', data: event.data.payload });
+      } catch (err) {
+        console.error('[sendMessage error]', chrome.runtime.id, err);
+      }
     }
   });
 };
