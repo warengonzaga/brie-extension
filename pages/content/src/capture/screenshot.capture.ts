@@ -162,6 +162,12 @@ const hideLoadingMessage = () => {
   loadingMessage = null;
 };
 
+const onScroll = () => {
+  if (message) {
+    positionInstructionsMessage(lastPointerX, lastPointerY);
+  }
+};
+
 // Clean up all temporary elements
 export const cleanup = (): void => {
   isSelecting = false;
@@ -183,13 +189,7 @@ export const cleanup = (): void => {
   // document.removeEventListener('mouseup', onMouseUp);
   document.removeEventListener('touchmove', updateSelectionBox);
   document.removeEventListener('touchend', onTouchEnd);
-  document.removeEventListener('scroll', onScroll);
-};
-
-const onScroll = () => {
-  if (message) {
-    positionInstructionsMessage(lastPointerX, lastPointerY);
-  }
+  window.removeEventListener('scroll', onScroll);
 };
 
 // Position the instructions message dynamically
@@ -219,6 +219,7 @@ const updateSelectionBox = (e: MouseEvent | TouchEvent) => {
 
   const width = Math.abs(clientX - startX);
   const height = Math.abs(clientY - startY);
+
   const left = Math.min(startX, clientX);
   const top = Math.min(startY, clientY);
 
@@ -233,6 +234,7 @@ const updateSelectionBox = (e: MouseEvent | TouchEvent) => {
     left: `${left + window.scrollX}px`,
     top: `${top + window.scrollY - 35}px`,
   });
+
   dimensionLabel.textContent = `W: ${width.toFixed(0)}px, H: ${height.toFixed(0)}px`;
 };
 
@@ -242,6 +244,7 @@ const onMouseDown = (e: MouseEvent | TouchEvent) => {
 
   isSelecting = true;
 
+  // Use viewport-relative coordinates
   const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
   const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
@@ -374,7 +377,7 @@ const showInstructions = () => {
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('touchmove', onTouchMove);
-  document.addEventListener('scroll', onScroll);
+  window.addEventListener('scroll', onScroll);
 };
 
 const captureTab = (): Promise<string> =>
