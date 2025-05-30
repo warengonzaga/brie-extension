@@ -48,7 +48,7 @@ export const interceptConsole = () => {
         pageUrl,
       };
 
-      if (method === 'error' && args[0] instanceof Error) {
+      if (method === 'error' && args && args[0] instanceof Error) {
         logData.error = {
           message: args[0].message,
           stack: args[0].stack,
