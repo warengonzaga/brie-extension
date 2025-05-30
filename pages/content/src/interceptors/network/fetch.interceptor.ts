@@ -1,5 +1,4 @@
 import { safePostMessage } from '@extension/shared';
-
 import { extractQueryParams } from '@src/utils';
 
 interface FetchOptions extends RequestInit {
@@ -82,9 +81,8 @@ export const interceptFetch = (): void => {
         });
 
         if (typeof window !== 'undefined') {
-          safePostMessage('ADD_RECORD', {
-            recordType: 'network',
-            source: 'client',
+          const timestamp = Date.now();
+          const payload = {
             method,
             url: url.toString(),
             queryParams,
@@ -95,7 +93,30 @@ export const interceptFetch = (): void => {
             requestStart: startTime,
             requestEnd: endTime,
             status: responseClone.status,
+          };
+
+          safePostMessage('ADD_RECORD', {
+            recordType: 'network',
+            source: 'client',
+            timestamp,
+            ...payload,
           });
+
+          if (responseClone.status >= 400) {
+            safePostMessage('ADD_RECORD', {
+              timestamp,
+              type: 'log',
+              recordType: 'console',
+              source: 'client',
+              method: 'error',
+              args: [`[Fetch] ${method} ${url} responded with status ${responseClone.status}`, payload],
+              stackTrace: {
+                parsed: 'interceptFetch',
+                raw: '',
+              },
+              pageUrl: window.location.href,
+            });
+          }
         } else {
           console.warn('[Fetch] safePostMessage is not supported.');
         }
