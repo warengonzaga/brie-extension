@@ -12,7 +12,6 @@ const sensitiveKeywords = [
   'id_token',
   'oauth_token',
   'jwt',
-  'key',
   'private_key',
   'public_key',
   'session_token',
