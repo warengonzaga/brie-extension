@@ -189,7 +189,7 @@ export const cleanup = (): void => {
   // document.removeEventListener('mouseup', onMouseUp);
   document.removeEventListener('touchmove', updateSelectionBox);
   document.removeEventListener('touchend', onTouchEnd);
-  window.removeEventListener('scroll', onScroll);
+  document.removeEventListener('scroll', onScroll);
 };
 
 // Position the instructions message dynamically
@@ -377,7 +377,7 @@ const showInstructions = () => {
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('touchmove', onTouchMove);
-  window.addEventListener('scroll', onScroll);
+  document.addEventListener('scroll', onScroll);
 };
 
 const captureTab = (): Promise<string> =>
@@ -493,6 +493,10 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
 const saveAndNotify = ({ secondary, primary }: { secondary: string; primary: string | null }) => {
   const timestamp = Date.now();
 
+  /**
+   * @todo use safePostMessage
+   * currently brakes the build (because of extend)
+   */
   window.postMessage(
     {
       type: 'ADD_RECORD',
