@@ -108,5 +108,14 @@
   },
   "GUEST_DAILY_LIMIT": {
     "message": "दुर्भाग्यवश, आपने दैनिक सीमा पार कर ली है।"
+  },
+  "refreshPage": {
+    "message": "इस पेज को रिफ्रेश करें"
+  },
+  "quickRefresh": {
+    "message": "बस एक ताज़ा अपडेट और एक्सटेंशन"
+  },
+  "readyToGo": {
+    "message": "तैयार हो जाएगी!"
   }
 }
