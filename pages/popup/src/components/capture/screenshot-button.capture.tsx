@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSlicesCreatedToday } from '@src/hooks';
 
 import { useStorage } from '@extension/shared';
-import { captureStateStorage, captureTabStorage } from '@extension/storage';
+import { captureStateStorage, captureTabStorage, pendingReloadTabsStorage } from '@extension/storage';
 import {
   Alert,
   AlertDescription,
@@ -37,6 +37,7 @@ export const CaptureScreenshotGroup = () => {
   const user = useUser();
   const captureState = useStorage(captureStateStorage);
   const captureTabId = useStorage(captureTabStorage);
+  const pendingReloadTabIds = useStorage(pendingReloadTabsStorage);
 
   const [activeTab, setActiveTab] = useState({ id: null, url: '' });
   const [currentActiveTab, setCurrentActiveTab] = useState<number>();
@@ -135,6 +136,13 @@ export const CaptureScreenshotGroup = () => {
     }
   };
 
+  const handleOnRefreshPendingTab = async () => {
+    if (currentActiveTab) {
+      await chrome.tabs.reload(currentActiveTab);
+      await pendingReloadTabsStorage.remove(currentActiveTab);
+    }
+  };
+
   const handleOnDiscard = async (activeTabId: number) => {
     /**
      * @todo
@@ -154,6 +162,25 @@ export const CaptureScreenshotGroup = () => {
   };
 
   const isInternalPage = activeTab.url.startsWith('about:') || activeTab.url.startsWith('chrome:');
+
+  if (currentActiveTab && pendingReloadTabIds.includes(currentActiveTab)) {
+    return (
+      <>
+        <Alert className="text-center">
+          <AlertDescription className="text-[12px]">
+            {t('quickRefresh')} <br />
+            {t('readyToGo')}
+          </AlertDescription>
+        </Alert>
+
+        <div className="mt-4 flex gap-x-2">
+          <Button type="button" size="sm" className="w-full" onClick={handleOnRefreshPendingTab}>
+            {t('refreshPage')}
+          </Button>
+        </div>
+      </>
+    );
+  }
 
   if (isInternalPage && captureState !== 'unsaved' && currentActiveTab !== activeTab.id) {
     return (

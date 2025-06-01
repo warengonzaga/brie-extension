@@ -6,6 +6,7 @@ import {
   annotationsStorage,
   captureStateStorage,
   captureTabStorage,
+  pendingReloadTabsStorage,
   userUUIDStorage,
 } from '@extension/storage';
 import { addOrMergeRecords, getRecords } from '@src/utils';
@@ -95,8 +96,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true; // Keep the connection open for async handling
 });
 
-chrome.runtime.onInstalled.addListener(async details => {
-  if (details.reason === 'install') {
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  if (reason === 'install') {
     /**
      * Set unique identifier for the user
      * to store reported bugs when no account
@@ -106,6 +107,21 @@ chrome.runtime.onInstalled.addListener(async details => {
 
     // Open a welcome page
     // await chrome.tabs.create({ url: 'welcome.html' });
+  }
+
+  /**
+   * @todo
+   * find a better way to reload the tabs that are open when install/update happens.
+   * context: see issue: #24
+   */
+  if (['install', 'update'].includes(reason)) {
+    chrome.tabs.query({}, tabs => {
+      tabs.forEach(tab => {
+        if (tab.id) {
+          pendingReloadTabsStorage.add(tab.id);
+        }
+      });
+    });
   }
 });
 

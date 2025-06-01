@@ -511,8 +511,6 @@ const AnnotationContainer = ({ attachments }: { attachments: { name: string; ima
      * window.
      */
     window.addEventListener('resize', () => {
-      console.log('is resizing event fired');
-
       handleResize({
         canvas: fabricRef.current,
       });
