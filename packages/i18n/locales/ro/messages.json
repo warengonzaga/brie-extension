@@ -108,5 +108,14 @@
   },
   "GUEST_DAILY_LIMIT": {
     "message": "Din păcate, ai atins limita zilnică."
+  },
+  "refreshPage": {
+    "message": "Reîncarcă această pagină"
+  },
+  "quickRefresh": {
+    "message": "Doar o reîmprospătare rapidă și extensia"
+  },
+  "readyToGo": {
+    "message": "va fi gata de utilizare!"
   }
 }

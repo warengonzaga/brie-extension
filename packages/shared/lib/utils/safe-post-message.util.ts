@@ -16,7 +16,11 @@ export const safePostMessage = (type: string, payload: Record<string, any>) => {
 
     window.postMessage(message, '*');
   } catch (e) {
-    console.warn(`[Brie] Failed to safePostMessage for "${type}"`, e);
-    console.debug('[Brie] Payload that caused failure:', payload);
+    /**
+     * @todo
+     * implement logs
+     */
+    // console.warn(`[Brie] Failed to safePostMessage for "${type}"`, e);
+    // console.debug('[Brie] Payload that caused failure:', payload);
   }
 };

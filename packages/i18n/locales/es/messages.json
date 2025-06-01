@@ -108,5 +108,14 @@
   },
   "GUEST_DAILY_LIMIT": {
     "message": "Desafortunadamente has alcanzado el límite diario."
+  },
+  "refreshPage": {
+    "message": "Actualiza esta página"
+  },
+  "quickRefresh": {
+    "message": "Solo una actualización rápida y la extensión"
+  },
+  "readyToGo": {
+    "message": "¡estará lista para usarse!"
   }
 }
