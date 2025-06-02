@@ -14,8 +14,7 @@ validate_is_boolean() {
 
 validate_key() {
   local key="$1"
-  local is_editable="${2:-false}"
-
+  local is_editable="${2:-false}" 
   if [[ -n "$key" && ! "$key" =~ ^# ]]; then
     if [[ "$is_editable" == false && ! "$key" =~ ^CLI_ ]]; then
       echo "Invalid key: <$key>. Must start with 'CLI_'."
