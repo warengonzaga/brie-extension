@@ -136,11 +136,31 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
 // Listener for onCompleted
 chrome.webRequest.onCompleted.addListener(
   (request: chrome.webRequest.WebResponseCacheDetails) => {
-    addOrMergeRecords(request.tabId, {
+    const clonedRequest = structuredClone(request);
+    addOrMergeRecords(clonedRequest.tabId, {
       recordType: 'network',
       source: 'background',
-      ...structuredClone(request),
+      ...clonedRequest,
     });
+
+    if (clonedRequest.statusCode >= 400) {
+      addOrMergeRecords(clonedRequest.tabId, {
+        timestamp: Date.now(),
+        type: 'log',
+        recordType: 'console',
+        source: 'background',
+        method: 'error',
+        args: [
+          `[${clonedRequest.type}] ${clonedRequest.method} ${clonedRequest.url} responded with status ${clonedRequest.statusCode}`,
+          clonedRequest,
+        ],
+        stackTrace: {
+          parsed: 'interceptFetch',
+          raw: '',
+        },
+        pageUrl: clonedRequest.url,
+      });
+    }
   },
   { urls: ['<all_urls>'] },
 );
