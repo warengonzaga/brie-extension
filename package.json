@@ -41,14 +41,14 @@
     "copy_env": "bash bash-scripts/copy_env.sh",
     "set-global-env": "bash bash-scripts/set_global_env.sh",
     "postinstall": "pnpm copy_env",
-    "run:chrome:local": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=false CLI_CEB_ENV=development && pnpm base-dev",
-    "run:firefox:local": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=true CLI_CEB_ENV=development && pnpm base-dev",
-    "build:chrome:local": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=false CLI_CEB_ENV=development && pnpm base-build",
-    "build:firefox:local": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=true CLI_CEB_ENV=development && pnpm base-build",
-    "run:chrome:production": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=false CLI_CEB_ENV=production && pnpm base-dev",
-    "run:firefox:production": "pnpm set-global-env CLI_CEB_DEV=true CLI_CEB_FIREFOX=true CLI_CEB_ENV=production && pnpm base-dev",
-    "build:chrome:production": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=false CLI_CEB_ENV=production && pnpm base-build",
-    "build:firefox:production": "pnpm set-global-env CLI_CEB_DEV=false CLI_CEB_FIREFOX=true CLI_CEB_ENV=production && pnpm base-build"
+    "run:chrome:local": "pnpm set-global-env CLI_DEV=true CLI_FIREFOX=false CLI_ENV=development && pnpm base-dev",
+    "run:firefox:local": "pnpm set-global-env CLI_DEV=true CLI_FIREFOX=true CLI_ENV=development && pnpm base-dev",
+    "build:chrome:local": "pnpm set-global-env CLI_DEV=false CLI_FIREFOX=false CLI_ENV=development && pnpm base-build",
+    "build:firefox:local": "pnpm set-global-env CLI_DEV=false CLI_FIREFOX=true CLI_ENV=development && pnpm base-build",
+    "run:chrome:production": "pnpm set-global-env CLI_DEV=true CLI_FIREFOX=false CLI_ENV=production && pnpm base-dev",
+    "run:firefox:production": "pnpm set-global-env CLI_DEV=true CLI_FIREFOX=true CLI_ENV=production && pnpm base-dev",
+    "build:chrome:production": "pnpm set-global-env CLI_DEV=false CLI_FIREFOX=false CLI_ENV=production && pnpm base-build",
+    "build:firefox:production": "pnpm set-global-env CLI_DEV=false CLI_FIREFOX=true CLI_ENV=production && pnpm base-build"
   },
   "dependencies": {
     "html2canvas": "^1.4.1",
