@@ -5,7 +5,7 @@
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Brie"
+    "message": "Brie - बग कैप्चर"
   },
   "loading": {
     "message": "लोड हो रहा है..."
@@ -105,5 +105,17 @@
   },
   "selectArea": {
     "message": "स्क्रीनशॉट के लिए क्षेत्र का चयन करने के लिए क्लिक करें या खींचें"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "दुर्भाग्यवश, आपने दैनिक सीमा पार कर ली है।"
+  },
+  "refreshPage": {
+    "message": "इस पेज को रिफ्रेश करें"
+  },
+  "quickRefresh": {
+    "message": "बस एक ताज़ा अपडेट और एक्सटेंशन"
+  },
+  "readyToGo": {
+    "message": "तैयार हो जाएगी!"
   }
 }

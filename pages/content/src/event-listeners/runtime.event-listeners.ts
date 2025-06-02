@@ -1,10 +1,10 @@
 import { cleanup, startScreenshotCapture } from '@src/capture';
 
 export const addRuntimeEventListeners = () => {
-  // Listen for runtime messages
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === 'START_SCREENSHOT') {
-      // Call the function to initiate the screenshot capture process
+      window.dispatchEvent(new CustomEvent('metadata'));
+
       startScreenshotCapture(msg.payload);
     }
 

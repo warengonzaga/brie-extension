@@ -29,9 +29,7 @@ export const PopupContent = () => {
   const handleOnBack = () => setShowSlicesHistory(false);
 
   if (isLoading) {
-    return (
-      <Skeleton />
-    );
+    return <Skeleton />;
   }
 
   return showSlicesHistory ? (

@@ -7,14 +7,18 @@ import { isNonProduction } from './is-non-production.util.js';
 const redactSkipCache = new Map<string, boolean>();
 
 /**
- * Allows external code to register custom redaction patterns.
+ * Registers a custom redaction regex pattern for matching sensitive values.
+ * @param pattern - The RegExp pattern used for redaction.
+ * @param groupIndex - Optional group index in the RegExp to target a submatch.
  */
 export const registerCustomRedactionPattern = (pattern: RegExp, groupIndex?: number) => {
   sensitivePatterns.push({ pattern, groupIndex });
 };
 
 /**
- * Handle context-based pairs like { name: 'cvv', value: '123' }
+ * Determines if an object contains a context where `name` matches a sensitive key.
+ * @param obj - The object to inspect.
+ * @returns True if the context suggests sensitive data.
  */
 const shouldRedactByNameValueContext = (obj: any): boolean => {
   return (
@@ -27,7 +31,9 @@ const shouldRedactByNameValueContext = (obj: any): boolean => {
 };
 
 /**
- * Redacts sensitive info in a string using regex patterns.
+ * Applies redaction rules to a raw string using defined regex patterns.
+ * @param value - The string to redact.
+ * @returns Redacted string.
  */
 const safeRedact = (value: string): string => {
   let result = value;
@@ -47,12 +53,13 @@ const safeRedact = (value: string): string => {
 };
 
 /**
- * Internal recursive function that uses a single precomputed redaction flag.
+ * Internal recursive function that redacts sensitive values.
+ * @param input - The object/string/array to process.
+ * @param shouldSkipRedaction - If true, redaction is bypassed.
+ * @returns Redacted version of the input.
  */
 const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
   if (shouldSkipRedaction || !input) return input;
-
-  if (typeof input !== 'object' && typeof input !== 'string') return input;
 
   if (typeof input === 'string') {
     const trimmed = input.trim();
@@ -75,13 +82,18 @@ const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
 
   const result: Record<string, any> = {};
   for (const [key, value] of Object.entries(input)) {
-    // Case 1: nested { name: 'token', value: '...' }
-    if (key === 'value' && typeof value === 'string' && shouldRedactByNameValueContext(input)) {
+    // value in { key: "secret", value: "..." }
+    if (
+      key === 'value' &&
+      typeof value === 'string' &&
+      (shouldRedactByNameValueContext(input) ||
+        sensitiveKeywordsPatterns.some(({ pattern }) => pattern.test(input.key)))
+    ) {
       result[key] = REDACTED_KEYWORD;
       continue;
     }
 
-    // Case 2: direct key match like { token: '...' }
+    // key-value pairs like { secret: "..." }
     if (
       typeof key === 'string' &&
       typeof value === 'string' &&
@@ -91,7 +103,6 @@ const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
       continue;
     }
 
-    // Default recursion
     result[key] = deepRedactInternal(value, shouldSkipRedaction);
   }
 
@@ -99,8 +110,13 @@ const deepRedactInternal = (input: any, shouldSkipRedaction: boolean): any => {
 };
 
 /**
- * Deeply redacts sensitive information from any object, array, or string.
- * Redaction mode is determined once per top-level object using its UUID.
+ * Deeply redacts sensitive information from an input structure.
+ * Automatically skips redaction in non-production environments.
+ * Uses cache when `uuid` is available on the object.
+ *
+ * @param input - Any value (object, array, string, etc.) to redact.
+ * @param url - Optional URL to determine if redaction should apply (e.g. non-prod).
+ * @returns Redacted copy of the input.
  */
 export const deepRedactSensitiveInfo = (input: any, url?: string): any => {
   let shouldSkipRedaction = false;

@@ -54,7 +54,6 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
       const records: any = await getRecords();
 
       if (records?.length) {
-        console.log('records.flat()', records);
         const jsonFile = createJsonFile(records.flat(), 'records.json');
 
         if (!jsonFile) {
@@ -96,7 +95,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
           onClose();
         } else {
           // GUEST_DAILY_LIMIT and other errors
-          toast({ variant: 'destructive', description: data?.message || t('failedToCreateSlice') });
+          toast({ variant: 'destructive', description: t(data?.message) || t('failedToCreateSlice') });
         }
       } else {
         toast({ variant: 'destructive', description: t('noRecordsCaptured') });

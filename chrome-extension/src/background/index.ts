@@ -6,9 +6,11 @@ import {
   annotationsStorage,
   captureStateStorage,
   captureTabStorage,
+  pendingReloadTabsStorage,
   userUUIDStorage,
 } from '@extension/storage';
 import { addOrMergeRecords, getRecords } from '@src/utils';
+import { deleteRecords } from '@src/utils/manage-records.util';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
   const captureTabId = await captureTabStorage.getCaptureTabId();
@@ -18,6 +20,8 @@ chrome.tabs.onRemoved.addListener(async tabId => {
 
     annotationsStorage.setAnnotations([]);
     annotationsRedoStorage.setAnnotations([]);
+
+    deleteRecords(tabId);
   }
 });
 
@@ -92,8 +96,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true; // Keep the connection open for async handling
 });
 
-chrome.runtime.onInstalled.addListener(async details => {
-  if (details.reason === 'install') {
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  if (reason === 'install') {
     /**
      * Set unique identifier for the user
      * to store reported bugs when no account
@@ -103,6 +107,21 @@ chrome.runtime.onInstalled.addListener(async details => {
 
     // Open a welcome page
     // await chrome.tabs.create({ url: 'welcome.html' });
+  }
+
+  /**
+   * @todo
+   * find a better way to reload the tabs that are open when install/update happens.
+   * context: see issue: #24
+   */
+  if (['install', 'update'].includes(reason)) {
+    chrome.tabs.query({}, tabs => {
+      tabs.forEach(tab => {
+        if (tab.id) {
+          pendingReloadTabsStorage.add(tab.id);
+        }
+      });
+    });
   }
 });
 
@@ -117,11 +136,31 @@ chrome.runtime.onInstalled.addListener(async details => {
 // Listener for onCompleted
 chrome.webRequest.onCompleted.addListener(
   (request: chrome.webRequest.WebResponseCacheDetails) => {
-    addOrMergeRecords(request.tabId, {
+    const clonedRequest = structuredClone(request);
+    addOrMergeRecords(clonedRequest.tabId, {
       recordType: 'network',
       source: 'background',
-      ...structuredClone(request),
+      ...clonedRequest,
     });
+
+    if (clonedRequest.statusCode >= 400) {
+      addOrMergeRecords(clonedRequest.tabId, {
+        timestamp: Date.now(),
+        type: 'log',
+        recordType: 'console',
+        source: 'background',
+        method: 'error',
+        args: [
+          `[${clonedRequest.type}] ${clonedRequest.method} ${clonedRequest.url} responded with status ${clonedRequest.statusCode}`,
+          clonedRequest,
+        ],
+        stackTrace: {
+          parsed: 'interceptFetch',
+          raw: '',
+        },
+        pageUrl: clonedRequest.url,
+      });
+    }
   },
   { urls: ['<all_urls>'] },
 );

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { deepRedactSensitiveInfo } from '@extension/shared';
 
-const restricted = ['briehq']; // 'extend.iife',  'kbmbnelnoppneadncmmkfikbcgmilbao'  Note: it blocks the logs
+const restricted = ['https://api.briehq.com']; // 'extend.iife',  'kbmbnelnoppneadncmmkfikbcgmilbao'  Note: it blocks the logs
 const invalidRecord = (entity: string) => restricted.some(word => entity.includes(word));
 
 const tabRecordsMap = new Map<number, Map<string, any>>();
@@ -18,22 +18,26 @@ export interface Record {
   [key: string]: any;
 }
 
+export const deleteRecords = async (tabId: number) => {
+  if (!tabId && !tabRecordsMap.has(tabId)) return;
+
+  tabRecordsMap.delete(tabId);
+};
+
 export const getRecords = async (tabId: number): Promise<Record[]> => {
   return tabId && tabRecordsMap.has(tabId) ? Array.from(tabRecordsMap.get(tabId)!.values()) : [];
 };
 
 export const addOrMergeRecords = async (tabId: number, record: Record | any): Promise<void> => {
   if (!tabId || tabId === -1) {
-    console.log('[addOrMergeRecords] tabId is null OR -1');
+    console.log('[addOrMergeRecords] SKIPPED: Invalid TabId (null OR -1)');
     return;
   }
 
-  if (invalidRecord(record?.url || '')) return;
-
-  // if (record.recordType === 'console' && invalidRecord(record.stackTrace.parsed)) {
-  //   console.log('record console', record);
-  //   return;
-  // }
+  if (invalidRecord(record?.url || '')) {
+    console.log('[addOrMergeRecords] SKIPPED: Invalid URL');
+    return;
+  }
 
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
   const tabUrl = tab?.url || record?.url;

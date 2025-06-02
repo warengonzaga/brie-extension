@@ -31,13 +31,13 @@
 <br />
 
 **🚀 Capture & Share Instantly:**
-_Record exactly what went wrong—no more back-and-forth emails or messy screenshots._
+_Record exactly what went wrong, no more back-and-forth emails or messy screenshots._
 
 **🛠️ Developer - Ready Reports:**
 _Brie auto-captures console logs, network errors, and user actions so devs get full context instantly._
 
 **🕒 Save Time, Build Faster:**
-_No wasted hours on unclear bug reports—just fast fixes and better software._
+_No wasted hours on unclear bug reports, just fast fixes and better software._
 
 **🔥 Join Thousands of Fast-Moving Teams:**
 _Install <a href="https://go.brie.io/lp" target="_blank">Brie</a> and start shipping bug-free software today!_

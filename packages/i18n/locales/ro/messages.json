@@ -5,7 +5,7 @@
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Brie"
+    "message": "Brie - Captură erori"
   },
   "loading": {
     "message": "Se încarcă..."
@@ -105,5 +105,17 @@
   },
   "selectArea": {
     "message": "Click sau trage pentru a selecta zona pentru screenshot"
+  },
+  "GUEST_DAILY_LIMIT": {
+    "message": "Din păcate, ai atins limita zilnică."
+  },
+  "refreshPage": {
+    "message": "Reîncarcă această pagină"
+  },
+  "quickRefresh": {
+    "message": "Doar o reîmprospătare rapidă și extensia"
+  },
+  "readyToGo": {
+    "message": "va fi gata de utilizare!"
   }
 }
