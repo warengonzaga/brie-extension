@@ -57,9 +57,9 @@ Then, depending on the target browser:
 ### For Chrome (Chromium-based): <a name="getting-started-chrome"></a>
 
 1. Run:
-   - Dev: `pnpm dev` (on Windows, you should run as administrator;
+   - Dev: `pnpm run:chrome:local ` (on Windows, you should run as administrator;
      see [issue#456](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/issues/456))
-   - Prod: `pnpm build`
+   - Prod: `pnpm run:chrome:production`
 2. Open in browser - `chrome://extensions`
 3. Check - <kbd>Developer mode</kbd>
 4. Click - <kbd>Load unpacked</kbd> in the upper left corner
@@ -68,8 +68,8 @@ Then, depending on the target browser:
 ### For Firefox: <a name="getting-started-firefox"></a>
 
 1. Run:
-   - Dev: `pnpm dev:firefox`
-   - Prod: `pnpm build:firefox`
+   - Dev: `pnpm run:chrome:local`
+   - Prod: `pnpm run:chrome:production`
 2. Open in browser - `about:debugging#/runtime/this-firefox`
 3. Click - <kbd>Load Temporary Add-on...</kbd> in the upper right corner
 4. Select the `./dist/manifest.json` file from the boilerplate project
@@ -79,6 +79,25 @@ Then, depending on the target browser:
 > load the add-on on every browser launch.
 
 > **NOTE:** Remember that these commands must be executed in the root folder of the project.
+
+### Multi Env Support
+
+This setup supports scoped and environment-based builds via the following pattern:
+
+```
+pnpm <action>:<scope>:<env>
+```
+
+- **Actions**: `run` | `build`
+- **Scopes**: `chrome` | `firefox`
+- **Environments**: `local` | `production`
+
+### Example Commands
+
+```bash
+pnpm run:chrome:local       # Dev Chrome with Local env
+pnpm run:firefox:production # Dev Firefox with Production env
+```
 
 ## Branch Creation
 
