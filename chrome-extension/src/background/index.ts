@@ -13,6 +13,12 @@ import { addOrMergeRecords, getRecords } from '@src/utils';
 import { deleteRecords } from '@src/utils/manage-records.util';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
+  // Remove closed tab from pending reload tabs
+  const pendingTabIds = await pendingReloadTabsStorage.getAll();
+  if (pendingTabIds.includes(tabId)) {
+    await pendingReloadTabsStorage.remove(tabId);
+  }
+
   const captureTabId = await captureTabStorage.getCaptureTabId();
   if (tabId === captureTabId) {
     await captureStateStorage.setCaptureState('idle');
@@ -26,6 +32,14 @@ chrome.tabs.onRemoved.addListener(async tabId => {
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+  // If tab finished loading (refreshed), remove it from pending reload tabs
+  if (changeInfo.status === 'complete') {
+    const pendingTabIds = await pendingReloadTabsStorage.getAll();
+    if (pendingTabIds.includes(tabId)) {
+      await pendingReloadTabsStorage.remove(tabId);
+    }
+  }
+
   if (changeInfo.status !== 'loading') return;
 
   const [state, capturedTabId] = await Promise.all([
