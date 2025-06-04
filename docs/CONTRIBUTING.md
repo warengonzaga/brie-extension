@@ -45,19 +45,21 @@ In order to maintain the Brie structure and guarantee code quality please use th
 
    **This will set the EOL (End of line) character to be the same as on Linux/macOS. Without this, our bash script won't work, and you will have conflicts with developers on Linux/macOS.**
 
-1. Clone the repo on your local machine;
-2. Ensure your node version is >= than in `.nvmrc` file, recommend to use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#intro)
-3. Install pnpm globally: `npm install -g pnpm` (ensure your node version >= 22.12.0)
+1. Clone or fork the repo on your local machine;
+   - make sure to uncheck “Copy the master branch only” option, so you get access to the `develop` branch.
+2. Ensure your node version is >= than in `.nvmrc` file, recommend to use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#intro);
+3. Install pnpm globally: `npm install -g pnpm` (ensure your node version >= 22.12.0);
 4. Inside **brie-extension** folder run `pnpm i` command to install all dependencies;
-5. Change the `version` to the desired version of your extension, see [UPDATE-PACKAGE-VERSIONS](/docs/UPDATE-PACKAGE-VERSIONS.md).
-6. To check if everything is working, run `pnpm dev` command in terminal.
+5. Change the `version` to the desired version of your extension, see [UPDATE-PACKAGE-VERSIONS](/docs/UPDATE-PACKAGE-VERSIONS.md);
+6. Don't forget to create ypur env files, see [ENV](/packages/env/README.md);
+7. To check if everything is working, run `pnpm run:chrome:local` command in terminal.
 
 Then, depending on the target browser:
 
 ### For Chrome (Chromium-based): <a name="getting-started-chrome"></a>
 
 1. Run:
-   - Dev: `pnpm run:chrome:local ` (on Windows, you should run as administrator;
+   - Dev: `pnpm run:chrome:local` (on Windows, you should run as administrator;
      see [issue#456](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/issues/456))
    - Prod: `pnpm run:chrome:production`
 2. Open in browser - `chrome://extensions`
