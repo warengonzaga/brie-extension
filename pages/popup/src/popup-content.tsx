@@ -7,7 +7,6 @@ import { Header, BetaNotifier, Skeleton } from './components/ui';
 import { authTokensStorage, captureStateStorage, userUUIDStorage } from '@extension/storage';
 import { useLoginGuestMutation } from '@extension/store';
 import { useStorage } from '@extension/shared';
-import { CLI_ENV, IS_DEV, IS_FIREFOX } from '@extension/env';
 
 export const PopupContent = () => {
   const captureState = useStorage(captureStateStorage);
@@ -38,12 +37,6 @@ export const PopupContent = () => {
   ) : (
     <>
       <Header />
-      IS_FIREFOX: {IS_FIREFOX ? 'true' : 'false'}
-      <br />
-      IS_DEV: {IS_DEV ? 'true' : 'false'}
-      <br />
-      CLI_ENV: {CLI_ENV}
-      <br />
       <CaptureScreenshotGroup />
       {captureState === 'idle' && <SlicesHistoryButton onClick={() => setShowSlicesHistory(true)} />}
       <BetaNotifier />
