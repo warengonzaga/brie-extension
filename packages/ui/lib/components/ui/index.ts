@@ -13,8 +13,6 @@ export * from './textarea';
 export * from './tooltip';
 export * from './scroll-area';
 export * from './separator';
-// export * from './toast';
-// export * from './toaster';
 export * from './context-menu';
 export * from './command';
 export * from './popover';
