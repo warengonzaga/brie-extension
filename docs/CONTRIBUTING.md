@@ -51,7 +51,7 @@ In order to maintain the Brie structure and guarantee code quality please use th
 3. Install pnpm globally: `npm install -g pnpm` (ensure your node version >= 22.12.0);
 4. Inside **brie-extension** folder run `pnpm i` command to install all dependencies;
 5. Change the `version` to the desired version of your extension, see [UPDATE-PACKAGE-VERSIONS](/docs/UPDATE-PACKAGE-VERSIONS.md);
-6. Don't forget to create ypur env files, see [ENV](/packages/env/README.md);
+6. Don't forget to create your env files, see [ENV](/packages/env/README.md);
 7. To check if everything is working, run `pnpm run:chrome:local` command in terminal.
 
 Then, depending on the target browser:
