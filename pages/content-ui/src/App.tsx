@@ -49,7 +49,7 @@ export default function App() {
             </main>
           )}
 
-          <Toaster />
+          <Toaster richColors />
         </div>
       </TooltipProvider>
     </ReduxProvider>
