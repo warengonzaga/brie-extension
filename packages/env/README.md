@@ -45,9 +45,12 @@ pnpm set-env CLI_MY_FLAG=true
 ### Option 2: Base Environment File
 
 Edit or add to your `.env.development` or `.env.production` files.
+Note: Use Sandbox Env as temporary workaround until we open-source the API and App.
 
 ```env
-API_URL=https://api.local
+NAME=[Sandbox] Brie
+API_BASE_URL=https://sandbox-api.briehq.com
+APP_BASE_URL=https://sandbox.briehq.com
 ```
 
 ## 🔁 Accessing the Variables in Code
