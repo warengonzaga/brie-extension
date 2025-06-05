@@ -86,6 +86,7 @@ create_new_file() {
     done
     echo ""
     echo "# Editable values (copied from .env.$CLI_ENV)"
+    grep -Ev '^\s*#|^\s*$' .env
   } > "$temp_file"
 
   mv "$temp_file" .env
