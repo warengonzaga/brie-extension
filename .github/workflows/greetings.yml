@@ -38,26 +38,32 @@ jobs:
       - name: Greet contributor
         run: |
           ACTOR="$GITHUB_ACTOR"
-          ISSUE_URL="${{ github.event.issue.url }}"
-          PR_URL="${{ github.event.pull_request.url }}"
+          REPO="$GITHUB_REPOSITORY"
           IS_FIRST="${{ steps.check_contributor.outputs.first_time }}"
 
-          if [ -n "$ISSUE_URL" ]; then
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            ISSUE_NUMBER="${{ github.event.issue.number }}"
+
             if [ "$IS_FIRST" = "true" ]; then
-              MESSAGE="Hey @$ACTOR,\nThanks for opening your first issue! 🐛\n\nWe'll take a look soon."
+              MESSAGE="Hey @$ACTOR,\nThanks for opening your first issue! 🐛\n\nWe’ll take a look soon."
             else
               MESSAGE="Hey @$ACTOR,\nThanks for reporting another issue! 🙌"
             fi
-            gh api --method POST "$ISSUE_URL/comments" -f body="$MESSAGE"
-          elif [ -n "$PR_URL" ]; then
+
+            gh api --method POST "/repos/$REPO/issues/$ISSUE_NUMBER/comments" -f body="$MESSAGE"
+
+          elif [ "${{ github.event_name }}" = "pull_request_target" ]; then
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+
             if [ "$IS_FIRST" = "true" ]; then
               MESSAGE="Hey @$ACTOR,\nThanks for your first pull request! 🎉\n\nWe’ll review it shortly."
             else
               MESSAGE="Hey @$ACTOR,\nThanks for another PR! 🚀"
             fi
-            gh api --method POST "$PR_URL/comments" -f body="$MESSAGE"
+
+            gh api --method POST "/repos/$REPO/issues/$PR_NUMBER/comments" -f body="$MESSAGE"
           else
-            echo "No issue or PR URL found — skipping comment."
+            echo "Unknown event — skipping comment."
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
