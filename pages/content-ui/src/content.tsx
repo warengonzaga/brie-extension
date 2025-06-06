@@ -4,7 +4,7 @@ import { t } from '@extension/i18n';
 import { AuthMethod } from '@extension/shared';
 import { APP_BASE_URL } from '@extension/env';
 import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
-import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, useToast } from '@extension/ui';
+import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, toast } from '@extension/ui';
 
 import AnnotationContainer from './components/annotation/annotation-container';
 import { useViewportSize } from './hooks';
@@ -12,7 +12,6 @@ import { base64ToFile, createJsonFile } from './utils';
 import { getCanvasElement } from './utils/annotation';
 
 const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: { name: string; image: string }[] }) => {
-  const { toast } = useToast();
   const { width } = useViewportSize();
 
   const [isMaximized, setIsMaximized] = useState(false);
@@ -57,7 +56,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
         const jsonFile = createJsonFile(records.flat(), 'records.json');
 
         if (!jsonFile) {
-          toast({ variant: 'destructive', description: t('failedToCreateRecords') });
+          toast.error(t('failedToCreateRecords'));
           return;
         }
 
@@ -67,7 +66,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
         const canvas = getCanvasElement();
 
         if (!canvas) {
-          toast({ variant: 'destructive', description: t('failedToCreateRecords') });
+          toast.error(t('failedToCreateRecords'));
           return;
         }
 
@@ -83,7 +82,7 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
 
         const { data } = await createSlice(formData);
         if (data?.externalId) {
-          toast({ description: t('openReport') });
+          toast(t('openReport'));
 
           /**
            * @todo move to env
@@ -95,14 +94,14 @@ const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: {
           onClose();
         } else {
           // GUEST_DAILY_LIMIT and other errors
-          toast({ variant: 'destructive', description: t(data?.message) || t('failedToCreateSlice') });
+          toast.error(t(data?.message) || t('failedToCreateSlice'));
         }
       } else {
-        toast({ variant: 'destructive', description: t('noRecordsCaptured') });
+        toast.error(t('noRecordsCaptured'));
       }
     } catch (error) {
       console.error('[OnCreate Error]:', error);
-      toast({ variant: 'destructive', description: t('unexpectedError') });
+      toast.error(t('unexpectedError'));
     } finally {
       setIsCreateLoading(false);
     }
