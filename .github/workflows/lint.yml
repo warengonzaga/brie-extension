@@ -1,4 +1,4 @@
-name: Lint Check
+name: ESLint Check
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   eslint:
-
+    name: ESLint Check
     runs-on: ubuntu-latest
 
     steps:
