@@ -5,10 +5,14 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   prettier:
     name: Prettier Check
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -18,13 +22,12 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Prettier
-        run: npm install --global prettier@latest
+      - name: Install Dependencies
+        run: npm ci
 
-      - name: Check Prettier Formatting
-        run: |
-          prettier --check \
-            --config ./.prettierrc \
-            --ignore-path ./.prettierignore \
-            --no-error-on-unmatched-pattern \
-            '**/*.{js,jsx,ts,tsx,json}'
+      - name: Run Prettier
+        run: npx prettier --check \
+          --config ./.prettierrc \
+          --ignore-path ./.prettierignore \
+          --no-error-on-unmatched-pattern \
+          '**/*.{js,jsx,ts,tsx,json}'
