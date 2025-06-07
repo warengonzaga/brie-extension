@@ -1,4 +1,5 @@
 import { useRef, useSyncExternalStore } from 'react';
+
 import type { BaseStorage } from '@extension/storage';
 
 type WrappedPromise = ReturnType<typeof wrapPromise>;

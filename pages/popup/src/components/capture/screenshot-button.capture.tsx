@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { t } from '@extension/i18n';
 import { useStorage } from '@extension/shared';
 import { captureStateStorage, captureTabStorage, pendingReloadTabsStorage } from '@extension/storage';
@@ -13,8 +15,8 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from '@extension/ui';
+
 import { useSlicesCreatedToday } from '@src/hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 
 const captureTypes = [
   {

@@ -1,5 +1,6 @@
 import { IS_DEV, NAME } from '@extension/env';
 import { Button, Icon } from '@extension/ui';
+
 import { navigateTo } from '@src/utils';
 
 export const Header = () => {

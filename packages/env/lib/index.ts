@@ -1,5 +1,6 @@
-import { CLI_ENV } from './const.js';
 import { config } from '@dotenvx/dotenvx';
+
+import { CLI_ENV } from './const.js';
 
 /**
  * @todo

@@ -1,6 +1,8 @@
-import { baseQueryWithReauth } from '../../services/index.js';
 import { createApi } from '@reduxjs/toolkit/query/react';
+
 import type { User } from '@extension/shared';
+
+import { baseQueryWithReauth } from '../../services/index.js';
 
 export const userAPI = createApi({
   reducerPath: 'user',

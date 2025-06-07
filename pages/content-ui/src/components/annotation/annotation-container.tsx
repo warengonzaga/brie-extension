@@ -1,3 +1,14 @@
+import type { fabric } from 'fabric';
+import moment from 'moment';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
+import { annotationsRedoStorage, annotationsStorage } from '@extension/storage';
+import { Button, Icon, toast } from '@extension/ui';
+
+import { defaultNavElement } from '@src/constants';
+import type { ActiveElement, Attributes } from '@src/models';
+
 import { AnnotationSection } from './annotation-section.feature';
 import AnnotationSidebarFeature from './annotation-sidebar.feature';
 import {
@@ -20,14 +31,7 @@ import {
   setCanvasBackground,
   getShadowHostElement,
 } from '../../utils/annotation';
-import { annotationsRedoStorage, annotationsStorage } from '@extension/storage';
-import { Button, Icon, toast } from '@extension/ui';
-import { defaultNavElement } from '@src/constants';
-import moment from 'moment';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import type { ActiveElement, Attributes } from '@src/models';
-import type { fabric } from 'fabric';
+
 // import { useCreateIssueMutation } from '@/store/issues';
 
 const AnnotationContainer = ({ attachments }: { attachments: { name: string; image: string }[] }) => {

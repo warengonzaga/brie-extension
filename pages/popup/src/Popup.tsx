@@ -1,9 +1,10 @@
 import '@src/Popup.css';
 
-import { Skeleton } from './components/ui';
-import { PopupContent } from './popup-content';
 import { withErrorBoundary, withSuspense } from '@extension/shared';
 import { store, ReduxProvider } from '@extension/store';
+
+import { Skeleton } from './components/ui';
+import { PopupContent } from './popup-content';
 
 const Popup = () => (
   <ReduxProvider store={store}>

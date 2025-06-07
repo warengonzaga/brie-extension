@@ -1,5 +1,6 @@
-import { t } from '@extension/i18n';
 import html2canvas from 'html2canvas';
+
+import { t } from '@extension/i18n';
 
 let lastPointerX = 0;
 let lastPointerY = 0;

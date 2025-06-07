@@ -1,8 +1,10 @@
-import Content from './content';
+import { useEffect, useState } from 'react';
+
 import { annotationsRedoStorage, annotationsStorage, captureStateStorage } from '@extension/storage';
 import { store, ReduxProvider } from '@extension/store';
 import { Toaster, TooltipProvider } from '@extension/ui';
-import { useEffect, useState } from 'react';
+
+import Content from './content';
 
 export default function App() {
   const [screenshots, setScreenshots] = useState<{ name: string; image: string }[]>();

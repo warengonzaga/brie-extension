@@ -1,3 +1,5 @@
+import type { SystemInfo } from '@src/interfaces/events';
+
 import { getBatteryInfo } from './battery-info.util';
 import { getExtensionContext } from './extension-context.util';
 import { getIncognitoStatus } from './incognito-status.util';
@@ -5,7 +7,6 @@ import { getLanguageInfo } from './language-info.util';
 import { getMemoryInfo } from './memory-info.util';
 import { getNetworkInfo } from './network-info.util';
 import { parseUserAgent } from './user-agent.util';
-import type { SystemInfo } from '@src/interfaces/events';
 
 /**
  * Collects environment information useful for debugging or diagnostics.

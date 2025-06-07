@@ -1,6 +1,8 @@
-import { Button, Icon, Tooltip, TooltipContent, TooltipTrigger } from '@extension/ui';
-import { navElements } from '@src/constants';
 import { memo } from 'react';
+
+import { Button, Icon, Tooltip, TooltipContent, TooltipTrigger } from '@extension/ui';
+
+import { navElements } from '@src/constants';
 
 const AnnotationSidebar = ({ activeElement, onActiveElement }: any) => {
   const isActive = (value: string | Array<any>) =>

@@ -1,13 +1,15 @@
-import AnnotationContainer from './components/annotation/annotation-container';
-import { useViewportSize } from './hooks';
-import { base64ToFile, createJsonFile } from './utils';
-import { getCanvasElement } from './utils/annotation';
+import { memo, useMemo, useState } from 'react';
+
 import { APP_BASE_URL } from '@extension/env';
 import { t } from '@extension/i18n';
 import { AuthMethod } from '@extension/shared';
 import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
 import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, toast } from '@extension/ui';
-import { memo, useMemo, useState } from 'react';
+
+import AnnotationContainer from './components/annotation/annotation-container';
+import { useViewportSize } from './hooks';
+import { base64ToFile, createJsonFile } from './utils';
+import { getCanvasElement } from './utils/annotation';
 
 const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: { name: string; image: string }[] }) => {
   const { width } = useViewportSize();

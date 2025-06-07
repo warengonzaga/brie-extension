@@ -1,13 +1,16 @@
-import { CardSkeleton } from './card-skeleton.slice-history';
-import { t } from '@extension/i18n';
-import { AuthMethod, ITEMS_PER_PAGE } from '@extension/shared';
-import { useAppSelector, useDeleteSliceByIdMutation, useGetSlicesQuery, useUser } from '@extension/store';
-import { Alert, AlertDescription, AlertTitle, Button, Icon, Separator } from '@extension/ui';
-import { useSlicesCreatedToday } from '@src/hooks';
-import { navigateTo } from '@src/utils';
 import { format } from 'date-fns';
 import { Fragment, useState } from 'react';
+
+import { t } from '@extension/i18n';
+import { AuthMethod, ITEMS_PER_PAGE } from '@extension/shared';
 import type { Pagination } from '@extension/shared';
+import { useAppSelector, useDeleteSliceByIdMutation, useGetSlicesQuery, useUser } from '@extension/store';
+import { Alert, AlertDescription, AlertTitle, Button, Icon, Separator } from '@extension/ui';
+
+import { useSlicesCreatedToday } from '@src/hooks';
+import { navigateTo } from '@src/utils';
+
+import { CardSkeleton } from './card-skeleton.slice-history';
 
 export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
   const user = useUser();

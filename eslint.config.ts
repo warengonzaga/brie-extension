@@ -1,4 +1,5 @@
 import { fixupConfigRules } from '@eslint/compat';
+import type { FixupConfigArray } from '@eslint/compat';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import { flatConfigs as importXFlatConfig } from 'eslint-plugin-import-x';
@@ -7,8 +8,6 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import reactPlugin from 'eslint-plugin-react';
 import { browser, es2020, node } from 'globals';
 import { config, configs as tsConfigs, parser as tsParser } from 'typescript-eslint';
-
-import type { FixupConfigArray } from '@eslint/compat';
 
 export default config(
   // Shared configs
@@ -70,7 +69,7 @@ export default config(
         {
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
           pathGroups: [
             {
               pattern: '@extension/**',
@@ -83,7 +82,7 @@ export default config(
               position: 'after',
             },
           ],
-          pathGroupsExcludedImportTypes: ['builtin'],
+          pathGroupsExcludedImportTypes: ['type'],
         },
       ],
       'import-x/no-unresolved': 'off',

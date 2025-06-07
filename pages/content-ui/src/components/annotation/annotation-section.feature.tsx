@@ -1,5 +1,7 @@
 'use client';
 
+import { useCallback } from 'react';
+
 import {
   ContextMenu,
   ContextMenuContent,
@@ -7,9 +9,9 @@ import {
   ContextMenuShortcut,
   ContextMenuTrigger,
 } from '@extension/ui';
+
 import { shortcuts } from '@src/constants';
 import { exportToPng } from '@src/utils/annotation';
-import { useCallback } from 'react';
 
 type Props = {
   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;

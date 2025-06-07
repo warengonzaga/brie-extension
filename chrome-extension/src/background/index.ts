@@ -1,4 +1,6 @@
 import 'webextension-polyfill';
+import { v4 as uuidv4 } from 'uuid';
+
 import { t } from '@extension/i18n';
 import {
   annotationsRedoStorage,
@@ -8,9 +10,9 @@ import {
   pendingReloadTabsStorage,
   userUUIDStorage,
 } from '@extension/storage';
+
 import { addOrMergeRecords, getRecords } from '@src/utils';
 import { deleteRecords } from '@src/utils/manage-records.util';
-import { v4 as uuidv4 } from 'uuid';
 
 chrome.tabs.onRemoved.addListener(async tabId => {
   // Remove closed tab from pending reload tabs

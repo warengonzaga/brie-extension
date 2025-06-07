@@ -1,3 +1,10 @@
+import clsx from 'clsx';
+import { MicIcon, SparklesIcon, TypeIcon } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useLocation, useParams } from 'react-router-dom';
+
 import { MicrophoneSettings } from '@/components/smart/microphone-settings';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -9,12 +16,6 @@ import { useRecordVoice } from '@/hooks';
 import { get, set } from '@/services';
 import { useImproveIssueDescriptionMutation } from '@/store/ai';
 import { isMobile } from '@/utils';
-import clsx from 'clsx';
-import { MicIcon, SparklesIcon, TypeIcon } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
-import { useLocation, useParams } from 'react-router-dom';
 
 export const AddDescription = ({
   isOpen,
