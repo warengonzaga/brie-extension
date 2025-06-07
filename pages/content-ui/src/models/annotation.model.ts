@@ -1,7 +1,7 @@
+import type { Gradient, Pattern } from 'fabric/fabric-impl';
 import type { Dispatch, MutableRefObject, RefObject, SetStateAction } from 'react';
 
 // eslint-disable-next-line import/no-unresolved
-import type { Gradient, Pattern } from 'fabric/fabric-impl';
 
 export enum CursorMode {
   Hidden,

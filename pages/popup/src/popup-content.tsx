@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
-
-import { SlicesHistoryButton, SlicesHistoryContent } from './components/slices-history';
 import { CaptureScreenshotGroup } from './components/capture';
+import { SlicesHistoryButton, SlicesHistoryContent } from './components/slices-history';
 import { Header, BetaNotifier, Skeleton } from './components/ui';
-
+import { useStorage } from '@extension/shared';
 import { authTokensStorage, captureStateStorage, userUUIDStorage } from '@extension/storage';
 import { useLoginGuestMutation } from '@extension/store';
-import { useStorage } from '@extension/shared';
+import { useEffect, useState } from 'react';
 
 export const PopupContent = () => {
   const captureState = useStorage(captureStateStorage);

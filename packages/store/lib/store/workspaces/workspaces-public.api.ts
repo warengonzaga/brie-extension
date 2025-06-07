@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-import type { Workspace } from '@extension/shared';
 import { API_BASE_URL } from '@extension/env';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Workspace } from '@extension/shared';
 
 export const workspacesPublicAPI = createApi({
   reducerPath: 'workspaces-public',

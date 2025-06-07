@@ -1,9 +1,7 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-
-import type { Slice, Pagination } from '@extension/shared';
-import { API_BASE_URL } from '@extension/env';
-
 import { baseQueryWithReauth } from '../../services/index.js';
+import { API_BASE_URL } from '@extension/env';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import type { Slice, Pagination } from '@extension/shared';
 
 export const attachmentUrlPath = (a: Slice) => {
   const uploadPaths = {

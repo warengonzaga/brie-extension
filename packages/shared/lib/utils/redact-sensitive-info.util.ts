@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { sensitiveKeywordsPatterns } from '../constants/sensitive-keywords.constants.js';
-import { REDACTED_KEYWORD } from '../constants/redacted-keyword.constants.js';
-import { sensitivePatterns } from '../constants/sensitive-patterns.constants.js';
 import { isNonProduction } from './is-non-production.util.js';
+import { REDACTED_KEYWORD } from '../constants/redacted-keyword.constants.js';
+import { sensitiveKeywordsPatterns } from '../constants/sensitive-keywords.constants.js';
+import { sensitivePatterns } from '../constants/sensitive-patterns.constants.js';
 
 const redactSkipCache = new Map<string, boolean>();
 

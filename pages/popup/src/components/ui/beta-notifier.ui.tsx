@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-
-import { userUUIDStorage } from '@extension/storage';
 import { t } from '@extension/i18n';
+import { userUUIDStorage } from '@extension/storage';
+import { useEffect, useState } from 'react';
 
 export const BetaNotifier = () => {
   const [uuid, setUUID] = useState<string | null>();

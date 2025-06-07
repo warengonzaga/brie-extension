@@ -1,6 +1,6 @@
-import type { BrowserInfo, OSInfo } from '@src/interfaces/events';
 import { isDevToolsOpen, isLikelyEmulated } from './detect-emulation.util';
 import { getBrowserZoomLevel } from './zoom-level.util';
+import type { BrowserInfo, OSInfo } from '@src/interfaces/events';
 
 /** Parses navigator.userAgent and userAgentData to extract browser and OS info. */
 export const parseUserAgent = (): { browser: BrowserInfo; os: OSInfo } => {

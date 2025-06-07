@@ -1,8 +1,7 @@
-import type { ReactNode } from 'react';
-import clsx from 'clsx';
-
 import { Button } from './button';
 import { Icon } from './icon';
+import clsx from 'clsx';
+import type { ReactNode } from 'react';
 
 export const DialogLegacy = ({
   isMaximized,

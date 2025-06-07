@@ -1,15 +1,13 @@
-import { memo, useMemo, useState } from 'react';
-
-import { t } from '@extension/i18n';
-import { AuthMethod } from '@extension/shared';
-import { APP_BASE_URL } from '@extension/env';
-import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
-import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, useToast } from '@extension/ui';
-
 import AnnotationContainer from './components/annotation/annotation-container';
 import { useViewportSize } from './hooks';
 import { base64ToFile, createJsonFile } from './utils';
 import { getCanvasElement } from './utils/annotation';
+import { APP_BASE_URL } from '@extension/env';
+import { t } from '@extension/i18n';
+import { AuthMethod } from '@extension/shared';
+import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
+import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, useToast } from '@extension/ui';
+import { memo, useMemo, useState } from 'react';
 
 const Content = ({ screenshots, onClose }: { onClose: () => void; screenshots: { name: string; image: string }[] }) => {
   const { toast } = useToast();

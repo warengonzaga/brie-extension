@@ -1,7 +1,7 @@
 import deepmerge from 'deepmerge';
-import type { Config } from 'tailwindcss';
 import { fontFamily } from 'tailwindcss/defaultTheme';
 import tailwindAnimate from 'tailwindcss-animate';
+import type { Config } from 'tailwindcss';
 
 export function withUI(tailwindConfig: Config): Config {
   return deepmerge(

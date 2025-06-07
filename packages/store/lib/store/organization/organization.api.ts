@@ -1,8 +1,6 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-
-import type { Organization } from '@extension/shared';
-
 import { baseQueryWithReauth } from '../../services/index.js';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import type { Organization } from '@extension/shared';
 
 export const organizationAPI = createApi({
   reducerPath: 'organization',

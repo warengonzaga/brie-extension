@@ -1,5 +1,5 @@
-import type { ExtensionContext } from '@src/interfaces/events';
 import packageJsonFile from '../../../../package.json';
+import type { ExtensionContext } from '@src/interfaces/events';
 
 /** Returns extension runtime context (extension ID, host, etc.). */
 export const getExtensionContext = (): ExtensionContext => {

@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
-import { useSlicesCreatedToday } from '@src/hooks';
-
+import { t } from '@extension/i18n';
 import { useStorage } from '@extension/shared';
 import { captureStateStorage, captureTabStorage, pendingReloadTabsStorage } from '@extension/storage';
+import { useUser } from '@extension/store';
 import {
   Alert,
   AlertDescription,
@@ -15,8 +13,8 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from '@extension/ui';
-import { useUser } from '@extension/store';
-import { t } from '@extension/i18n';
+import { useSlicesCreatedToday } from '@src/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 const captureTypes = [
   {
@@ -244,7 +242,7 @@ export const CaptureScreenshotGroup = () => {
                 <Label
                   htmlFor={type.slug}
                   className={cn(
-                    'flex flex-col items-center justify-between rounded-md border border-transparent py-3 hover:bg-accent hover:text-accent-foreground hover:border-slate-200 hover:cursor-pointer',
+                    'hover:bg-accent hover:text-accent-foreground flex flex-col items-center justify-between rounded-md border border-transparent py-3 hover:cursor-pointer hover:border-slate-200',
                   )}>
                   <Icon name={type.icon} className="mb-3 size-5" strokeWidth={type.slug === 'area' ? 2 : 1.5} />
 

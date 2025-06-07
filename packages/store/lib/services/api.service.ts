@@ -1,11 +1,10 @@
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { Mutex } from 'async-mutex';
-import { toast } from 'react-hot-toast';
-
-import type { Tokens, UserAndTokensResponse } from '@extension/shared';
 import { API_BASE_URL } from '@extension/env';
 import { authTokensStorage } from '@extension/storage';
+import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import { Mutex } from 'async-mutex';
+import { toast } from 'react-hot-toast';
+import type { Tokens, UserAndTokensResponse } from '@extension/shared';
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 const mutex = new Mutex();
 const baseQuery = (type: 'access' | 'refresh') =>

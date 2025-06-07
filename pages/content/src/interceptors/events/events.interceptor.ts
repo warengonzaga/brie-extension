@@ -1,5 +1,5 @@
+import { historyApiInterceptor } from './history.interceptor';
 import { safePostMessage } from '@extension/shared';
-
 import {
   findClickableParent,
   getElementDescription,
@@ -8,7 +8,6 @@ import {
   shouldSkipClick,
   shouldSkipInputTracking,
 } from '@src/utils';
-import { historyApiInterceptor } from './history.interceptor';
 
 /**
  * @todo

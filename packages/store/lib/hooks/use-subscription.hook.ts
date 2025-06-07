@@ -1,10 +1,8 @@
-import { useEffect, useMemo } from 'react';
-import { differenceInCalendarDays, isWithinInterval, addDays, parseISO } from 'date-fns';
-
-import type { Subscription } from '@extension/shared';
-
 import { useUserOrganization } from './use-user-organization.hook.js';
 import { useLazyGetSubscriptionByIdQuery } from '../store/index.js';
+import { differenceInCalendarDays, isWithinInterval, addDays, parseISO } from 'date-fns';
+import { useEffect, useMemo } from 'react';
+import type { Subscription } from '@extension/shared';
 
 export const useSubscription = (): {
   fields:

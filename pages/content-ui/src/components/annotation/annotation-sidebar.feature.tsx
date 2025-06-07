@@ -1,7 +1,6 @@
-import { memo } from 'react';
-
 import { Button, Icon, Tooltip, TooltipContent, TooltipTrigger } from '@extension/ui';
 import { navElements } from '@src/constants';
+import { memo } from 'react';
 
 const AnnotationSidebar = ({ activeElement, onActiveElement }: any) => {
   const isActive = (value: string | Array<any>) =>
@@ -16,8 +15,8 @@ const AnnotationSidebar = ({ activeElement, onActiveElement }: any) => {
   };
 
   return (
-    <div className="dark:bg-secondary inset-x-0 mx-auto flex w-fit rounded-xl bg-black shadow-md mt-8">
-      <div className="flex items-center p-1 sm:p2 flex-column space-x-1 sm:space-x-1.5">
+    <div className="dark:bg-secondary inset-x-0 mx-auto mt-8 flex w-fit rounded-xl bg-black shadow-md">
+      <div className="sm:p2 flex-column flex items-center space-x-1 p-1 sm:space-x-1.5">
         {navElements.map((item: any, idx: number) =>
           item?.value ? (
             <Tooltip key={item.value + idx}>
@@ -39,7 +38,7 @@ const AnnotationSidebar = ({ activeElement, onActiveElement }: any) => {
               </TooltipContent>
             </Tooltip>
           ) : (
-            <div key={idx} className="bg-slate-700 w-[1px] h-full"></div>
+            <div key={idx} className="h-full w-[1px] bg-slate-700"></div>
           ),
         )}
       </div>

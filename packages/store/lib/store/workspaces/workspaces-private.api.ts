@@ -1,7 +1,6 @@
-import type { Pagination, Workspace } from '@extension/shared';
-import { createApi } from '@reduxjs/toolkit/query/react';
-
 import { baseQueryWithReauth } from '../../services/index.js';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import type { Pagination, Workspace } from '@extension/shared';
 
 export const workspacesPrivateAPI = createApi({
   reducerPath: 'workspaces-private',

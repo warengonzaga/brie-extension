@@ -1,9 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-import type { Slice } from '@extension/shared';
-import { API_BASE_URL } from '@extension/env';
-
 import { attachmentUrlPath } from './slices-private.api.js';
+import { API_BASE_URL } from '@extension/env';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Slice } from '@extension/shared';
 
 export const slicesPublicAPI = createApi({
   reducerPath: 'slices-public',

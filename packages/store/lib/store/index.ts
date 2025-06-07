@@ -1,15 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
-
 import { authReducer, authPublicAPI } from './auth/index.js';
-import { slicesPrivateAPI, slicesPublicAPI, slicesReducer } from './slices/index.js';
+import { organizationAPI } from './organization/index.js';
 import { overviewAPI } from './overview/index.js';
-import { workspacesPrivateAPI, workspacesPublicAPI, workspacesReducer } from './workspaces/index.js';
+import { screenshotAPI } from './screenshot/index.js';
+import { slicesPrivateAPI, slicesPublicAPI, slicesReducer } from './slices/index.js';
 import { spacesAPI } from './spaces/index.js';
 import { subscriptionsAPI } from './subscriptions/index.js';
 import { userAPI } from './user/index.js';
-import { organizationAPI } from './organization/index.js';
-import { screenshotAPI } from './screenshot/index.js';
+import { workspacesPrivateAPI, workspacesPublicAPI, workspacesReducer } from './workspaces/index.js';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
   [authPublicAPI.reducerPath]: authPublicAPI.reducer,

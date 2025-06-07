@@ -1,11 +1,9 @@
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { createSlice } from '@reduxjs/toolkit';
-
-import type { AuthState, Tokens, User, UserAndTokensResponse } from '@extension/shared';
-import { authTokensStorage } from '@extension/storage';
-
-import { userAPI } from '../user/index.js';
 import { authPublicAPI } from './auth-public.api.js';
+import { userAPI } from '../user/index.js';
+import { authTokensStorage } from '@extension/storage';
+import { createSlice } from '@reduxjs/toolkit';
+import type { AuthState, Tokens, User, UserAndTokensResponse } from '@extension/shared';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: AuthState = {
   user: {} as User,
