@@ -1,6 +1,6 @@
 import { Button } from './button';
 import { Icon } from './icon';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import type { ReactNode } from 'react';
 
 export const DialogLegacy = ({

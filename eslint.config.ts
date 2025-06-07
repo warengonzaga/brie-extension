@@ -89,6 +89,13 @@ export default config(
       'import-x/consistent-type-specifier-style': 'error',
       'import-x/exports-last': 'error',
       'import-x/first': 'error',
+      /**
+       * @todo
+       * switch/remove bellow rules
+       * once the team feels more comfortable with our codebase
+       */
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
     },
     linterOptions: {
       reportUnusedDisableDirectives: 'error',

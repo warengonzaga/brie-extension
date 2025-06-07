@@ -8,7 +8,6 @@ export * from './alert';
 export * from './checkbox';
 export * from './form';
 export * from './label';
-export * from './skeleton';
 export * from './textarea';
 export * from './tooltip';
 export * from './scroll-area';

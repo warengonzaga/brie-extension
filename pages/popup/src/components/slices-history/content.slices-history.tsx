@@ -19,9 +19,9 @@ export const SlicesHistoryContent = ({ onBack }: { onBack: () => void }) => {
   });
 
   const [deleteSliceByExternalId, { isLoading: isDeleteSliceLoading }] = useDeleteSliceByIdMutation();
-  const { isLoading, isError, data: slices } = useGetSlicesQuery({ ...pagination, ...filters });
+  const { isLoading, data: slices } = useGetSlicesQuery({ ...pagination, ...filters });
 
-  const previewScreenshotUrl = attachments => attachments.find(a => a?.name === 'primary')?.preview;
+  const previewScreenshotUrl = (attachments: any) => attachments.find((a: any) => a?.name === 'primary')?.preview;
 
   const onDeleteAll = () => {
     // Handle delete all logic

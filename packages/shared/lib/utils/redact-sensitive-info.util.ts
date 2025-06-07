@@ -7,15 +7,6 @@ import { sensitivePatterns } from '../constants/sensitive-patterns.constants.js'
 const redactSkipCache = new Map<string, boolean>();
 
 /**
- * Registers a custom redaction regex pattern for matching sensitive values.
- * @param pattern - The RegExp pattern used for redaction.
- * @param groupIndex - Optional group index in the RegExp to target a submatch.
- */
-export const registerCustomRedactionPattern = (pattern: RegExp, groupIndex?: number) => {
-  sensitivePatterns.push({ pattern, groupIndex });
-};
-
-/**
  * Determines if an object contains a context where `name` matches a sensitive key.
  * @param obj - The object to inspect.
  * @returns True if the context suggests sensitive data.
@@ -134,4 +125,13 @@ export const deepRedactSensitiveInfo = (input: any, url?: string): any => {
   }
 
   return deepRedactInternal(input, shouldSkipRedaction);
+};
+
+/**
+ * Registers a custom redaction regex pattern for matching sensitive values.
+ * @param pattern - The RegExp pattern used for redaction.
+ * @param groupIndex - Optional group index in the RegExp to target a submatch.
+ */
+export const registerCustomRedactionPattern = (pattern: RegExp, groupIndex?: number) => {
+  sensitivePatterns.push({ pattern, groupIndex });
 };

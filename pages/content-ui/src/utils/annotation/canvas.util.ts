@@ -1,6 +1,7 @@
 import { createSpecificShape, setCanvasBackground } from './shapes.util';
 import { defaultNavElement } from '@src/constants';
 import { fabric } from 'fabric';
+import { Control } from 'fabric/fabric-impl';
 import { v4 as uuid4 } from 'uuid';
 import type {
   CanvasMouseDown,
@@ -12,7 +13,7 @@ import type {
   CanvasSelectionCreated,
   RenderCanvas,
 } from '@src/models';
-import type { MutableRefObject } from 'react';
+import type { RefObject } from 'react';
 
 const rotateSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" strokeLinejoin="round" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`;
 
@@ -43,15 +44,15 @@ export const initializeFabric = ({
   canvasRef,
   backgroundImage,
 }: {
-  fabricRef: MutableRefObject<fabric.Canvas | null>;
-  canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+  fabricRef: RefObject<fabric.Canvas | null>;
+  canvasRef: RefObject<HTMLCanvasElement | null>;
   backgroundImage: string;
 }) => {
   // get canvas element
   const canvasElement = getCanvasElement();
 
   // Get the parent container dimensions
-  const maxWidth = canvasElement?.clientWidth;
+  const maxWidth = canvasElement?.clientWidth || 500;
   const maxHeight = 500; // Maximum height constraint
 
   // Create the Fabric.js canvas
@@ -76,12 +77,13 @@ export const initializeFabric = ({
 
   // Customize corner controls
   for (const control in fabric.Object.prototype.controls) {
+    // eslint-disable-next-line no-prototype-builtins
     if (fabric.Object.prototype.controls.hasOwnProperty(control)) {
       const ctrl = fabric.Object.prototype.controls[control];
       // ctrl.cornerStyle = 'circle';
-      ctrl.cornerColor = 'blue';
+      (ctrl as any).cornerColor = 'blue';
       // ctrl.cornerStrokeColor = 'white';
-      ctrl.cornerSize = 9;
+      (ctrl as any).cornerSize = 9;
       // ctrl.visible = true; // Ensure controls are visible
 
       if (control === 'mtr') {
@@ -114,7 +116,7 @@ export const initializeFabric = ({
         // Custom rendering for the controls
         ctrl.render = function (ctx, left, top, styleOverride, fabricObject) {
           ctx.save();
-          const size = this.cornerSize; // Control size
+          const size = (this as any).cornerSize; // Control size
           const radius = 2.5; // Radius for rounded corners
 
           // Draw background (white square with rounded corners)

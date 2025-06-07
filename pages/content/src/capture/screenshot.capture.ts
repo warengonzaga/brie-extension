@@ -168,30 +168,6 @@ const onScroll = () => {
   }
 };
 
-// Clean up all temporary elements
-export const cleanup = (): void => {
-  isSelecting = false;
-
-  // Reset any necessary state
-  // startX = 0;
-  // startY = 0;
-  // cancelled = true;
-
-  overlay?.remove();
-  selectionBox?.remove();
-  dimensionLabel?.remove();
-  message?.remove();
-  loadingMessage?.remove();
-
-  document.body.style.overflow = '';
-  document.removeEventListener('keydown', onKeyDown);
-  document.removeEventListener('mousemove', updateSelectionBox);
-  // document.removeEventListener('mouseup', onMouseUp);
-  document.removeEventListener('touchmove', updateSelectionBox);
-  document.removeEventListener('touchend', onTouchEnd);
-  document.removeEventListener('scroll', onScroll);
-};
-
 // Position the instructions message dynamically
 const positionInstructionsMessage = (clientX: number, clientY: number) => {
   if (!message) return;
@@ -283,7 +259,7 @@ const onTouchStart = (e: TouchEvent) => {
   startX = e.touches[0].pageX;
   startY = e.touches[0].pageY;
 
-  createSelectionBox(startX, startY);
+  createSelectionBox();
   e.preventDefault();
 };
 
@@ -407,7 +383,7 @@ const checkIfNativeCaptureAvailable = () =>
   });
 
 // Screenshot Capturing
-const captureScreenshots = async (x, y, width, height) => {
+const captureScreenshots = async (x: number, y: number, width: number, height: number) => {
   try {
     const scaleFactor = window.devicePixelRatio || 2;
 
@@ -456,7 +432,14 @@ const captureScreenshots = async (x, y, width, height) => {
 };
 
 // Helper: Process the screenshot
-const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
+const processScreenshot = async (
+  dataUrl: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  scaleFactor: number,
+) => {
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.src = dataUrl;
@@ -466,8 +449,8 @@ const processScreenshot = async (dataUrl, x, y, width, height, scaleFactor) => {
   fullCanvas.width = img.width;
   fullCanvas.height = img.height;
 
-  const ctx = fullCanvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
+  const ctx: CanvasRenderingContext2D | null = fullCanvas.getContext('2d');
+  ctx?.drawImage(img, 0, 0);
 
   // Crop the selected area
   const croppedCanvas = cropSelectedArea(fullCanvas, x, y, width, height, scaleFactor);
@@ -552,4 +535,28 @@ export const startScreenshotCapture = async ({ type }: { type: 'full-page' | 'vi
   overlay.addEventListener('keydown', onKeyDown); // Listen for ESC key press
   overlay.addEventListener('mousedown', onMouseDown);
   overlay.addEventListener('touchstart', onMouseDown);
+};
+
+// Clean up all temporary elements
+export const cleanup = (): void => {
+  isSelecting = false;
+
+  // Reset any necessary state
+  // startX = 0;
+  // startY = 0;
+  // cancelled = true;
+
+  overlay?.remove();
+  selectionBox?.remove();
+  dimensionLabel?.remove();
+  message?.remove();
+  loadingMessage?.remove();
+
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', onKeyDown);
+  document.removeEventListener('mousemove', updateSelectionBox);
+  // document.removeEventListener('mouseup', onMouseUp);
+  document.removeEventListener('touchmove', updateSelectionBox);
+  document.removeEventListener('touchend', onTouchEnd);
+  document.removeEventListener('scroll', onScroll);
 };
