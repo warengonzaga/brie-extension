@@ -1,4 +1,3 @@
-/* eslint-disable import-x/namespace */
 import * as radix from '@radix-ui/react-icons';
 import * as lucide from 'lucide-react';
 
