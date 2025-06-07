@@ -7,6 +7,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import reactPlugin from 'eslint-plugin-react';
 import { browser, es2020, node } from 'globals';
 import { config, configs as tsConfigs, parser as tsParser } from 'typescript-eslint';
+
 import type { FixupConfigArray } from '@eslint/compat';
 
 export default config(
@@ -67,17 +68,22 @@ export default config(
       'import-x/order': [
         'error',
         {
-          'newlines-between': 'never',
+          'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
-          groups: ['index', 'sibling', 'parent', 'internal', 'external', 'builtin', 'object', 'type'],
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
           pathGroups: [
             {
-              pattern: '@*/**',
+              pattern: '@extension/**',
               group: 'internal',
               position: 'before',
             },
+            {
+              pattern: '@src/**',
+              group: 'internal',
+              position: 'after',
+            },
           ],
-          pathGroupsExcludedImportTypes: ['type'],
+          pathGroupsExcludedImportTypes: ['builtin'],
         },
       ],
       'import-x/no-unresolved': 'off',
