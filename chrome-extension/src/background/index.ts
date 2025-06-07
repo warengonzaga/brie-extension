@@ -1,7 +1,7 @@
 import 'webextension-polyfill';
 import { v4 as uuidv4 } from 'uuid';
-import { t } from '@extension/i18n';
 
+import { t } from '@extension/i18n';
 import {
   annotationsRedoStorage,
   annotationsStorage,
@@ -10,6 +10,7 @@ import {
   pendingReloadTabsStorage,
   userUUIDStorage,
 } from '@extension/storage';
+
 import { addOrMergeRecords, getRecords } from '@src/utils';
 import { deleteRecords } from '@src/utils/manage-records.util';
 

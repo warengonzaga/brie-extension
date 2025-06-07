@@ -1,8 +1,8 @@
 import { memo, useMemo, useState } from 'react';
 
+import { APP_BASE_URL } from '@extension/env';
 import { t } from '@extension/i18n';
 import { AuthMethod } from '@extension/shared';
-import { APP_BASE_URL } from '@extension/env';
 import { useCreateSliceMutation, useGetUserDetailsQuery } from '@extension/store';
 import { Button, DialogLegacy, Icon, Textarea, Tooltip, TooltipContent, TooltipTrigger, toast } from '@extension/ui';
 

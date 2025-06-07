@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { Toaster, TooltipProvider } from '@extension/ui';
-import { store, ReduxProvider } from '@extension/store';
 import { annotationsRedoStorage, annotationsStorage, captureStateStorage } from '@extension/storage';
+import { store, ReduxProvider } from '@extension/store';
+import { Toaster, TooltipProvider } from '@extension/ui';
 
 import Content from './content';
 
