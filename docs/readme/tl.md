@@ -58,7 +58,7 @@ Para sa detalyadong mga guide at API references, bisitahin ang <a href="https://
 
 Interesado ba kayong mag-contribute, kahit hindi kayo customer?
 
-Tingnan ang [Good First Issues](https://github.com/briehq/brie-extension/labels/good%20first%20issue) at basahin ang [Contributing Guide](./docs/CONTRIBUTING.md). Tingnan din ang [`docs`](./docs) folder.
+Tingnan ang [Good First Issues](https://github.com/briehq/brie-extension/labels/good%20first%20issue) at basahin ang [Contributing Guide](../../CONTRIBUTING.md). Tingnan din ang [`docs`](./docs) folder.
 
 ## 👨‍💻 Team
 
